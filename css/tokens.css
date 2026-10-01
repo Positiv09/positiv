@@ -1,0 +1,53 @@
+/* ==========================================================================
+   Design tokens — extracted from the live Webflow build (positiv.agency/hometest)
+   ========================================================================== */
+
+@font-face {
+  font-family: "Optima Nova";
+  src: url("../assets/fonts/OptimaNovaLTProDemi.otf") format("opentype");
+  font-weight: 400;   /* single weight, so 700 is browser-synthesised bold exactly like the live h1 words */
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  /* Colour palette */
+  --c-ink: #211d1d;          /* dark sections, body text on light */
+  --c-ink-2: #363232;        /* table header cells */
+  --c-paper: #f2f2ed;        /* page background */
+  --c-paper-2: #efefeb;      /* nav-menu bg / light text on dark */
+  --c-white: #fff;
+  --c-lime: #f0f879;         /* primary accent / CTA */
+  --c-lime-soft: #f8fbe0;    /* feature card 1 */
+  --c-lime-tint: #fbfee0;    /* portfolio rail, tags */
+  --c-lime-cell: #f9ffc7;    /* comparison table highlighted column */
+  --c-purple: #5915ff;       /* --pr */
+  --c-purple-soft: #e9e4fe;  /* feature card 2 */
+  --c-purple-chip: #dcd5fb;
+  --c-orange: #fe572a;       /* CTA orange */
+  --c-orange-nav: #ff6941;   /* --or */
+  --c-orange-soft: #fae8e1;  /* feature card 4 */
+  --c-orange-chip: #ffd2c6;
+  --c-title: #393939;
+  --c-muted: #8e8e8e;
+  --c-muted-2: #b2b2b2;
+  --c-line: rgb(239 239 235 / 0.2);
+
+  /* Typography */
+  --f-display: "Optima Nova", "Optima", "Marcellus", Arial, sans-serif;
+  --f-body: "Poppins", system-ui, sans-serif;
+
+  /* Radii */
+  --r-pill: 50px;
+  --r-card: 20px;
+  --r-media: 12px;
+
+  /* Layout */
+  --gutter: 10%;                      /* nav side padding */
+  --content-w: 80%;                   /* standard section content width */
+  --nav-h: 76px;
+  --hero-h: 910px;
+
+  /* Motion (hooks for GSAP / Lenis later) */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+}

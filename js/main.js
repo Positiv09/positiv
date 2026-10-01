@@ -196,7 +196,7 @@
       if (visible) raf = requestAnimationFrame(tick);
     };
     if ('IntersectionObserver' in window) {
-      new IntersectionObserver(([en]) => { visible = en.isIntersecting; if (visible && !raf) { last = performance.now(); raf = requestAnimationFrame(tick); } }).observe(heroMedia);
+      new IntersectionObserver((ens) => { const en = ens[ens.length - 1]; visible = en.isIntersecting; if (visible && !raf) { last = performance.now(); raf = requestAnimationFrame(tick); } }).observe(heroMedia);
     }
     raf = requestAnimationFrame(tick);
 
@@ -293,6 +293,7 @@
             });
           } else if (n.nodeType === 1) {
             if (n.tagName === 'BR') { into.appendChild(n.cloneNode()); return; }
+            if (n.classList.contains('about-t')) { const w = document.createElement('span'); w.className = 'ft-word'; w.setAttribute('aria-hidden', 'true'); w.appendChild(n.cloneNode(true)); into.appendChild(w); fw.push(w); return; }   // the logo-style "t" travels with its word
             const wrap = document.createElement(n.tagName.toLowerCase());
             wrap.className = n.className; wrap.setAttribute('aria-hidden', 'true');
             splitNode(n, wrap); into.appendChild(wrap);
@@ -312,13 +313,15 @@
           { opacity: 1, yPercent: 0, filter: 'blur(0px)', rotation: 0, duration: 1.1, ease: 'back.out(1.5)', stagger: 0.09, overwrite: 'auto' });
       };
       if ('IntersectionObserver' in window) {
-        new IntersectionObserver(([en]) => {
-          if (en.isIntersecting && en.intersectionRatio >= 0.35 && !shown) play();
+        new IntersectionObserver((ens) => {
+          const en = ens[ens.length - 1];                                      // batched callbacks: the latest entry is the truth
+          const enough = en.isIntersecting && (en.intersectionRatio >= 0.35 || en.intersectionRect.height >= innerHeight * 0.4);
+          if (enough && !shown) play();
           else if (!en.isIntersecting && shown) { shown = false; tw?.kill(); hide(); }
-        }, { threshold: [0, 0.35] }).observe(heading);
+        }, { threshold: [0, 0.1, 0.2, 0.35, 0.5, 0.75, 1] }).observe(heading);
       } else gsap.set(fw, { opacity: 1, yPercent: 0, filter: 'none', rotation: 0 });
     };
-    $$('.features__title, .impact__title, .impact__sub, .clients__title, .services__eyebrow, .services__lines h4, .testimonials__title, .compare__title, .cta__title').forEach(revealHeading);
+    $$('.features__title, .about-title, .impact__title, .impact__sub, .clients__title, .services__eyebrow, .services__lines h4, .testimonials__title, .compare__title, .cta__title').forEach(revealHeading);
   }
 
   /* ---------- Hero word rotator ----------
@@ -434,7 +437,8 @@
           .to(rule, { scaleX: 1, duration: 0.9, ease: 'power2.out' }, 0.1);
       };
       if ('IntersectionObserver' in window) {
-        new IntersectionObserver(([en]) => {
+        new IntersectionObserver((ens) => {
+          const en = ens[ens.length - 1];
           if (en.isIntersecting && en.intersectionRatio >= 0.5 && !shown) play();
           else if (!en.isIntersecting && shown) { shown = false; tl?.kill(); hide(); }
         }, { threshold: [0, 0.5] }).observe(stat);

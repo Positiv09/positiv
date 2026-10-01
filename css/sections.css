@@ -317,6 +317,8 @@
   will-change: opacity, transform;
 }
 .svc-panel.is-active { opacity: 1; transform: none; pointer-events: auto; }
+.svc-mask { display: inline-block; overflow: hidden; vertical-align: top; padding: .06em .12em .14em; margin: -.06em -.12em -.14em; }
+.svc-word { display: inline-block; will-change: transform; }
 .svc-panel__icon { display: flex; align-items: center; justify-content: center; width: 64px; height: 64px; margin-bottom: 34px; border-radius: 12px; background: var(--c-lime); }
 .svc-panel__title { margin-bottom: 26px; color: var(--c-lime); font-family: var(--f-display); font-weight: 700; font-size: 56px; line-height: 60px; }
 .svc-panel__work { margin-bottom: 30px; }

@@ -413,21 +413,33 @@
     onHeaderScroll();
   }
 
-  /* ---------- Stats count-up ---------- */
-  const counters = $$('[data-count]');
-  if ('IntersectionObserver' in window && !reduceMotion) {
-    const io = new IntersectionObserver((entries) => entries.forEach((en) => {
-      if (!en.isIntersecting) return;
-      io.unobserve(en.target);
-      const el = en.target, end = +el.dataset.count, t0 = performance.now(), dur = 1400;
-      const tick = (t) => {
-        const p = Math.min((t - t0) / dur, 1);
-        el.textContent = Math.round(end * (1 - Math.pow(1 - p, 3)));
-        if (p < 1) requestAnimationFrame(tick);
+  /* ---------- Stats: light count-up (GSAP) ----------
+     Short and quiet: each stat fades up, its number counts from 0 with a soft ease-out (~1.1s, tabular digits so the
+     width never jumps) and the divider line draws in. Replays when the stat re-enters the viewport. */
+  const stats = $$('[data-stat]');
+  if (stats.length && window.gsap && !reduceMotion) {
+    stats.forEach((stat) => {
+      const numEl = $('[data-count]', stat), unit = $('.stat__unit', stat), rule = $('.stat__rule', stat), text = $('.stat__text', stat);
+      const end = +numEl.dataset.count, value = { v: 0 };
+      numEl.style.fontVariantNumeric = 'tabular-nums';
+      const parts = [text, numEl, unit].filter(Boolean);
+      const hide = () => { numEl.textContent = '0'; gsap.set(parts, { opacity: 0, y: 12 }); gsap.set(rule, { scaleX: 0, transformOrigin: 'left' }); };
+      hide();
+      let shown = false, tl = null;
+      const play = () => {
+        shown = true; tl?.kill(); value.v = 0;
+        tl = gsap.timeline();
+        tl.to(parts, { opacity: 1, y: 0, duration: 0.7, ease: 'power2.out', stagger: 0.06 }, 0)
+          .to(value, { v: end, duration: 1.1, ease: 'power2.out', onUpdate: () => { numEl.textContent = Math.round(value.v); } }, 0)
+          .to(rule, { scaleX: 1, duration: 0.9, ease: 'power2.out' }, 0.1);
       };
-      requestAnimationFrame(tick);
-    }), { threshold: 0.6 });
-    counters.forEach((c) => { c.textContent = '0'; io.observe(c); });
+      if ('IntersectionObserver' in window) {
+        new IntersectionObserver(([en]) => {
+          if (en.isIntersecting && en.intersectionRatio >= 0.5 && !shown) play();
+          else if (!en.isIntersecting && shown) { shown = false; tl?.kill(); hide(); }
+        }, { threshold: [0, 0.5] }).observe(stat);
+      } else { numEl.textContent = end; }
+    });
   }
 
   /* ---------- Portfolio rail ----------
@@ -619,6 +631,26 @@
     const measureS = () => { pinStart = svc.getBoundingClientRect().top + window.scrollY - parseFloat(getComputedStyle(card).top); updateS(true); };
     // The target progress follows the scroll position; the value actually drawn eases toward it every frame, so wheel
     // notches glide instead of stepping (time constant ≈ 110ms).
+    // Text choreography for a panel: title words rise out of a mask, then icon / copy / labels / pills / number follow in a
+    // soft stagger (power3.out, a little blur clearing). Runs each time the dominant panel changes. Reads as one brand
+    // motion language with the section headings.
+    let svcActive = -1;
+    panels.forEach((p) => {
+      const t = $('.svc-panel__title', p); if (!t || t.dataset.split) return;
+      t.dataset.split = '1'; const label = t.textContent; t.setAttribute('aria-label', label); t.textContent = '';
+      label.split(' ').forEach((w, i, arr) => {
+        const m = document.createElement('span'); m.className = 'svc-mask'; m.setAttribute('aria-hidden', 'true');
+        const s = document.createElement('span'); s.className = 'svc-word'; s.textContent = w; m.appendChild(s); t.appendChild(m);
+        if (i < arr.length - 1) t.appendChild(document.createTextNode(' '));
+      });
+    });
+    const playPanelText = (p) => {
+      if (!window.gsap || reduceMotion) return;
+      const words = $$('.svc-word', p), rest = $$('.svc-panel__icon, .svc-panel__work, .svc-label--deliv, .svc-pill, .svc-panel__num', p);
+      gsap.killTweensOf([...words, ...rest]);
+      gsap.fromTo(words, { yPercent: 115, rotation: 4 }, { yPercent: 0, rotation: 0, duration: 0.95, ease: 'power4.out', stagger: 0.07, transformOrigin: '0% 100%' });
+      gsap.fromTo(rest, { opacity: 0, y: 22, filter: 'blur(5px)' }, { opacity: 1, y: 0, filter: 'blur(0px)', duration: 0.8, ease: 'power3.out', stagger: 0.06, delay: 0.12 });
+    };
     let curPx = null, targetPx = 0, rafS = 0, lastS = 0;
     const applyS = (px) => {
       const scale = media.clientHeight / 800;
@@ -628,6 +660,10 @@
         const inn = u[j], out = j === 3 ? 1 : 1 - u[j + 1], o = inn * out;
         p.style.opacity = o; p.style.transform = `translateY(${34 * (1 - o)}px)`; p.style.pointerEvents = o > 0.5 ? 'auto' : 'none';
       });
+      // the panel that is now dominant gets its text choreography (once per change)
+      let dom = 0, best = -1;
+      panels.forEach((p, k) => { const o = parseFloat(p.style.opacity) || 0; if (o > best) { best = o; dom = k; } });
+      if (dom !== svcActive && best > 0.5) { svcActive = dom; playPanelText(panels[dom]); }
       // tiles: find the running transition k (0..2) and its progress
       let k = 0, t = 0;
       for (let n = 1; n <= 3; n++) {

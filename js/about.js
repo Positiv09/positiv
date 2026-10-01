@@ -111,7 +111,7 @@
     const startProgress = () => {
       auto?.kill();
       if (!bar) return;
-      auto = gsap.fromTo(bar, { scaleX: 0 }, { scaleX: 1, duration: 6, ease: 'none', onUpdate: () => { const r = $('.ring-bar', el.thumbs); if (r) r.style.strokeDashoffset = 100 - auto.progress() * 100; }, onComplete: () => { if (busy) startProgress(); else go(1); } });   // never leave the timer dead if a transition is still running
+      auto = gsap.fromTo(bar, { scaleX: 0 }, { scaleX: 1, duration: 6, ease: 'none', onUpdate() { const r = $('.ring-bar', el.thumbs); if (r) r.style.strokeDashoffset = 100 - this.progress() * 100; }, onComplete: () => { if (busy) startProgress(); else go(1); } });   // never leave the timer dead if a transition is still running
     };
     const go = (dir) => {
       if (busy) return; busy = true;

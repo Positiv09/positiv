@@ -278,6 +278,11 @@
      stagger with a soft overshoot, and it re-arms once the heading has fully left the screen. Applied to every plain
      section heading (only the hero heading and its rotating word keep their own motion). */
   if (window.gsap && !reduceMotion) {
+    const headingChecks = [];
+    const runChecks = () => headingChecks.forEach((f) => f());
+    window.addEventListener('scroll', runChecks, { passive: true });
+    window.addEventListener('resize', runChecks);
+    setInterval(runChecks, 350);
     const revealHeading = (heading) => {
       const label = heading.textContent.replace(/\s+/g, ' ').trim();
       heading.setAttribute('aria-label', label);
@@ -306,20 +311,27 @@
       heading.classList.add('is-split');
       const hide = () => gsap.set(fw, { opacity: 0.12, yPercent: 60, filter: 'blur(8px)', rotation: 3 });
       hide();
-      let shown = false, tw = null;
+      let shown = false, done = false, tw = null;
       const play = () => {
-        shown = true; tw?.kill();
+        shown = true; done = false; tw?.kill();
         tw = gsap.fromTo(fw, { opacity: 0.12, yPercent: 60, filter: 'blur(8px)', rotation: 3 },
-          { opacity: 1, yPercent: 0, filter: 'blur(0px)', rotation: 0, duration: 1.1, ease: 'back.out(1.5)', stagger: 0.09, overwrite: 'auto' });
+          { opacity: 1, yPercent: 0, filter: 'blur(0px)', rotation: 0, duration: 1.1, ease: 'back.out(1.5)', stagger: 0.09, overwrite: 'auto', onComplete: () => { done = true; } });
       };
-      if ('IntersectionObserver' in window) {
-        new IntersectionObserver((ens) => {
-          const en = ens[ens.length - 1];                                      // batched callbacks: the latest entry is the truth
-          const enough = en.isIntersecting && (en.intersectionRatio >= 0.35 || en.intersectionRect.height >= innerHeight * 0.4);
-          if (enough && !shown) play();
-          else if (!en.isIntersecting && shown) { shown = false; tw?.kill(); hide(); }
-        }, { threshold: [0, 0.1, 0.2, 0.35, 0.5, 0.75, 1] }).observe(heading);
-      } else gsap.set(fw, { opacity: 1, yPercent: 0, filter: 'none', rotation: 0 });
+      /* State is re-checked from geometry (not only from IntersectionObserver events), so a slow-loading page,
+         a restored scroll position or a batched callback can never leave a heading stuck in its hidden state. */
+      const check = () => {
+        const r = heading.getBoundingClientRect(), vh = window.innerHeight;
+        if (!r.height) return;
+        const vis = Math.min(r.bottom, vh) - Math.max(r.top, 0);
+        const enough = vis > 0 && (vis / r.height >= 0.35 || vis >= vh * 0.4);
+        const out = r.bottom <= 0 || r.top >= vh;
+        if (enough && !shown) play();
+        else if (out && shown) { shown = false; done = false; tw?.kill(); hide(); }
+        else if (enough && shown && !done && tw && !tw.isActive()) play();           // tween was killed/stalled → run it again
+      };
+      headingChecks.push(check);
+      if ('IntersectionObserver' in window) new IntersectionObserver(check, { threshold: [0, 0.1, 0.2, 0.35, 0.5, 0.75, 1] }).observe(heading);
+      else gsap.set(fw, { opacity: 1, yPercent: 0, filter: 'none', rotation: 0 });
     };
     $$('.features__title, .about-title, .impact__title, .impact__sub, .clients__title, .services__eyebrow, .services__lines h4, .testimonials__title, .compare__title, .cta__title').forEach(revealHeading);
   }
@@ -398,13 +410,22 @@
     toggle.addEventListener('click', (e) => { e.preventDefault(); const open = !toggle.classList.contains('w--open'); closeAll(dd); setOpen(dd, open); });
     toggle.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle.click(); } });
   });
-  navButton?.addEventListener('click', () => {
-    const open = !navButton.classList.contains('w--open');
+  if (navMenu && !$('.mobile-menu-cta', navMenu)) {                // the bar's "Get in touch" is hidden on small screens, so a copy sits at the end of the sheet
+    const cta = document.createElement('a'); cta.className = 'mobile-menu-cta'; cta.href = '#contact'; cta.textContent = 'Get in touch'; navMenu.appendChild(cta);
+  }
+  const setMenu = (open) => {
+    if (!navButton || !navMenu) return;
     navButton.classList.toggle('w--open', open);
     navMenu.classList.toggle('w--nav-menu-open', open);
     navMenu.style.display = open ? 'block' : '';
-  });
-  window.addEventListener('resize', () => { if (isDesktop()) { navMenu && (navMenu.style.display = ''); navButton?.classList.remove('w--open'); } });
+    $('#site-header')?.classList.toggle('is-menu-open', open);
+    document.documentElement.style.overflow = open ? 'hidden' : '';
+    if (open) { const nb = $('.wbs-navbar-center-2'); if (nb) document.documentElement.style.setProperty('--hdr-h', Math.round(nb.getBoundingClientRect().bottom) + 'px'); }
+    else closeAll();
+  };
+  navButton?.addEventListener('click', () => setMenu(!navButton.classList.contains('w--open')));
+  navMenu?.addEventListener('click', (e) => { const a = e.target.closest('a[href]'); if (a && !isDesktop() && a.getAttribute('href') !== '#') setMenu(false); });
+  window.addEventListener('resize', () => { if (isDesktop()) setMenu(false); });
   document.addEventListener('click', (e) => { if (!e.target.closest('.w-nav')) closeAll(); });
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { closeAll(); closeModal(); } });
 

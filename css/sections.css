@@ -715,7 +715,50 @@
   .svc-media { display: none; }
 }
 
+/* ==========================================================================
+   Mobile / tablet refinements (v2)
+   ========================================================================== */
+@media (max-width: 991px) {
+  .feature-card__media-inner { width: 90%; padding-bottom: 28px; }
+  .feature-card__tags { gap: 8px; }
+  .feature-card__tags .tag { width: auto; min-width: 100px; height: 38px; padding: 0 18px; font-size: 14px; }
+  .stat__row { align-items: flex-start; }
+  .compare-table { min-width: 720px; grid-auto-rows: 84px; }
+  .compare-table > div { font-size: 14px; }
+  .compare__scroll { -webkit-overflow-scrolling: touch; scroll-snap-type: x proximity; padding-bottom: 8px; }
+  .compare__scroll::after { content: ""; }
+}
+@media (max-width: 767px) {
+  .stat__row { flex-direction: column-reverse; align-items: flex-start; gap: 14px; }
+  .stat__text { max-width: 100%; }
+  .stat__value { align-self: flex-start; }
+  .feature-card { padding: 12px; border-radius: 22px; }
+  .feature-card__body { width: 90%; }
+  .feature-card__media { height: 300px; }
+  .feature-card__media-title { font-size: 26px; line-height: 32px; }
+  .features__title { width: 92%; }
+  .impact__title, .impact__sub { font-size: 32px; line-height: 40px; }
+  .stats { width: calc(100% - 40px); }
+  .portfolio-card { flex-basis: 88vw; }
+  .svc-panel { padding: 28px 22px; }
+  .svc-panel__title { font-size: 34px; line-height: 38px; }
+  .compare-section { padding-bottom: 64px; }
+  .compare-table { min-width: 640px; grid-auto-rows: 72px; grid-template-columns: 1.6fr repeat(5, 1fr); }
+  .cell--label { padding-left: 14px; font-size: 13px !important; }
+  .cta-section { gap: 40px; padding-top: 64px; }
+  .footer__col { padding: 0 18px 20px; }
+}
+@media (max-width: 479px) {
+  .hero__eyebrow { font-size: 26px; }
+  .hero__word { font-size: 32px; }
+  .hero__actions .btn { padding-inline: 22px; }
+  .features__title { font-size: 34px; line-height: 40px; }
+  .testimonial-card__copy { margin: 0 22px; }
+  .compare__title { font-size: 30px; line-height: 38px; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .hero__track, .logo-marquee__track { animation: none; }
   html { scroll-behavior: auto; }
 }
+@media (min-width: 600px) and (max-width: 991px) { .compare-table { min-width: 100%; } }

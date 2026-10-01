@@ -67,7 +67,7 @@
 /* ---------- What we believe in ---------- */
 .about-beliefs { background: var(--c-ink); color: #fff; padding: 122px 0 128px; }
 .belief-list { margin-top: 47px; }
-.belief-row { display: grid; grid-template-columns: 435px 337px 1fr; align-items: center; height: 193px; padding: 0 max(120px, calc((100% - 1200px) / 2)); border-top: .5px solid rgb(178 178 178 / .3); }
+.belief-row { display: grid; grid-template-columns: 435px 337px 1fr; align-items: center; height: 193px; padding: 0 10%;   /* same side margins as the navbar (10%) */ border-top: .5px solid rgb(178 178 178 / .3); }
 .belief-row:first-child { border-top: 0; }
 .belief-row:last-child { border-bottom: .5px solid rgb(178 178 178 / .3); }
 .belief-row__title { font-weight: 400; font-size: 24px; line-height: 32px; text-transform: capitalize; transition: color .3s; }
@@ -164,8 +164,81 @@
   .team { grid-template-columns: 1fr; height: auto; }
   .team__left { padding: 48px 24px; border-right: 0; border-bottom: .5px solid rgb(178 178 178 / .3); }
   .team__shape { display: none; }
-  .team__right { height: 770px; }
-  .team__card { left: 50%; margin-left: -214px; }
-  .quote-card { width: 82vw; }
+  .quote-card { width: min(82vw, 520px); padding: 32px 28px; }
+  .team__lead, .team__sub, .team__bio { width: auto; max-width: 100%; }
+  .team__name { margin-top: 36px; }
+  .team__bio { margin-top: 14px; }
+  .about-endorsed { padding: 90px 0 100px; }
+
+  /* team slider: the card first, then thumbs / arrows / counter in one row underneath */
+  .team__right { display: grid; grid-template-columns: auto 1fr auto; grid-template-areas: "card card card" "thumbs nav count"; align-items: center; gap: 24px 16px;
+    width: 100%; max-width: 477px; margin: 0 auto; padding: 32px 24px 44px; height: auto; }
+  .team__card { position: relative; left: auto; top: auto; grid-area: card; width: 100%; height: auto; aspect-ratio: 429 / 643; }
+  .team__thumbs { position: static; grid-area: thumbs; flex-direction: row; gap: 18px; padding-left: 8px; }
+  .team__nav { position: static; grid-area: nav; flex-direction: row; justify-content: center; gap: 12px; }
+  .team__count { position: static; grid-area: count; }
+}
+@media (max-width: 767px) {
+  .about-hero { padding-top: 120px; }
+  .about-hero__muted { font-size: 26px; line-height: 36px; }
+  .about-hero__strong { font-size: 40px; line-height: 48px; margin-top: 6px; }
+  .about-hero__actions { gap: 12px; margin-top: 32px; }
+  .about-hero__actions .btn { width: 140px; }
+  .scroll-ring { width: 112px; height: 112px; margin-top: 44px; }
+  .scroll-ring__arrow { width: 30px; height: 30px; }
+  .about-collage__inner { gap: 10px; padding: 0 14px; }
+  .about-collage__img { height: 180px; border-radius: 14px; }
+  .about-h { font-size: 30px; line-height: 38px; } .about-h strong { font-size: 34px; }
+  .about-h--dark { line-height: 40px; }
+  .about-endorsed__sub { font-size: 16px; line-height: 24px; padding: 0 20px; }
+  .about-beliefs { padding: 80px 0 72px; }
+  .belief-row { padding: 28px 20px; }
+  .belief-row__thumb { width: 100%; max-width: 360px; height: 110px; }
+  .about-team { padding-bottom: 72px; }
+  .team__left { padding: 40px 20px; }
+  .team__lead { font-size: 26px; line-height: 34px; }
+  .team__sub { font-size: 20px; line-height: 28px; }
+  .team__name { font-size: 20px; }
+  .team__bio { font-size: 16px; line-height: 24px; }
+  .team__right { padding: 24px 16px 36px; gap: 20px 12px; }
+  .team__btn { width: 60px; height: 40px; }
+  .quote-card { width: 84vw; padding: 26px 22px; }
+  .quote-card__text { font-size: 16px; line-height: 23px; }
+  .quote-rows { margin-top: 36px; gap: 16px; }
 }
 @media (prefers-reduced-motion: reduce) { .scroll-ring__text, .quote-row__track { animation: none; } }
+
+/* team slider: stacked layout also on small laptops / landscape tablets (the 586px + card design needs ~1180px) */
+.team__progress { width: calc(100% - 64px); }
+@media (max-width: 1199px) {
+  .team { grid-template-columns: 1fr; height: auto; }
+  .team__left { padding: 56px 48px; border-right: 0; border-bottom: .5px solid rgb(178 178 178 / .3); }
+  .team__shape { display: none; }
+  .team__lead, .team__sub, .team__bio { width: auto; max-width: 560px; }
+  .team__right { display: grid; grid-template-columns: auto 1fr auto; grid-template-areas: "card card card" "thumbs nav count"; align-items: center; gap: 24px 16px;
+    width: 100%; max-width: 477px; margin: 0 auto; padding: 40px 24px 48px; height: auto; }
+  .team__card { position: relative; left: auto; top: auto; grid-area: card; width: 100%; height: auto; aspect-ratio: 429 / 643; }
+  .team__thumbs { position: static; grid-area: thumbs; flex-direction: row; gap: 18px; padding-left: 8px; }
+  .team__nav { position: static; grid-area: nav; flex-direction: row; justify-content: center; gap: 12px; }
+  .team__count { position: static; grid-area: count; }
+}
+@media (max-width: 1199px) and (min-width: 992px) {
+  .belief-row { grid-template-columns: 1fr 1.3fr 192px; gap: 32px; padding: 0 48px; }
+}
+@media (max-width: 1199px) { .team { grid-template-columns: minmax(0, 1fr); } .team__right { min-width: 0; } }
+@media (max-width: 479px) {
+  .team__right { grid-template-columns: auto minmax(0, 1fr) auto; gap: 18px 8px; padding: 20px 14px 32px; }
+  .team__thumbs { gap: 12px; padding-left: 6px; }
+  .team__thumb { width: 32px; height: 32px; } .team__thumb--on { width: 48px; height: 48px; }
+  .team__btn { width: 48px; height: 36px; } .team__btn img { width: 30px; }
+  .team__nav { gap: 8px; } .team__count { font-size: 16px; }
+}
+
+/* desktop: the team block uses the navbar's side margins (10%) instead of a fixed 1440 box */
+@media (min-width: 1200px) {
+  .team { width: 80%; max-width: none; }
+  .team__left { padding-left: 0; }
+  .team__thumbs { right: 0; }
+  .team__nav { right: 0; }
+  .team__count { right: 0; }
+}

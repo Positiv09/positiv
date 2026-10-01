@@ -207,6 +207,9 @@
     document.body.appendChild(lb);
     const lbImg = $('.lightbox__img', lb);
     let opener = null;
+    // Figma exported these JPGs with their rounded corners filled light grey; clip the preview to the same radius (measured: the grey corner arc is ~28px on a 492px-wide export, so 6% of the width)
+    const fitRadius = () => { lbImg.style.borderRadius = '0'; const w = lbImg.getBoundingClientRect().width; lbImg.style.clipPath = `inset(${(w * 0.025).toFixed(1)}px round ${(w * 0.05).toFixed(1)}px)`; };   // trim 2.5% off every edge: removes the whole grey corner arc (it reaches ~1.7% in), then re-round
+    lbImg.addEventListener('load', fitRadius); window.addEventListener('resize', fitRadius);
     const openLb = (src, from) => { lbImg.src = src; lb.classList.add('is-open'); heroPaused = true; opener = from; $('.lightbox__close', lb).focus(); };
     openLightbox = openLb;
     const closeLb = () => { if (!lb.classList.contains('is-open')) return; lb.classList.remove('is-open'); heroPaused = false; opener?.focus?.({ preventScroll: true }); };
@@ -222,10 +225,9 @@
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeLb(); });
   }
 
-  /* ---------- Hero heading: bouncy letter entrance + the Positiv mark as every "t" ----------
+  /* ---------- Hero heading: bouncy letter entrance + the Positiv mark as every "t" (no hover) ----------
      The text is split into masked words/letters (aria-label keeps it readable). With GSAP: letters spring up with a
-     back-ease stagger, each mark pops in with an elastic spin, then idles (rocking + an occasional squash-and-hop) and
-     letters bounce when hovered. Without GSAP (or with reduced motion) a plain CSS stagger / static state is used. */
+     back-ease stagger, each mark pops in with an elastic spin, then idles (an occasional squash-and-hop). Without GSAP (or with reduced motion) a plain CSS stagger / static state is used. */
   const eyebrow = $('.hero__eyebrow');
   if (eyebrow && !eyebrow.dataset.split) {
     const text = eyebrow.textContent.trim();
@@ -265,215 +267,64 @@
               .to(m, { scaleX: 1, scaleY: 1, duration: 1.05, ease: 'elastic.out(1, 0.3)' });
           });
         }, '>-0.2');
-      chars.forEach((c) => c.addEventListener('pointerenter', () => {                    // springy hover on every letter
-        const lime = c.classList.contains('hero__char--t') ? {} : { color: '#f0f879' };
-        gsap.timeline({ overwrite: 'auto' })
-          .to(c, { y: '-0.14em', ...lime, duration: 0.2, ease: 'power2.out' })
-          .to(c, { y: 0, color: '#ffffff', duration: 1.15, ease: 'elastic.out(1, 0.28)' });
-      }));
     } else {                                                                             // CSS-only path
       requestAnimationFrame(() => requestAnimationFrame(() => eyebrow.classList.add('is-in')));
       setTimeout(() => eyebrow.classList.add('is-ready'), 400 + idx * 34 + 1000);
     }
   }
 
-  /* ---------- "We adapt to you…" title: replaying word reveal + repel hover ----------
-     Words start dim, lowered and blurred; each time the title enters the viewport they develop in a stagger. On hover the words are
-     pushed away from the cursor (magnetic repulsion with a slight turn) and spring back elastically on leave. */
-  const ftTitle = $('.features__title');
-  if (ftTitle && window.gsap && !reduceMotion) {
-    const label = ftTitle.textContent.replace(/\s+/g, ' ').trim();
-    ftTitle.setAttribute('aria-label', label);
-    const fw = [];
-    const splitNode = (node, into, cls) => {
-      node.childNodes.forEach((n) => {
-        if (n.nodeType === 3) {
-          n.textContent.split(/(\s+)/).forEach((tok) => {
-            if (!tok) return;
-            if (/^\s+$/.test(tok)) { into.appendChild(document.createTextNode(' ')); return; }
-            const w = document.createElement('span'); w.className = 'ft-word' + (cls ? ' ' + cls : ''); w.textContent = tok; w.setAttribute('aria-hidden', 'true');
-            into.appendChild(w); fw.push(w);
-          });
-        } else if (n.nodeType === 1) {
-          const wrap = document.createElement(n.tagName.toLowerCase());
-          wrap.className = n.className; wrap.setAttribute('aria-hidden', 'true');
-          splitNode(n, wrap, n.className); into.appendChild(wrap);
-        }
-      });
-    };
-    const holder = document.createDocumentFragment();
-    splitNode(ftTitle, holder);
-    ftTitle.textContent = ''; ftTitle.appendChild(holder);
-    ftTitle.classList.add('is-split');
-    gsap.set(fw, { opacity: 0.12, yPercent: 60, filter: 'blur(8px)', rotation: 3 });
-
-    // Plays every time the title enters the viewport (≥35% visible) and resets once it has fully left, so scrolling
-    // away and back replays it. Words develop in a stagger: lift, un-blur and fade in, with a soft overshoot.
-    let shown = false, revealTween = null;
-    const playIn = () => {
-      shown = true; revealTween?.kill();
-      revealTween = gsap.fromTo(fw, { opacity: 0.12, yPercent: 60, filter: 'blur(8px)', rotation: 3 },
-        { opacity: 1, yPercent: 0, filter: 'blur(0px)', rotation: 0, duration: 1.1, ease: 'back.out(1.5)', stagger: 0.09, overwrite: 'auto' });
-    };
-    const resetOut = () => {
-      shown = false; revealTween?.kill();
-      gsap.set(fw, { opacity: 0.12, yPercent: 60, filter: 'blur(8px)', rotation: 3, x: 0, y: 0 });
-    };
-    if ('IntersectionObserver' in window) {
-      new IntersectionObserver(([en]) => {
-        if (en.isIntersecting && en.intersectionRatio >= 0.35 && !shown) playIn();
-        else if (!en.isIntersecting && shown) resetOut();                                // fully out of view → arm it again
-      }, { threshold: [0, 0.35] }).observe(ftTitle);
-    } else gsap.set(fw, { opacity: 1, yPercent: 0, filter: 'none' });
-
-    if (matchMedia('(hover: hover) and (pointer: fine)').matches) {
-      const R = 190;
-      ftTitle.addEventListener('pointermove', (e) => {
-        fw.forEach((w) => {
-          const b = w.getBoundingClientRect(), cx = b.left + b.width / 2, cy = b.top + b.height / 2;
-          const dx = cx - e.clientX, dy = cy - e.clientY, d = Math.hypot(dx, dy) || 1, k = Math.max(0, 1 - d / R);
-          gsap.to(w, { x: (dx / d) * k * 26, y: (dy / d) * k * 16, rotation: (dx / d) * k * 5, duration: 0.45, ease: 'power3.out', overwrite: 'auto' });
+  /* ---------- Section headings: replaying word reveal (no hover) ----------
+     Words start dim, lowered and blurred; each time a heading enters the viewport (≥35% visible) they develop in a
+     stagger with a soft overshoot, and it re-arms once the heading has fully left the screen. Applied to every plain
+     section heading (only the hero heading and its rotating word keep their own motion). */
+  if (window.gsap && !reduceMotion) {
+    const revealHeading = (heading) => {
+      const label = heading.textContent.replace(/\s+/g, ' ').trim();
+      heading.setAttribute('aria-label', label);
+      const fw = [];
+      const splitNode = (node, into) => {
+        node.childNodes.forEach((n) => {
+          if (n.nodeType === 3) {
+            n.textContent.split(/(\s+)/).forEach((tok) => {
+              if (!tok) return;
+              if (/^\s+$/.test(tok)) { into.appendChild(document.createTextNode(' ')); return; }
+              const w = document.createElement('span'); w.className = 'ft-word'; w.textContent = tok; w.setAttribute('aria-hidden', 'true');
+              into.appendChild(w); fw.push(w);
+            });
+          } else if (n.nodeType === 1) {
+            if (n.tagName === 'BR') { into.appendChild(n.cloneNode()); return; }
+            const wrap = document.createElement(n.tagName.toLowerCase());
+            wrap.className = n.className; wrap.setAttribute('aria-hidden', 'true');
+            splitNode(n, wrap); into.appendChild(wrap);
+          }
         });
-      });
-      ftTitle.addEventListener('pointerleave', () => {
-        gsap.to(fw, { x: 0, y: 0, rotation: 0, duration: 1.3, ease: 'elastic.out(1, 0.32)', stagger: { each: 0.015, from: 'center' }, overwrite: 'auto' });
-      });
-    }
-  }
-
-  /* ---------- "Our creative impact…" title: decode / scramble reveal + re-scramble hover ----------
-     A new motion for this heading (not used elsewhere): every letter first cycles through random glyphs in lime and then
-     locks onto its real character, left to right, word after word. Replays each time the title enters the viewport.
-     Hovering a word scrambles it again and lights it up. Each letter's width is pinned so the line never jitters. */
-  const impHead = $('.impact__head');
-  if (impHead && window.gsap && !reduceMotion) {
-    const targets = [$('.impact__title', impHead), ...$$('.impact__sub > span:not(.glyph), .impact__sub .glyph > span', impHead)].filter(Boolean);
-    const words = [];
-    const CH = 'abcdefghijklmnopqrstuvwxyz';
-    targets.forEach((el) => {
-      if (el.getAttribute('aria-hidden') === 'true') return;
-      const text = el.textContent;
-      if (!text.trim()) return;
-      el.setAttribute('aria-label', text.trim());
-      el.textContent = '';
-      text.split(/(\s+)/).forEach((tok) => {
-        if (!tok) return;
-        if (/^\s+$/.test(tok)) { el.appendChild(document.createTextNode(' ')); return; }
-        const w = document.createElement('span'); w.className = 'sc-word'; w.setAttribute('aria-hidden', 'true');
-        const chars = [...tok].map((ch) => { const c = document.createElement('span'); c.className = 'sc-char'; c.textContent = ch; w.appendChild(c); return { el: c, ch }; });
-        el.appendChild(w);
-        words.push({ el: w, chars, tween: null });
-      });
-    });
-    // the decorative "t" glyph (aria-hidden) is split too so the whole heading decodes together
-    $$('.impact__sub .glyph > span[aria-hidden="true"]', impHead).forEach((el) => {
-      const text = el.textContent; el.textContent = '';
-      const w = document.createElement('span'); w.className = 'sc-word'; w.setAttribute('aria-hidden', 'true');
-      const chars = [...text].map((ch) => { const c = document.createElement('span'); c.className = 'sc-char'; c.textContent = ch; w.appendChild(c); return { el: c, ch }; });
-      el.appendChild(w); words.push({ el: w, chars, tween: null });
-    });
-
-    // pin every letter to its real width (measured with the real character, whatever it currently shows)
-    const pin = () => words.forEach((wd) => wd.chars.forEach((c) => {
-      const keep = c.el.textContent; c.el.style.width = ''; c.el.textContent = c.ch;
-      c.el.style.width = `${c.el.getBoundingClientRect().width}px`; c.el.textContent = keep;
-    }));
-    (document.fonts?.ready || Promise.resolve()).then(pin);
-    window.addEventListener('resize', pin);
-
-    const scramble = (wd, dur, delay = 0) => {
-      wd.tween?.kill();
-      const n = wd.chars.length, state = { p: 0 };
-      wd.el.classList.add('is-scrambling');
-      wd.tween = gsap.to(state, {
-        p: 1, duration: dur, delay, ease: 'none',
-        onUpdate: () => {
-          wd.chars.forEach((c, i) => {
-            const settle = (i + 1) / n * 0.78 + 0.1;                                     // letters lock left → right
-            const done = state.p >= settle;
-            c.el.textContent = done || !/[a-z]/i.test(c.ch) ? c.ch : (c.ch === c.ch.toUpperCase() ? CH[(Math.random() * 26) | 0].toUpperCase() : CH[(Math.random() * 26) | 0]);
-            c.el.classList.toggle('is-lock', done);
-          });
-        },
-        onComplete: () => { wd.chars.forEach((c) => { c.el.textContent = c.ch; c.el.classList.add('is-lock'); }); wd.el.classList.remove('is-scrambling'); }
-      });
+      };
+      const holder = document.createDocumentFragment();
+      splitNode(heading, holder);
+      heading.textContent = ''; heading.appendChild(holder);
+      heading.classList.add('is-split');
+      const hide = () => gsap.set(fw, { opacity: 0.12, yPercent: 60, filter: 'blur(8px)', rotation: 3 });
+      hide();
+      let shown = false, tw = null;
+      const play = () => {
+        shown = true; tw?.kill();
+        tw = gsap.fromTo(fw, { opacity: 0.12, yPercent: 60, filter: 'blur(8px)', rotation: 3 },
+          { opacity: 1, yPercent: 0, filter: 'blur(0px)', rotation: 0, duration: 1.1, ease: 'back.out(1.5)', stagger: 0.09, overwrite: 'auto' });
+      };
+      if ('IntersectionObserver' in window) {
+        new IntersectionObserver(([en]) => {
+          if (en.isIntersecting && en.intersectionRatio >= 0.35 && !shown) play();
+          else if (!en.isIntersecting && shown) { shown = false; tw?.kill(); hide(); }
+        }, { threshold: [0, 0.35] }).observe(heading);
+      } else gsap.set(fw, { opacity: 1, yPercent: 0, filter: 'none', rotation: 0 });
     };
-    const hide = () => { words.forEach((wd) => { wd.tween?.kill(); wd.el.classList.remove('is-scrambling'); wd.chars.forEach((c) => { c.el.textContent = ' '; c.el.classList.remove('is-lock'); }); wd.el.style.opacity = 0; }); };
-    const play = () => { let d = 0; words.forEach((wd) => { wd.el.style.opacity = 1; scramble(wd, 0.55 + wd.chars.length * 0.07, d); d += 0.16; }); };
-    pin(); hide();
-    let shownI = false;
-    if ('IntersectionObserver' in window) {
-      new IntersectionObserver(([en]) => {
-        if (en.isIntersecting && en.intersectionRatio >= 0.5 && !shownI) { shownI = true; play(); }
-        else if (!en.isIntersecting && shownI) { shownI = false; hide(); }
-      }, { threshold: [0, 0.5] }).observe(impHead);
-    } else play();
-
-    if (matchMedia('(hover: hover) and (pointer: fine)').matches) {
-      words.forEach((wd) => {
-        wd.el.addEventListener('pointerenter', () => { if (!shownI) return; wd.el.classList.add('is-hot'); scramble(wd, 0.45 + wd.chars.length * 0.05); });
-        wd.el.addEventListener('pointerleave', () => wd.el.classList.remove('is-hot'));
-      });
-    }
-  }
-
-  /* ---------- "We bring you innovative solutions…" headline: 3D card-flip reveal + tilt hover ----------
-     New motion: every word is a little card that flips down into place (rotateX from -95° with perspective) in a
-     stagger with an elastic settle, line after line; it replays whenever the headline re-enters the viewport. On hover
-     the words turn in 3D toward the cursor (rotateX/rotateY + a lift toward you) and spring back on leave.
-     The video's landing slot is left untouched. */
-  const svcHead = $('.services__headline');
-  if (svcHead && window.gsap && !reduceMotion) {
-    const eyebrow2 = $('.services__eyebrow', svcHead), lines = $('.services__lines', svcHead);
-    const fw = [];
-    $$('h4', lines).forEach((h) => {
-      const text = h.textContent.trim();
-      h.setAttribute('aria-label', text); h.textContent = '';
-      text.split(/\s+/).forEach((tok, i, arr) => {
-        const w = document.createElement('span'); w.className = 'sw-word'; w.textContent = tok; w.setAttribute('aria-hidden', 'true');
-        h.appendChild(w); fw.push(w);
-        if (i < arr.length - 1) h.appendChild(document.createTextNode(' '));
-      });
-    });
-    const parts = [eyebrow2, ...fw].filter(Boolean);
-    gsap.set(fw, { transformPerspective: 800, transformOrigin: '50% 0%' });
-    const hideS = () => gsap.set(parts, { opacity: 0, rotationX: -95, y: 18 });
-    hideS();
-    let shownS = false, tlS = null;
-    const playS = () => {
-      shownS = true; tlS?.kill();
-      tlS = gsap.timeline();
-      if (eyebrow2) tlS.fromTo(eyebrow2, { opacity: 0, y: 14, rotationX: 0 }, { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out' }, 0);
-      tlS.to(fw, { opacity: 1, rotationX: 0, y: 0, duration: 1.2, ease: 'elastic.out(1, 0.55)', stagger: 0.075 }, 0.1);
-    };
-    if ('IntersectionObserver' in window) {
-      new IntersectionObserver(([en]) => {
-        if (en.isIntersecting && en.intersectionRatio >= 0.5 && !shownS) playS();
-        else if (!en.isIntersecting && shownS) { shownS = false; tlS?.kill(); hideS(); }
-      }, { threshold: [0, 0.5] }).observe(svcHead);
-    } else gsap.set(parts, { opacity: 1, rotationX: 0, y: 0 });
-
-    if (matchMedia('(hover: hover) and (pointer: fine)').matches) {
-      const R = 360;
-      lines.addEventListener('pointermove', (e) => {
-        if (!shownS) return;
-        fw.forEach((w) => {
-          const b = w.getBoundingClientRect(), cx = b.left + b.width / 2, cy = b.top + b.height / 2;
-          const nx = Math.max(-1, Math.min(1, (e.clientX - cx) / R)), ny = Math.max(-1, Math.min(1, (e.clientY - cy) / R));
-          const near = Math.max(0, 1 - Math.hypot(e.clientX - cx, e.clientY - cy) / R);
-          gsap.to(w, { rotationY: nx * 26, rotationX: -ny * 20, z: near * 46, duration: 0.5, ease: 'power3.out', overwrite: 'auto' });
-        });
-      });
-      lines.addEventListener('pointerleave', () => {
-        gsap.to(fw, { rotationY: 0, rotationX: 0, z: 0, duration: 1.2, ease: 'elastic.out(1, 0.35)', stagger: { each: 0.012, from: 'center' }, overwrite: 'auto' });
-      });
-    }
+    $$('.features__title, .impact__title, .impact__sub, .clients__title, .services__eyebrow, .services__lines h4, .testimonials__title, .compare__title, .cta__title').forEach(revealHeading);
   }
 
   /* ---------- Hero word rotator ----------
      GSAP version: each word is split into masked letters. The current word's letters shear up and out (power3.in,
      staggered), then the next word's letters spring up from below with a back-ease and a slight rotation, while a
-     soft blur clears. On hover the letters near the cursor lift and light up. Falls back to the CSS cross-fade
+     soft blur clears. Falls back to the CSS cross-fade
      without GSAP, and stays static with reduced motion. */
   const rotator = $('[data-rotator]');
   if (rotator && !reduceMotion) {
@@ -505,20 +356,6 @@
           }, 0.5)
           .fromTo(inChars, { yPercent: 125, rotation: 7, filter: 'blur(6px)' }, { yPercent: 0, rotation: 0, filter: 'blur(0px)', transformOrigin: '0% 100%', duration: 1, ease: 'back.out(1.7)', stagger: { each: 0.035 } }, 0.52);
       };
-      // Hover: letters near the cursor lift, scale and turn white (falloff by distance); leaving springs them back (elastic)
-      if (matchMedia('(hover: hover) and (pointer: fine)').matches) {
-        const R = 130;
-        rotator.addEventListener('pointermove', (e) => {
-          split[cur].forEach((c) => {
-            const r = c.getBoundingClientRect(), d = Math.hypot(e.clientX - (r.left + r.width / 2), e.clientY - (r.top + r.height / 2));
-            const k = Math.max(0, 1 - d / R);                                               // 1 under the cursor → 0 at R px away
-            gsap.to(c, { y: -k * 18, scale: 1 + k * 0.22, color: k > 0.12 ? '#ffffff' : '#f0f879', duration: 0.35, ease: 'power3.out', overwrite: 'auto' });
-          });
-        });
-        rotator.addEventListener('pointerleave', () => {
-          gsap.to(split[cur], { y: 0, scale: 1, color: '#f0f879', duration: 1.1, ease: 'elastic.out(1, 0.35)', stagger: { each: 0.012, from: 'center' }, overwrite: 'auto' });
-        });
-      }
       let timer = null;
       const schedule = () => { timer = gsap.delayedCall(2.4, () => { if (document.hidden) { schedule(); return; } change(); }); };
       intro.eventCallback('onComplete', schedule);

@@ -25,7 +25,6 @@
 }
 .hero__eyebrow.is-in .hero__char { opacity: 1; transform: none; }
 .hero__eyebrow.is-ready .hero__char { transition-delay: 0s; }
-.hero__eyebrow.is-ready:not(.is-gsap) .hero__char:not(.hero__char--t):hover { transform: translateY(-.07em); color: var(--c-lime); transition-duration: .35s; }
 .hero__eyebrow.is-gsap .hero__char { opacity: 1; transform: none; transition: none; }   /* GSAP owns the motion */
 
 .hero__char--t .t-base { visibility: hidden; }                                  /* keeps the letter's advance width */
@@ -108,7 +107,7 @@
   opacity: 0; visibility: hidden; transition: opacity .3s ease, visibility .3s;
 }
 .lightbox.is-open { opacity: 1; visibility: visible; }
-.lightbox__img { max-width: min(1200px, 90vw); max-height: 88vh; border-radius: 16px; object-fit: contain; transform: scale(.96); transition: transform .45s var(--ease-out); box-shadow: 0 30px 80px rgb(0 0 0 / .45); }
+.lightbox__img { max-width: min(1200px, 90vw); max-height: 88vh; object-fit: contain; transform: scale(.96); transition: transform .45s var(--ease-out); box-shadow: 0 30px 80px rgb(0 0 0 / .45); }
 .lightbox.is-open .lightbox__img { transform: none; }
 .lightbox__close { position: absolute; top: 24px; right: 24px; width: 48px; height: 48px; border-radius: 50%; display: grid; place-items: center; background: var(--c-lime); color: var(--c-ink); cursor: pointer; transition: transform .25s var(--ease-out); }
 .lightbox__close:hover { transform: rotate(90deg); }
@@ -194,10 +193,10 @@
   width: 96%; height: 96%; border-radius: 15px; overflow: hidden;
   background-size: cover; background-position: 50%; background-repeat: no-repeat;
 }
-.feature-card--yellow .feature-card__media { background-image: url("../assets/img/feature-yellow.jpg"); }
-.feature-card--purple .feature-card__media { background-image: url("../assets/img/feature-purple.jpg"); }
-.feature-card--white  .feature-card__media { background-image: url("../assets/img/feature-white.png"); }
-.feature-card--orange .feature-card__media { background-image: url("../assets/img/feature-orange.png"); }
+.feature-card--yellow .feature-card__media { background-image: url("../assets/img/feature-card-1.jpg"); }
+.feature-card--purple .feature-card__media { background-image: url("../assets/img/feature-card-2.jpg"); }
+.feature-card--white  .feature-card__media { background-image: url("../assets/img/feature-card-3.jpg"); }
+.feature-card--orange .feature-card__media { background-image: url("../assets/img/feature-card-4.jpg"); }
 
 .feature-card__media-inner { width: 80%; padding-bottom: 60px; position: relative; }
 .feature-card__media-title {
@@ -230,12 +229,6 @@
 .impact__title { font-weight: 400; font-size: 56px; line-height: 64px; margin-top: 0; text-align: center; }
 .impact__sub { min-height: 74px; display: flex; align-items: center; justify-content: center; gap: 15px; font-size: 56px; line-height: 64px; }
 .impact__sub .glyph { display: flex; align-items: center; gap: 2px; font-family: var(--f-display); }
-
-/* Decode title: pinned-width letters, lime while scrambling, white once locked; hovered words glow lime */
-.sc-word { display: inline-block; white-space: nowrap; transition: color .3s ease, text-shadow .3s ease; cursor: default; }
-.sc-char { display: inline-block; text-align: center; clip-path: inset(-.4em 0); transition: color .25s ease; }   /* a wide random glyph never spills onto its neighbours */
-.sc-word.is-scrambling .sc-char:not(.is-lock) { color: var(--c-lime); }
-.sc-word.is-hot { color: var(--c-lime); text-shadow: 0 0 28px rgb(240 248 121 / .35); }
 
 .stats {
   display: grid; grid-template-columns: 1fr 1fr; gap: 50px 82px;
@@ -305,7 +298,6 @@
 .video-frame video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 
 .services__headline { display: flex; flex-direction: column; align-items: center; width: 100%; text-align: center; color: var(--c-title); }
-.sw-word { display: inline-block; will-change: transform, opacity; backface-visibility: hidden; }
 .services__eyebrow { margin-bottom: 20px; font-size: 18px; font-weight: 400; }
 .services__lines { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 12px; width: 70%; }
 .services__lines h4 { font-family: var(--f-display); font-weight: 700; font-size: 56px; line-height: 72px; }

@@ -14,11 +14,6 @@
   const $$ = (s, c = document) => [...c.querySelectorAll(s)];
   const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-  /* ---------- Hero image columns: expand buttons (added before the loop clone so copies get them too) ---------- */
-  $$('.hero__tile').forEach((t) => {
-    t.insertAdjacentHTML('beforeend', '<button class="hero__expand" type="button" aria-label="Expand image"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M10 20H4v-6M20 4l-7 7M4 20l7-7"/></svg></button>');
-  });
-
   /* ---------- Seamless marquees ---------- */
   // Vertical hero columns: one clone is enough (a set is taller than the viewport).
   $$('[data-marquee-set]').forEach((set) => {
@@ -213,14 +208,7 @@
     const openLb = (src, from) => { lbImg.src = src; lb.classList.add('is-open'); heroPaused = true; opener = from; $('.lightbox__close', lb).focus(); };
     openLightbox = openLb;
     const closeLb = () => { if (!lb.classList.contains('is-open')) return; lb.classList.remove('is-open'); heroPaused = false; opener?.focus?.({ preventScroll: true }); };
-    // Clicking anywhere on an image (not just the expand button) opens it — unless that click ended a drag.
-    heroMedia.addEventListener('click', (e) => {
-      const tile = e.target.closest('.hero__tile');
-      if (!tile) return;
-      if (heroState.some((s) => s.moved)) { heroState.forEach((s) => { s.moved = false; }); return; }
-      const m = /url\(["']?([^"')]+)["']?\)/.exec(getComputedStyle(tile).backgroundImage);
-      if (m) openLb(m[1], $('.hero__expand', tile));
-    });
+    // (the hero pictures no longer open on click; the lightbox is only used by the service-card pictures)
     lb.addEventListener('click', (e) => { if (e.target === lb || e.target.closest('.lightbox__close')) closeLb(); });
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeLb(); });
   }

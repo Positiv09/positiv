@@ -91,15 +91,7 @@
 .hero__media.is-js .hero__track { animation: none; will-change: transform; }   /* JS drives the columns (drift, wheel, drag) */
 .hero__col { cursor: default; touch-action: pan-y; }
 .hero__col.is-dragging .hero__tile { pointer-events: none; }
-.hero__tile { position: relative; overflow: hidden; }   /* click opens the image; dragging a column still scrolls it; the pointer stays the normal arrow */
-.hero__expand {
-  position: absolute; top: 12px; right: 12px; z-index: 3; width: 44px; height: 44px; border-radius: 50%;
-  display: grid; place-items: center; background: var(--c-lime); color: var(--c-ink); cursor: pointer;
-  opacity: 0; transform: scale(.7); transition: opacity .25s ease, transform .35s var(--ease-out), background-color .2s;
-}
-.hero__tile:hover .hero__expand, .hero__expand:focus-visible { opacity: 1; transform: none; }
-.hero__expand:hover { background: #fff; }
-@media (hover: none) { .hero__expand { opacity: .92; transform: none; width: 36px; height: 36px; } }
+.hero__tile { position: relative; overflow: hidden; }   
 
 .lightbox {
   position: fixed; inset: 0; z-index: 100000; display: grid; place-items: center; padding: 5vh 5vw;

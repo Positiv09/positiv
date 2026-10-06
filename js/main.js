@@ -241,14 +241,15 @@
       [...w].forEach((ch) => {
         const c = document.createElement('span');
         c.className = 'hero__char'; c.style.setProperty('--i', idx++);
-        if (ch.toLowerCase() === 't') {
+        if (ch === 't') {
           c.classList.add('hero__char--t');
           c.innerHTML = `<span class="t-base">${ch}</span><svg class="t-stem" viewBox="61.79 1.9 11.08 22.07" aria-hidden="true"><path fill="#fff" d="M70.7672 20.5501C69.5899 20.3215 68.83 19.4028 68.8304 18.1959L68.8317 13.5938H64.9297L65.0085 18.9944C65.0369 20.9064 66.1129 22.662 67.8574 23.3833C69.4681 24.0496 71.1897 23.9665 72.8638 23.9665C72.8754 22.8889 72.8575 21.6911 72.8613 20.5797C72.0209 20.5839 71.4495 20.6828 70.7672 20.5501Z"/></svg><svg class="t-mark" viewBox="61.79 1.9 11.08 22.07" aria-hidden="true"><path fill="#f0f879" d="M71.8464 5.7464C70.7662 5.85237 69.7507 6.21659 68.8477 6.77229C68.7105 6.85699 68.5587 6.72891 68.6225 6.5808C69.0121 5.67506 69.2623 3.52733 69.3403 2.55276C69.3691 2.19522 69.0734 1.90234 68.7147 1.90234H66.0409C65.7415 1.90234 65.4658 2.11178 65.4266 2.4084C65.2056 4.09013 63.914 6.83362 62.2866 7.10939C61.9892 7.15945 61.7891 7.44649 61.7891 7.74854V10.4053C61.7891 10.7649 62.0848 11.0615 62.443 11.031C63.5549 10.9359 64.5975 10.5997 65.5205 10.0757C65.661 9.99598 65.807 10.1312 65.7373 10.2772C65.2189 11.3636 64.9262 12.5655 64.9266 13.7933H68.8327C68.8327 11.9372 70.2169 9.97888 72.0065 9.66514C72.3051 9.61299 72.5041 9.32346 72.5041 9.02057V6.3722C72.5041 6.01049 72.2063 5.71094 71.8464 5.7464Z"/></svg>`;
         } else c.textContent = ch;
         word.appendChild(c);
       });
       eyebrow.appendChild(word);
-      if (wi < arr.length - 1) eyebrow.appendChild(document.createTextNode(' '));
+      if (w === 'embedded') eyebrow.appendChild(document.createElement('br'));   /* Figma: "The embedded" / "Creative team for" on two lines */
+      else if (wi < arr.length - 1) eyebrow.appendChild(document.createTextNode(' '));
     });
 
     const chars = $$('.hero__char', eyebrow), marks = $$('.t-mark', eyebrow);
@@ -270,6 +271,69 @@
     } else {                                                                             // CSS-only path
       requestAnimationFrame(() => requestAnimationFrame(() => eyebrow.classList.add('is-in')));
       setTimeout(() => eyebrow.classList.add('is-ready'), 400 + idx * 34 + 1000);
+    }
+  }
+
+  /* ---------- CTA heading: the same Positiv-mark "t" as the hero heading ----------
+     Reuses the hero's letter markup (masked chars, white stem + lime mark). The letters rise and the marks pop in each time the
+     heading scrolls into view, then idle with the same squash-and-hop; without GSAP / with reduced motion it is simply static. */
+  const ctaTitle = $('.cta__title');
+  const tTemplate = $('.hero__char--t');
+  if (ctaTitle && tTemplate && !ctaTitle.dataset.split) {
+    const nodes = [...ctaTitle.childNodes];
+    ctaTitle.setAttribute('aria-label', ctaTitle.textContent.replace(/\s+/g, ' ').trim());
+    ctaTitle.dataset.split = '1';
+    ctaTitle.textContent = '';
+    let idx = 0;
+    nodes.forEach((n) => {
+      if (n.nodeType === 1 && n.tagName === 'BR') { ctaTitle.appendChild(document.createElement('br')); return; }
+      const text = n.textContent.replace(/\s+/g, ' ');
+      text.split(' ').forEach((w, wi, arr) => {
+        if (w) {
+          const word = document.createElement('span');
+          word.className = 'hero__mask'; word.setAttribute('aria-hidden', 'true');
+          [...w].forEach((ch) => {
+            const c = document.createElement('span');
+            c.className = 'hero__char'; c.style.setProperty('--i', idx++);
+            if (ch === 't') {
+              c.classList.add('hero__char--t');
+              c.innerHTML = tTemplate.innerHTML.replace(/(<span class="t-base">)[^<]*(<\/span>)/, `$1${ch}$2`);
+            } else c.textContent = ch;
+            word.appendChild(c);
+          });
+          ctaTitle.appendChild(word);
+        }
+        if (wi < arr.length - 1) ctaTitle.appendChild(document.createTextNode(' '));
+      });
+    });
+    if (window.gsap && !reduceMotion && 'IntersectionObserver' in window) {
+      const chars = $$('.hero__char', ctaTitle), marks = $$('.t-mark', ctaTitle);
+      gsap.set(marks, { transformOrigin: '50% 80%' });
+      let tl = null, idle = [];
+      const stop = () => { tl?.kill(); idle.forEach((t) => t.kill()); idle = []; };
+      const reset = () => { stop(); gsap.set(chars, { clearProps: 'transform,opacity' }); gsap.set(chars, { opacity: 0 }); gsap.set(marks, { clearProps: 'transform,opacity' }); gsap.set(marks, { scale: 0, opacity: 0 }); };
+      const play = () => {
+        stop();
+        gsap.set(chars, { clearProps: 'transform,opacity' });
+        tl = gsap.timeline();
+        tl.fromTo(chars, { yPercent: 140, rotation: (i) => (i % 2 ? 10 : -10), transformOrigin: '0% 100%', opacity: 0 }, { yPercent: 0, rotation: 0, opacity: 1, duration: 1.15, ease: 'back.out(1.8)', stagger: 0.035 }, 0)
+          .fromTo(marks, { scale: 0, opacity: 0, yPercent: 0 }, { scale: 1, opacity: 1, duration: 1.4, ease: 'elastic.out(1, 0.45)', stagger: 0.18 }, 0.45)
+          .add(() => {
+            marks.forEach((m, i) => {
+              idle.push(gsap.timeline({ repeat: -1, repeatDelay: 2.2 + i * 1.1, delay: 0.8 + i * 1.3 })
+                .to(m, { yPercent: -16, scaleX: 0.94, scaleY: 1.1, duration: 0.26, ease: 'power2.out' })
+                .to(m, { yPercent: 0, scaleX: 1.12, scaleY: 0.84, duration: 0.17, ease: 'power2.in' })
+                .to(m, { scaleX: 1, scaleY: 1, duration: 1.05, ease: 'elastic.out(1, 0.3)' }));
+            });
+          }, '>-0.2');
+      };
+      reset();
+      let shown = false;
+      new IntersectionObserver((ens) => {
+        const en = ens[ens.length - 1];
+        if (en.isIntersecting && en.intersectionRatio >= 0.5 && !shown) { shown = true; play(); }
+        else if (!en.isIntersecting && shown) { shown = false; reset(); }
+      }, { threshold: [0, 0.5] }).observe(ctaTitle);
     }
   }
 
@@ -333,7 +397,7 @@
       if ('IntersectionObserver' in window) new IntersectionObserver(check, { threshold: [0, 0.1, 0.2, 0.35, 0.5, 0.75, 1] }).observe(heading);
       else gsap.set(fw, { opacity: 1, yPercent: 0, filter: 'none', rotation: 0 });
     };
-    $$('.features__title, .about-title, .impact__title, .impact__sub, .clients__title, .services__eyebrow, .services__lines h4, .testimonials__title, .compare__title, .cta__title').forEach(revealHeading);
+    $$('.features__title, .about-title, .impact__title, .impact__sub, .clients__title, .services__eyebrow, .services__lines h4, .testimonials__title, .compare__title').forEach(revealHeading);
   }
 
   /* ---------- Hero word rotator ----------
@@ -478,29 +542,40 @@
     const track = $('[data-portfolio-track]', work);
     const fill = $('[data-portfolio-progress]', work);
     const mq = matchMedia('(min-width: 992px)');
-    let range = 0, target = 0, current = 0, raf = 0;
+    // range = sideways travel driven by the page scroll (pinned until the 4th card is in view); full = the whole rail.
+    // Cards beyond the scroll-driven part (5 and 6) are reached only by dragging / swiping, which adds `extra`.
+    let range = 0, full = 0, target = 0, current = 0, extra = 0, extraCur = 0, raf = 0;
     const clamp = (v) => Math.min(Math.max(v, 0), 1);
     const setFill = (p) => { fill.style.transform = `scaleX(${0.07 + p * 0.93})`; };
+    const extraLimits = () => [-target * range, Math.max(full - target * range, 0)];
+    const setExtra = (v) => { const [lo, hi] = extraLimits(); extra = Math.min(Math.max(v, lo), hi); if (!raf) raf = requestAnimationFrame(render); };
 
     const render = () => {
       raf = 0;
-      current += (target - current) * (reduceMotion ? 1 : 0.12);       // light easing; swap for gsap.quickTo later
+      const k = reduceMotion ? 1 : 0.12;                              // light easing; swap for gsap.quickTo later
+      current += (target - current) * k;
+      extraCur += (extra - extraCur) * k;
       if (Math.abs(target - current) < 0.0005) current = target;
-      track.style.transform = `translate3d(${-current * range}px,0,0)`;
-      setFill(current);
-      if (current !== target) raf = requestAnimationFrame(render);
+      if (Math.abs(extra - extraCur) < 0.5) extraCur = extra;
+      const total = Math.min(Math.max(current * range + extraCur, 0), full || 1);
+      track.style.transform = `translate3d(${-total}px,0,0)`;
+      setFill(full ? total / full : 0);
+      if (current !== target || extraCur !== extra) raf = requestAnimationFrame(render);
     };
     const measure = () => {
       const pinned = mq.matches;
       work.classList.toggle('is-pinned', pinned);
-      if (!pinned) { work.style.height = ''; track.style.transform = ''; onNativeScroll(); return; }
-      range = Math.max(track.scrollWidth - viewport.clientWidth, 0);
+      if (!pinned) { work.style.height = ''; track.style.transform = ''; extra = extraCur = 0; onNativeScroll(); return; }
+      full = Math.max(track.scrollWidth - viewport.clientWidth, 0);
+      const cardsP = $$('.portfolio-card', track), pitch = cardsP[1] ? cardsP[1].offsetLeft - cardsP[0].offsetLeft : cardsP[0].offsetWidth;
+      range = Math.min(full, Math.max(4 * pitch - viewport.clientWidth, 0));
       work.style.height = `${pin.offsetHeight + range}px`;
       onScroll();
     };
     const onScroll = () => {
       if (!mq.matches) return;
       target = clamp(-work.getBoundingClientRect().top / (range || 1));
+      setExtra(extra);
       if (!raf) raf = requestAnimationFrame(render);
     };
     const onNativeScroll = () => {
@@ -514,30 +589,21 @@
     window.addEventListener('load', measure);
     mq.addEventListener?.('change', measure);
 
-    // Page-scroll positions where the rail is pinned: start → end of the sideways travel
-    const pinStart = () => work.getBoundingClientRect().top + window.scrollY;
-    const clampToRail = (y) => { const s = pinStart(); return Math.min(Math.max(y, s), s + range); };
-
-    // Drag with the mouse → scroll the page by the same distance, but never past either end of the rail
+    // Drag with the mouse → slides the rail itself (this is the only way to reach the last cards)
     let drag = null;
     viewport.addEventListener('pointerdown', (e) => {
       if (!mq.matches || e.pointerType !== 'mouse' || e.button !== 0) return;
-      drag = { x: e.clientX, y: window.scrollY };
+      drag = { x: e.clientX, e0: extra };
       viewport.classList.add('is-dragging');
       viewport.setPointerCapture(e.pointerId);
     });
-    viewport.addEventListener('pointermove', (e) => {
-      if (drag) window.scrollTo({ top: clampToRail(drag.y - (e.clientX - drag.x)), behavior: 'instant' });
-    });
+    viewport.addEventListener('pointermove', (e) => { if (drag) setExtra(drag.e0 - (e.clientX - drag.x)); });
     const endDrag = () => { drag = null; viewport.classList.remove('is-dragging'); };
     viewport.addEventListener('pointerup', endDrag);
     viewport.addEventListener('pointercancel', endDrag);
-    // Horizontal wheel / trackpad swipe — also stops at the ends
+    // Horizontal wheel / trackpad swipe does the same
     viewport.addEventListener('wheel', (e) => {
-      if (mq.matches && Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
-        e.preventDefault();
-        window.scrollTo({ top: clampToRail(window.scrollY + e.deltaX), behavior: 'instant' });
-      }
+      if (mq.matches && Math.abs(e.deltaX) > Math.abs(e.deltaY)) { e.preventDefault(); setExtra(extra + e.deltaX); }
     }, { passive: false });
 
     measure();
@@ -585,18 +651,20 @@
   if (stage && vFrame && vSlot && vPin && vHead) {
     const mqV = matchMedia('(min-width: 992px)');
     const GAP = 70;                                          // headline → cards
-    const T_START = 1.346, T_END = 0.596;                    // pill top (× vh) where the shrink starts / finishes
+    const T_START = 1.35, T_END = 0.95;                      // pill top (× vh) where the shrink starts / finishes (the heading is still below the fold)
+    const SEP_A = 0.62, SEP_B = 0.24, HOVER = 140;           // pill top (× vh) where the words start / finish separating; the small video hovers HOVER px above the glued heading, then drops into the gap
     const lerp = (a, b, t) => a + (b - a) * t;
     const clamp01 = (v) => Math.min(Math.max(v, 0), 1);
     const ease = (t) => t * t * (3 - 2 * t);
     let S0 = 0, off = 0;
+    const vWords = $$('.services__lines h4', vHead);
     const measureV = () => {
-      if (!mqV.matches) { vFrame.removeAttribute('style'); stage.style.paddingBottom = stage.style.marginBottom = ''; return; }
+      if (!mqV.matches) { vWords.forEach((h) => { h.style.transform = ''; }); vFrame.removeAttribute('style'); stage.style.paddingBottom = stage.style.marginBottom = ''; return; }
       const vh = window.innerHeight;
       stage.style.paddingBottom = stage.style.marginBottom = '';
       off = vHead.getBoundingClientRect().bottom - vSlot.getBoundingClientRect().top;   // pill top → headline bottom
       // keep the pin engaged until the video has landed (pill at T_END), then pull the cards up to sit GAP under the headline
-      const pad = Math.max(vh - (T_END * vh + off), 0);
+      const pad = Math.max(vh - (SEP_B * vh + off), 0);
       stage.style.paddingBottom = `${pad}px`;
       stage.style.marginBottom = `${GAP - pad}px`;
       S0 = stage.getBoundingClientRect().top + window.scrollY;                           // scroll where the pin engages
@@ -618,14 +686,23 @@
       const enterY = mid * Math.pow(clamp01(1 - pinTop / (0.45 * vh)), 2.5);
       const top = pinTop > 0 ? pinTop + enterY : mid;
       const base = { x: (vw - w) / 2, y: top, w, h };
-      const liveEnd = { x: s.left, y: s.top + (s.height - fh) / 2 - 7, w: fw, h: fh };   // rides with the pill
-      const t = clamp01((T_START * vh - s.top) / ((T_START - T_END) * vh));              // linear, as measured
+      // the headline words sit tight together while the video hovers above; then they slide apart and the video drops into the gap
+      const u = ease(clamp01((SEP_A * vh - s.top) / ((SEP_A - SEP_B) * vh))), hov = -HOVER * (1 - u);
+      if (vWords.length === 2) {
+        const shift = (s.width + 12) / 2 * (1 - u);
+        vWords[0].style.transform = `translateX(${shift}px)`; vWords[1].style.transform = `translateX(${-shift}px)`;
+      }
+      const liveEnd = { x: s.left, y: s.top + (s.height - fh) / 2 - 7 + hov, w: fw, h: fh };   // the pill, hovering above the headline until the words open
+      // The rising headline pushes the big video up: its bottom edge never goes lower than 24px above the headline, so it can never cover
+      // the words. It shrinks from the full stage into the small pill (progress t = how far the headline has climbed), then drops in.
+      const t = clamp01((base.y + base.h + 24 - s.top) / (base.y + base.h + 24 - SEP_A * vh));
       let r;
       if (t <= 0) r = { ...base, r: 24 };
-      else if (t >= 1) r = { ...liveEnd, r: 20 };
       else {
-        const F = { x: s.left, y: T_END * vh + (s.height - fh) / 2 - 7, w: fw, h: fh };  // where the pill will be at T_END
-        r = { x: lerp(base.x, F.x, t), y: lerp(base.y, F.y, t), w: lerp(base.w, F.w, t), h: lerp(base.h, F.h, t), r: lerp(24, 20, t) };
+        const bottom = lerp(s.top - 24, liveEnd.y + fh, t);                                  // always ≥ 24px above the headline
+        const top = lerp(base.y, liveEnd.y, t);
+        r = { x: lerp(base.x, liveEnd.x, t), y: top, w: lerp(base.w, fw, t), h: Math.max(bottom - top, 0), r: lerp(24, 20, t) };
+        if (t >= 1) r = { ...liveEnd, r: 20 };
       }
       vFrame.style.cssText = `left:${r.x}px;top:${r.y - pinTop}px;width:${r.w}px;height:${r.h}px;border-radius:${r.r}px`;
     };

@@ -357,7 +357,7 @@
       if ('IntersectionObserver' in window) new IntersectionObserver(check, { threshold: [0, 0.1, 0.2, 0.35, 0.5, 0.75, 1] }).observe(heading);
       else gsap.set(fw, { opacity: 1, yPercent: 0, filter: 'none', rotation: 0 });
     };
-    $$('.features__title, .about-title, .impact__title, .impact__sub, .clients__title, .services__eyebrow, .services__lines h4, .testimonials__title, .compare__title, .work-hero__title').forEach(revealHeading);
+    $$('.features__title, .about-title, .impact__title, .impact__sub, .clients__title, .services__eyebrow, .services__lines h4, .testimonials__title, .compare__title, .work-hero__title, .contact-hero__title, .c-h2, .contact-faq__title').forEach(revealHeading);
   }
 
   /* ---------- Hero word rotator ----------

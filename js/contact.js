@@ -5,7 +5,7 @@
   const $$ = (s, c = document) => [...c.querySelectorAll(s)];
 
   /* reveal */
-  const items = $$('.cf-card, .faq');
+  const items = $$('.c-card, .rv, .faq');
   if ('IntersectionObserver' in window) {
     const io = new IntersectionObserver((ens) => ens.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('is-in'); io.unobserve(e.target); } }), { threshold: 0.12 });
     items.forEach((el, i) => { el.style.transitionDelay = `${(i % 3) * 90}ms`; io.observe(el); });

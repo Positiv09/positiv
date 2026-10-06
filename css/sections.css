@@ -183,6 +183,10 @@
 .drag-cursor.is-down .drag-cursor__ball { transform: scale(.82); }
 .logo-marquee.is-js .logo-marquee__track { animation: none; will-change: transform; }   /* JS drives the rows: drift, drag, momentum */
 .client-logo img { pointer-events: none; -webkit-user-drag: none; }
+.client-logo__angel { position: relative; display: block; width: 124px; height: 22px; }   /* the Figma "Angel East" logo with its mark (already #393939 like the others) */
+.client-logo .client-logo__angel img { position: absolute; display: block; max-width: none; }
+.client-logo__angel img:first-child { inset: 0 83.1% 3.89% 0; width: 16.9%; height: 96.11%; }
+.client-logo__angel img:last-child { inset: 13.64% 0 0 19.69%; width: 80.31%; height: 86.36%; }
 .client-logo { flex: none; display: flex; align-items: center; }
 .client-logo img { max-width: none; }   /* natural SVG size (~125×27–46) and built-in #393939 fill — as on the live site */
 /* Placeholder box (still used by the testimonial logo strip) */

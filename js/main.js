@@ -753,19 +753,9 @@
       gsap.fromTo(words, { yPercent: 115, rotation: 4 }, { yPercent: 0, rotation: 0, duration: 0.95, ease: 'power4.out', stagger: 0.07, transformOrigin: '0% 100%' });
       gsap.fromTo(rest, { opacity: 0, y: 22, filter: 'blur(5px)' }, { opacity: 1, y: 0, filter: 'blur(0px)', duration: 0.8, ease: 'power3.out', stagger: 0.06, delay: 0.12 });
     };
-    let curPx = null, targetPx = 0, rafS = 0, lastS = 0;
+    let curPx = null, targetPx = 0, rafS = 0, lastS = 0, mainTile = 0;
     const applyS = (px) => {
       const scale = media.clientHeight / 800;
-      // panels
-      const u = [0, 1, 2, 3].map((k) => (k === 0 ? 1 : clamp01((px - (E1 + STEP * (k - 1) - PANEL_W)) / PANEL_W)));
-      panels.forEach((p, j) => {
-        const inn = u[j], out = j === 3 ? 1 : 1 - u[j + 1], o = inn * out;
-        p.style.opacity = o; p.style.transform = `translateY(${34 * (1 - o)}px)`; p.style.pointerEvents = o > 0.5 ? 'auto' : 'none';
-      });
-      // the panel that is now dominant gets its text choreography (once per change)
-      let dom = 0, best = -1;
-      panels.forEach((p, k) => { const o = parseFloat(p.style.opacity) || 0; if (o > best) { best = o; dom = k; } });
-      if (dom !== svcActive && best > 0.5) { svcActive = dom; playPanelText(panels[dom]); }
       // tiles: find the running transition k (0..2) and its progress
       let k = 0, t = 0;
       for (let n = 1; n <= 3; n++) {
@@ -773,12 +763,27 @@
         if (px >= end) { k = n; t = 0; } else if (px > start) { k = n - 1; t = clamp01((px - start) / TILE_W); break; } else break;
       }
       k = Math.min(k, 3);
+      // The four pictures sit on a big horizontal drum: picture i is at angle (i - pos)·38° around the drum's axis, so scrolling just
+      // rotates the drum. Each face is pushed along the circle (y = R·sin a, z = R·cos a − R) and tipped by the same angle, so the
+      // neighbours curve away above and below and the face in front is flat. The drum loops: the last picture sits above the first and the first below the last.
+      const pos = k + t * t * (3 - 2 * t);
+      mainTile = Math.round(pos);
+      const tileH = SLOT.main[1] * scale, cy = (SLOT.main[0] + SLOT.main[1] / 2) * scale, R = 760 * scale, SPREAD = 38;
+      // the texts ride the very same drum as the pictures: each panel is a face at the same angle, so the copy rolls away and in
+      // together with its picture (only the face in front, and the one arriving, is readable)
+      panels.forEach((p, i) => {
+        const x = ((((i - pos + 2) % 4) + 4) % 4) - 2, a = x * SPREAD, r = (a * Math.PI) / 180, o = clamp01(1 - Math.abs(x) * 1.25);
+        p.style.opacity = o.toFixed(3);
+        p.style.transform = `translateY(${(R * Math.sin(r)).toFixed(1)}px) translateZ(${(R * Math.cos(r) - R).toFixed(1)}px) rotateX(${(-a).toFixed(2)}deg)`;
+        p.style.pointerEvents = o > 0.5 ? 'auto' : 'none';
+      });
       tiles.forEach((tile, i) => {
-        const d = (((i - k) % 4) + 4) % 4;
-        const from = [SLOT.main, SLOT.bottom, SLOT.hidden, SLOT.top][d];
-        const to = k >= 3 ? from : [SLOT.top, SLOT.main, SLOT.bottom, SLOT.gone][d];
-        const top = lerp(from[0], to[0], t) * scale, height = lerp(from[1], to[1], t) * scale;
-        tile.style.top = `${top}px`; tile.style.height = `${Math.max(height, 0)}px`;
+        const x = ((((i - pos + 2) % 4) + 4) % 4) - 2;                   // signed distance from the front, wrapped so the drum is a loop
+        const a = x * SPREAD, r = (a * Math.PI) / 180;
+        tile.style.top = `${cy - tileH / 2}px`; tile.style.height = `${tileH}px`;
+        tile.style.opacity = clamp01(2 - Math.abs(x)).toFixed(3);       // neighbours are fully there, the face behind the drum fades out
+        tile.style.transform = `translateY(${(R * Math.sin(r)).toFixed(1)}px) translateZ(${(R * Math.cos(r) - R).toFixed(1)}px) rotateX(${(-a).toFixed(2)}deg)`;
+        tile.style.pointerEvents = Math.abs(x) < 1.4 ? '' : 'none';
       });
     };
     const loopS = (now) => {
@@ -802,7 +807,13 @@
         const m = /url\(["']?([^"')]+)["']?\)/.exec(getComputedStyle(tile).backgroundImage);
         if (m && openLightbox) openLightbox(m[1], tile.querySelector('.svc-tile__expand'));
       };
-      tile.addEventListener('click', open);
+      // the picture in the main slot opens the lightbox; a peeking picture (above / below) jumps to its own service
+      tile.addEventListener('click', () => {
+        const i = tiles.indexOf(tile);
+        if (i === mainTile || !mqS.matches) { open(); return; }
+        const px = i === 0 ? 0.55 : E1 + STEP * (i - 1) + 0.4 * STEP;
+        window.scrollTo({ top: pinStart + px * window.innerHeight, behavior: 'smooth' });
+      });
     });
     window.addEventListener('scroll', () => updateS(), { passive: true });
     window.addEventListener('resize', measureS);

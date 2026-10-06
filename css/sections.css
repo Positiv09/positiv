@@ -317,11 +317,11 @@
   display: grid; grid-template-columns: 1.3fr 1fr; gap: 16px;
   border-radius: 32px; background: var(--c-ink);
 }
-.svc-text { position: relative; margin-right: 15%; }
+.svc-text { position: relative; margin-right: 15%; perspective: 1300px; perspective-origin: 50% 50%; }   /* same drum as the pictures */
 .svc-panel {
   position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center;
   padding: 14.6vh 64px 56px; opacity: 0; transform: translateY(34px); pointer-events: none;
-  will-change: opacity, transform;
+  will-change: opacity, transform; backface-visibility: hidden;
 }
 .svc-panel.is-active { opacity: 1; transform: none; pointer-events: auto; }
 .svc-mask { display: inline-block; overflow: hidden; vertical-align: top; padding: .06em .12em .14em; margin: -.06em -.12em -.14em; }
@@ -337,10 +337,10 @@
 .svc-pill:hover { background: var(--c-paper); color: var(--c-ink); }
 .svc-panel__num { align-self: flex-start; margin-top: 64px; padding: 10px 20px; border: .5px solid var(--c-paper); border-radius: 30px; color: var(--c-lime); font-size: 14px; font-weight: 700; letter-spacing: 1.12px; line-height: 20px; }
 
-.svc-media { position: relative; overflow: hidden; }
+.svc-media { position: relative; overflow: hidden; perspective: 1300px; perspective-origin: 50% 50%; }   /* the pictures roll like a 3D drum */
 .svc-tile {
   position: absolute; left: 40px; width: calc(100% - 80px); top: 0; height: 0;
-  border-radius: 20px; background-size: cover; background-position: 50%; will-change: top, height;
+  border-radius: 20px; background-size: cover; background-position: 50%; will-change: top, height, transform; backface-visibility: hidden;
   overflow: hidden; cursor: pointer;
 }
 /* hover: the picture zooms inside its frame, a soft shade appears, and the expand button pops in */
@@ -463,6 +463,20 @@
 .cta__title .hero__char { opacity: 1; transform: none; transition: none; }   /* same letters as the hero heading; GSAP drives the entrance */
 .cta__text { width: 70%; padding-bottom: 48px; text-align: center; font-size: 20px; line-height: 28px; font-weight: 400; }
 
+/* CTA button: same hover as the hero buttons - the colours invert with a circular fill growing from the bottom edge */
+.cta__inner .btn {
+  position: relative; overflow: hidden; isolation: isolate; border: 1px solid var(--c-lime); --fill: var(--c-ink);
+  transition: color .45s var(--ease-out) .05s, transform .4s var(--ease-out);
+}
+.cta__inner .btn::before {
+  content: ""; position: absolute; z-index: -1; left: 50%; top: 100%; width: 150%; aspect-ratio: 1; border-radius: 50%;
+  background: var(--fill); transform: translate(-50%, -50%) scale(0);
+  transition: transform .7s var(--ease-out);
+}
+.cta__inner .btn:hover { color: var(--c-lime); }
+.cta__inner .btn:hover::before, .cta__inner .btn:focus-visible::before { transform: translate(-50%, -50%) scale(1.15); }
+.cta__inner .btn:active { transform: scale(.98); }
+@media (prefers-reduced-motion: reduce) { .cta__inner .btn, .cta__inner .btn::before { transition-duration: .01ms; } }
 .footer { width: 100%; padding: 70px 0 60px; color: #fff; }
 .footer__container { width: 80%; margin: 0 auto; }
 .footer__main { display: flex; justify-content: space-between; align-items: stretch; }

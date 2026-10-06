@@ -12,11 +12,10 @@
 .hero__content { width: 84%; margin: 60px 0 0 auto; }
 .hero__eyebrow {
   font-family: var(--f-display); font-weight: 400; color: #fff;
-  font-size: max(28px, 2.917vw); line-height: 64px; letter-spacing: 0;
+  font-size: max(28px, 2.917vw); line-height: 1.143; letter-spacing: 0;
 }
 .hero__rotator { display: grid; color: var(--c-lime); }
 /* Heading letters: masked words; every "t" = white lower stem + the Positiv mark on top (the logo's treatment) */
-.js .hero__eyebrow:not([data-split]) { opacity: 0; }
 .hero__mask { display: inline-block; vertical-align: top; padding: .28em .16em .18em; margin: -.28em -.16em -.18em; overflow: hidden; }
 .hero__char {
   display: inline-block; position: relative; line-height: 1.2;   /* fixed in em so the logo-mark offsets hold at every font size */ opacity: 0; transform: translateY(118%) rotate(6deg); transform-origin: 0 100%;
@@ -99,26 +98,48 @@
   opacity: 0; visibility: hidden; transition: opacity .3s ease, visibility .3s;
 }
 .lightbox.is-open { opacity: 1; visibility: visible; }
-.lightbox__stage { display: flex; align-items: center; justify-content: center; gap: clamp(32px, 5vw, 88px); max-width: 100%; }
+.lightbox__stage { display: flex; align-items: center; justify-content: center; gap: clamp(56px, 7vw, 120px); max-width: 100%; }
 .lightbox__img { max-width: min(1200px, 90vw); max-height: 88vh; object-fit: contain; transform: scale(.96); transition: transform .45s var(--ease-out); box-shadow: 0 30px 80px rgb(0 0 0 / .45); }
 .lightbox.is-open .lightbox__img { transform: none; }
 /* with a service: picture on the left, its copy on the right */
-.lightbox.has-info .lightbox__img { max-width: min(560px, 42vw); max-height: 84vh; border-radius: 20px; }
+.lightbox__gallery { position: relative; display: flex; flex: none; }
+.lightbox__extra { display: none; position: absolute; z-index: 2; width: 48%; height: auto; cursor: pointer; border-radius: 16px; box-shadow: 0 24px 60px rgb(0 0 0 / .5); border: 3px solid var(--c-ink); }
+.lightbox.has-info .lightbox__extra { display: block; opacity: 0; transition: opacity .6s ease, transform .9s var(--ease-out); }
+.lightbox__extra--a { right: -5%; top: 6%; transform: translate(30px, 20px) rotate(4deg); }
+.lightbox__extra--b { left: -12%; bottom: -6%; transform: translate(-30px, 30px) rotate(-4deg); }
+.lightbox.has-info.is-open .lightbox__extra--a { opacity: 1; transform: rotate(3deg); transition-delay: .35s; }
+.lightbox.has-info.is-open .lightbox__extra--b { opacity: 1; transform: rotate(-3deg); transition-delay: .5s; }
+/* the two small pictures float gently, and on hover rise, grow and straighten */
+@keyframes lb-float { 0%, 100% { translate: 0 0; } 50% { translate: 0 -12px; } }
+.lightbox.has-info.is-open .lightbox__extra { animation: lb-float 5s ease-in-out infinite; transition: opacity .6s ease, transform .9s var(--ease-out), scale .6s var(--ease-out), box-shadow .5s ease, border-color .4s ease, filter .6s ease; }
+.lightbox.has-info.is-open .lightbox__extra--b { animation-delay: -2.5s; }
+.lightbox.has-info.is-open .lightbox__extra:hover { scale: 1.08; z-index: 4; box-shadow: 0 34px 80px rgb(0 0 0 / .65); border-color: var(--c-lime); animation-play-state: paused; transition-delay: 0s; scale: 1.06; }
+@media (prefers-reduced-motion: reduce) { .lightbox.has-info.is-open .lightbox__extra { animation: none; } }
+.lightbox.has-info .lightbox__img { max-width: min(540px, 40vw); max-height: 80vh; border-radius: 20px; }
 .lightbox__info { display: none; }
 .lightbox.has-info .lightbox__info {
   display: block; flex: 0 1 520px; min-width: 0; max-height: 84vh; overflow-y: auto; color: var(--c-paper);
   opacity: 0; transform: translateX(28px); transition: opacity .6s ease .18s, transform .8s var(--ease-out) .18s;
 }
 .lightbox.has-info.is-open .lightbox__info { opacity: 1; transform: none; }
-.lightbox__panel { display: flex; flex-direction: column; align-items: flex-start; }
-.lightbox__panel .svc-panel__icon { margin-bottom: 28px; }
-.lightbox__panel .svc-panel__title { margin-bottom: 22px; font-size: clamp(36px, 4vw, 56px); line-height: 1.08; }
-.lightbox__panel .svc-panel__text { font-size: 18px; line-height: 28px; }
-.lightbox__panel .svc-panel__work { margin-bottom: 28px; }
-.lightbox__panel .svc-panel__pills { width: 100%; margin-bottom: 8px; }
-.lightbox__panel .svc-panel__num { margin-top: 36px; }
+.lightbox__panel { display: grid; grid-template-columns: auto 1fr; column-gap: 16px; align-items: center; justify-items: start; }
+.lightbox__panel .svc-panel__icon { grid-area: 1 / 1; margin: 0; }
+.lightbox__panel .svc-panel__num { display: none; }
+.lightbox__panel .svc-panel__title { grid-column: 1 / -1; margin: 32px 0 28px; font-size: clamp(40px, 4.4vw, 64px); line-height: 1.04; }
+.lightbox__panel .svc-panel__work { grid-column: 1 / -1; width: 100%; margin: 0; padding: 26px 0; border-top: 1px solid rgb(239 239 235 / .16); }
+.lightbox__panel .svc-label { margin: 0 0 12px; letter-spacing: .12em; font-size: 12px; color: #b2b2b2; }
+.lightbox__panel .svc-panel__text { font-size: 20px; line-height: 30px; color: #fff; }
+.lightbox__panel .svc-label--deliv { grid-column: 1 / -1; width: 100%; margin: 0; padding: 26px 0 14px; border-top: 1px solid rgb(239 239 235 / .16); }
+.lightbox__panel .svc-panel__pills { grid-column: 1 / -1; width: 100%; gap: 12px; margin: 0; }
+.lightbox__panel .svc-pill { height: 42px; padding: 0 18px; font-size: 14px; border-color: rgb(239 239 235 / .45); background: rgb(255 255 255 / .04); }
+/* the big picture comes to the front when clicked (class set by JS): it lifts, the small ones dim and ease back */
+.lightbox.has-info .lightbox__img { position: relative; z-index: 1; cursor: pointer; transition: transform .7s var(--ease-out), box-shadow .6s ease; }
+.lightbox__gallery.is-front .lightbox__img { z-index: 5; transform: scale(1.03); box-shadow: 0 40px 90px rgb(0 0 0 / .6); }
+.lightbox.has-info .lightbox__extra { filter: brightness(1); }
+.lightbox.has-info.is-open .lightbox__gallery.is-front .lightbox__extra { filter: brightness(.55); scale: .96; animation-play-state: paused; }
 @media (max-width: 900px) {
   .lightbox.has-info .lightbox__stage { flex-direction: column; gap: 20px; }
+  .lightbox__extra { width: 38%; }
   .lightbox.has-info .lightbox__img { max-width: 80vw; max-height: 38vh; }
   .lightbox.has-info .lightbox__info { max-height: 46vh; }
 }
@@ -140,10 +161,10 @@
 }
 .clients__title em { font-style: normal; font-family: var(--f-display); font-weight: 600; font-size: 24px; color: #5915ff; }
 .logo-marquee { position: relative; display: flex; align-items: center; height: 101px; overflow: hidden; }
-/* one soft fade across the whole row, strongest at both edges (same gradient as live .div-block-174) */
+/* a short soft fade at both edges only, so the logos in the middle stay fully visible */
 .logo-marquee::after {
   content: ""; position: absolute; inset: 0; z-index: 2; pointer-events: none;
-  background: linear-gradient(90deg, var(--c-paper) 10%, rgb(242 242 237 / 0) 50%, var(--c-paper) 90%);
+  background: linear-gradient(90deg, var(--c-paper) 3%, rgb(242 242 237 / 0) 22%, rgb(242 242 237 / 0) 78%, var(--c-paper) 97%);
 }
 .logo-marquee__track { display: flex; width: max-content; animation: marquee-x 40s linear infinite; }
 .logo-marquee--reverse .logo-marquee__track { animation-direction: reverse; }  /* row 2 runs the opposite way */
@@ -208,6 +229,18 @@
 .feature-card--white  .feature-card__media { background-image: url("../assets/img/feature-card-3.webp"); }
 .feature-card--orange .feature-card__media { background-image: url("../assets/img/feature-card-4.webp"); }
 
+/* hover: the picture zooms in a little and the yellow Positiv mark fades in at the bottom-right corner */
+.feature-card__media::before {
+  content: ""; position: absolute; inset: 0; background: inherit; background-size: cover; background-position: 50%;
+  transition: transform 1s var(--ease-out); will-change: transform;
+}
+.feature-card__media::after {
+  content: ""; position: absolute; right: 24px; bottom: 24px; width: 60px; height: 57px;
+  background: url("../assets/logos/portfolio-hover-logo.svg") right center / 429px 57px no-repeat;   /* only the yellow Positiv mark */
+  opacity: 0; transform: translateY(10px); transition: opacity .45s ease, transform .6s var(--ease-out);
+}
+.feature-card__media:hover::before { transform: scale(1.06); }
+.feature-card__media:hover::after { opacity: 1; transform: none; }
 .feature-card__media-inner { width: 80%; padding-bottom: 60px; position: relative; }
 .feature-card__media-title {
   display: flex; flex-wrap: wrap; justify-content: center; text-align: center;
@@ -250,8 +283,13 @@
 .stat__text { color: var(--c-muted-2); font-size: 16px; line-height: 26px; }
 .stat__num, .stat__unit { font-family: var(--f-display); font-weight: 400; font-size: 88px; line-height: 88px; color: #fff; }
 .stat__value { display: flex; align-items: center; }
-.stat__rule { height: .5px; margin-top: 20px; background: #fdfdfd; opacity: .15; }
+.stat__rule { height: .5px; margin-top: 20px; background: #fdfdfd; opacity: .15; transition: opacity .4s ease; }
+.stat:hover .stat__rule { opacity: .4; }   /* the divider brightens a little when its stat is hovered */
 .stat__link { display: flex; align-items: center; gap: 15px; margin-top: 12px; font-size: 16px; font-weight: 300; line-height: 26px; }
+.stat__link { transition: color .3s ease; }
+.stat__link svg { transition: transform .4s var(--ease-out); }
+.stat__link:hover { color: var(--c-lime); }                       /* text turns lime, the arrow slides forward */
+.stat__link:hover svg { transform: translateX(6px); }
 
 .portfolio { width: 100%; }
 .portfolio__pin { display: flex; flex-direction: column; justify-content: center; }
@@ -271,6 +309,29 @@
 .portfolio-card__media--3 { background-image: url("../assets/img/portfolio-3.webp"); }
 .portfolio-card__media--web { background-image: url("../assets/img/service-web.jpg"); }
 .portfolio-card__media--fig { background-image: url("../assets/img/portfolio-fig.webp"); }
+/* hover (Figma "Hover card project"): the picture zooms a little, the corner logo slides up and out, and the project name + category slide in with the Positiv bolt */
+.portfolio-card__media { position: relative; overflow: hidden; }
+.portfolio-card__media::before {
+  content: ""; position: absolute; inset: 0; background: inherit; background-size: cover; background-position: 50%;
+  transition: transform .9s var(--ease-out); will-change: transform;
+}
+.portfolio-card__media:hover::before { transform: scale(1.09); }
+.portfolio-card__media::after {
+  content: ""; position: absolute; inset: auto 0 0 0; height: 55%; pointer-events: none; opacity: 0; transition: opacity .5s ease;
+  background: linear-gradient(to top, rgb(33 29 29 / .85), rgb(33 29 29 / .45) 45%, transparent);   /* dark shade behind the hover text so it stays readable */
+}
+.portfolio-card__media:hover::after { opacity: 1; }
+.pc-hover { position: absolute; z-index: 1; left: 32px; right: 32px; bottom: 28px; height: 57px; overflow: hidden; pointer-events: none; }
+.pc-hover__logo { position: absolute; right: 0; top: 0; width: 429px; height: 57px; max-width: none; transition: transform .6s var(--ease-out), opacity .45s ease; }
+.pc-hover__text {
+  position: absolute; left: 0; right: 0; top: 0; display: flex; align-items: center; justify-content: space-between; color: #fff;
+  height: 57px; transform: translateY(70px); opacity: 0; transition: transform .6s var(--ease-out), opacity .45s ease;
+}
+.pc-hover__text strong { display: block; font-size: 20px; font-weight: 500; line-height: 26px; }
+.pc-hover__text span { display: block; margin-top: 2px; color: var(--c-paper-2); font-size: 15px; line-height: 20px; }
+.pc-hover__text img { width: 41px; height: 27px; flex: none; }
+.portfolio-card__media:hover .pc-hover__logo { transform: translateY(-70px); opacity: 0; }
+.portfolio-card__media:hover .pc-hover__text { transform: none; opacity: 1; }
 .portfolio-card__info { display: flex; flex-direction: column; justify-content: space-between; height: calc(100% - 50px); }
 .portfolio-card__tag {
   display: inline-flex; align-items: center; justify-content: center; align-self: flex-start;
@@ -283,6 +344,7 @@
 .portfolio-card__logo img:last-child { inset: 13.64% 0 0 19.69%; width: 80.31%; height: 86.36%; }
 
 .portfolio__progress { display: flex; justify-content: center; margin-top: 40px; }
+.portfolio__all { display: flex; width: 190px; margin: 40px auto 0; }
 .portfolio__bar { width: 30%; height: 5px; border-radius: 20px; background: var(--c-paper-2); overflow: hidden; }
 .portfolio__bar-fill { width: 100%; height: 10px; margin-top: -2px; border-radius: 20px; background: var(--c-lime); transform: scaleX(.07); transform-origin: left; }
 
@@ -320,7 +382,7 @@
 .services__slot { display: block; width: max(21vh, 150px); height: 70px; border-radius: 20px; }   /* the pill the video lands in */
 
 /* Stacked service card — dimensions measured from the staging build at 1920×1000 */
-.svc { position: relative; width: 100%; height: 440vh; display: flex; justify-content: center; align-items: flex-start; }
+.svc { position: relative; width: 100%; height: 280vh; display: flex; justify-content: center; align-items: flex-start; }
 .svc-card {
   position: sticky; top: 14.2vh; width: 80%; height: 80vh; overflow: hidden;
   display: grid; grid-template-columns: 1.3fr 1fr; gap: 16px;
@@ -346,10 +408,10 @@
 .svc-pill:hover { background: var(--c-paper); color: var(--c-ink); }
 .svc-panel__num { align-self: flex-start; margin-top: 64px; padding: 10px 20px; border: .5px solid var(--c-paper); border-radius: 30px; color: var(--c-lime); font-size: 14px; font-weight: 700; letter-spacing: 1.12px; line-height: 20px; }
 
-.svc-media { position: relative; overflow: hidden; perspective: 1300px; perspective-origin: 50% 50%; }   /* the pictures roll like a 3D drum */
+.svc-media { position: relative; overflow: hidden; }
 .svc-tile {
   position: absolute; left: 40px; width: calc(100% - 80px); top: 0; height: 0;
-  border-radius: 20px; background-size: cover; background-position: 50%; will-change: top, height, transform; backface-visibility: hidden;
+  border-radius: 20px; background-size: cover; background-position: 50%; will-change: top, height, transform;
   overflow: hidden; cursor: pointer;
 }
 /* hover: the picture zooms inside its frame, a soft shade appears, and the expand button pops in */
@@ -389,12 +451,16 @@
 /* Logo tabs: 120×75 buttons, 100px apart, pushed to the right edge of the head (as on the staging site) */
 .testimonials__tabs { flex: 1 1 auto; display: flex; justify-content: flex-end; align-items: flex-start; gap: 66px; padding-top: 16px; }   /* starts where the title ends, 876px wide @1905 */
 .testi-tab { display: flex; flex-direction: column; gap: 38px; flex: none; text-align: left; cursor: pointer; }
-.testi-tab__bar { display: block; width: 100%; height: 4px; background: #b2b2b2; transition: background-color .3s; }
+.testi-tab__bar { position: relative; display: block; width: 100%; height: 4px; border-radius: 4px; overflow: hidden; background: #b2b2b2; }
+.testi-tab__bar::after { content: ""; position: absolute; inset: 0; border-radius: 4px; background: #17171e; transform: scaleX(0); transform-origin: left; }
+.testi-tab.is-active .testi-tab__bar::after { animation: testi-fill 7s linear forwards; }
+.testimonials-section.is-paused .testi-tab.is-active .testi-tab__bar::after, .testimonials-section.is-offscreen .testi-tab.is-active .testi-tab__bar::after { animation-play-state: paused; }
+@keyframes testi-fill { to { transform: scaleX(1); } }
+@media (prefers-reduced-motion: reduce) { .testi-tab.is-active .testi-tab__bar::after { animation: none; transform: scaleX(1); } }
 .testi-tab img, .testi-tab .portfolio-card__logo { opacity: .35; transition: opacity .3s; }
 .testi-tab > img { height: auto; }
 .testi-tab .portfolio-card__logo { margin-bottom: 0; }
 .testi-tab:hover img, .testi-tab:hover .portfolio-card__logo { opacity: .65; }
-.testi-tab.is-active .testi-tab__bar { background: #17171e; }
 .testi-tab.is-active img, .testi-tab.is-active .portfolio-card__logo { opacity: 1; }
 .testi-tab:focus-visible { outline: 2px solid var(--c-purple); outline-offset: 6px; }
 
@@ -457,6 +523,16 @@
 .compare-table .is-last-row { border-bottom: .5px solid var(--c-line) !important; }
 .compare-table .is-last-row.is-last-col { border-bottom-right-radius: var(--r-media); }
 .compare-table svg { width: 28px; height: 28px; }
+/* hover: each cell lights up on its own */
+.compare-table > div { transition: background-color .3s ease, color .3s ease; }
+.compare-table svg { transition: transform .35s var(--ease-out); }
+.compare-table > div:not(.cell--spacer):not(.cell--brand):hover { background-color: rgb(240 248 121 / .10); }
+.compare-table > .cell--col-head:hover { background-color: #4a4545; color: #fff; }
+.compare-table > .cell--label:hover { color: var(--c-lime); }
+.compare-table > div.cell--us:not(.cell--brand):hover { background-color: var(--c-ink-2); }   /* Positiv column: the cell darkens and its check turns white */
+.compare-table > .cell--us:hover svg { color: #fff; }
+.compare-table > div:hover svg { transform: scale(1.2); }
+
 
 /* ---------- 8. CTA + FOOTER — rules taken from the staging stylesheet, per breakpoint ------------------- */
 .cta-section {
@@ -473,18 +549,18 @@
 .cta__text { width: 70%; padding-bottom: 48px; text-align: center; font-size: 20px; line-height: 28px; font-weight: 400; }
 
 /* CTA button: same hover as the hero buttons - the colours invert with a circular fill growing from the bottom edge */
-.cta__inner .btn {
+.cta__inner .btn, .portfolio__all {
   position: relative; overflow: hidden; isolation: isolate; border: 1px solid var(--c-lime); --fill: var(--c-ink);
   transition: color .45s var(--ease-out) .05s, transform .4s var(--ease-out);
 }
-.cta__inner .btn::before {
+.cta__inner .btn::before, .portfolio__all::before {
   content: ""; position: absolute; z-index: -1; left: 50%; top: 100%; width: 150%; aspect-ratio: 1; border-radius: 50%;
   background: var(--fill); transform: translate(-50%, -50%) scale(0);
   transition: transform .7s var(--ease-out);
 }
-.cta__inner .btn:hover { color: var(--c-lime); }
-.cta__inner .btn:hover::before, .cta__inner .btn:focus-visible::before { transform: translate(-50%, -50%) scale(1.15); }
-.cta__inner .btn:active { transform: scale(.98); }
+.cta__inner .btn:hover, .portfolio__all:hover { color: var(--c-lime); }
+.cta__inner .btn:hover::before, .cta__inner .btn:focus-visible::before, .portfolio__all:hover::before, .portfolio__all:focus-visible::before { transform: translate(-50%, -50%) scale(1.15); }
+.cta__inner .btn:active, .portfolio__all:active { transform: scale(.98); }
 @media (prefers-reduced-motion: reduce) { .cta__inner .btn, .cta__inner .btn::before { transition-duration: .01ms; } }
 .footer { width: 100%; padding: 70px 0 60px; color: #fff; }
 .footer__container { width: 80%; margin: 0 auto; }
@@ -617,8 +693,8 @@
   .stats { gap: 100px; }
   .stat__num, .stat__unit { line-height: 75px; }      /* staging: 88px type on a 75px line */
   .hero__content { width: 84%; }
-  .hero__eyebrow { font-size: 4.583vw; }                 /* 88px @1920 */
-  .hero__word { font-size: 4.5vw; line-height: 1.12; }   /* ≈86px @1920: measured from the live screenshot (word line = 803px wide) */
+  .hero__eyebrow { font-size: 4.583vw; line-height: 1.143; }                 /* 88px @1920 */
+  .hero__word { font-size: 4.5vw; line-height: 1.143; }   /* ≈86px @1920: measured from the live screenshot (word line = 803px wide) */
   .hero__content { margin-top: 80px; }
   .hero__lead { width: 70%; padding: 20px 0 40px; font-size: .938vw; font-weight: 300; }
   .hero__actions { padding-top: 20px; }

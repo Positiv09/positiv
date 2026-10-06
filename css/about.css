@@ -22,10 +22,11 @@
 .btn--outline-dark { --fill: var(--c-lime); border-color: var(--c-ink) !important; color: var(--c-ink); background: transparent; }
 .about-hero__actions .btn:hover::before { transform: translate(-50%, -50%) scale(1.15); }
 
-.scroll-ring { position: absolute; left: 50%; top: 668px; z-index: 3; width: 140px; height: 140px; margin-left: -70px; border-radius: 50%; border: 1px solid rgb(178 178 178 / .6); display: grid; place-items: center; transition: transform .5s var(--ease-out); }
+.scroll-ring { position: absolute; left: 50%; top: 668px; z-index: 5; width: 140px; height: 140px; margin-left: -70px; border-radius: 50%; border: 1px solid rgb(178 178 178 / .6); --over: 0; background: rgb(242 242 237 / calc(1 - var(--over) * .92)); box-shadow: 0 0 0 calc(14px * (1 - var(--over))) rgb(242 242 237 / calc(1 - var(--over))), inset 0 0 calc(var(--over) * 22px) rgb(255 255 255 / calc(var(--over) * .55)), 0 calc(var(--over) * 14px) calc(var(--over) * 34px) rgb(0 0 0 / calc(var(--over) * .28)); -webkit-backdrop-filter: blur(calc(var(--over) * 7px)) saturate(calc(1 + var(--over) * .5)); backdrop-filter: blur(calc(var(--over) * 7px)) saturate(calc(1 + var(--over) * .5)); border-color: rgb(255 255 255 / calc(.2 + var(--over) * .5));   /* paper disc on the page, glassy water drop on a picture */ display: grid; place-items: center; transition: transform .5s var(--ease-out); }
 .scroll-ring:hover { transform: scale(1.06); }
 .scroll-ring__text { position: absolute; inset: 0; width: 100%; height: 100%; animation: ring-spin 18s linear infinite; }
-.scroll-ring__text text { font-family: var(--f-body); font-weight: 600; font-size: 11.5px; letter-spacing: .22em; fill: var(--c-ink); }
+.scroll-ring__text text { font-family: var(--f-body); font-weight: 600; font-size: 11.5px; letter-spacing: .22em; fill: color-mix(in srgb, #fff calc(var(--over) * 100%), var(--c-ink)); }
+.scroll-ring__arrow { filter: invert(calc(var(--over))) drop-shadow(0 1px 3px rgb(0 0 0 / calc(var(--over) * .4))); }
 .scroll-ring__arrow { position: relative; width: 38px; height: 38px; }
 @keyframes ring-spin { to { transform: rotate(360deg); } }
 
@@ -33,7 +34,10 @@
 .about-collage__inner { position: absolute; inset: 0; }
 /* x / width follow the viewport (edge to edge, no side gaps); y / height keep the design scale, so wide screens just crop wider */
 .about-collage__img { position: absolute; left: calc(var(--x) * var(--ux)); top: calc(var(--y) * var(--u)); width: calc(var(--w) * var(--ux)); height: calc(var(--h) * var(--u)); border-radius: 18px; overflow: hidden; will-change: transform; pointer-events: auto; transition: box-shadow .6s var(--ease-out); }
-.about-collage__img img { width: 100%; height: 100%; object-fit: cover; transition: transform 1s var(--ease-out); }
+.about-collage__inner { touch-action: pan-y; }
+.about-collage__img { cursor: grab; user-select: none; -webkit-user-select: none; }
+.about-collage__inner.is-dragging .about-collage__img { cursor: grabbing; }
+.about-collage__img img { -webkit-user-drag: none; width: 100%; height: 100%; object-fit: cover; transition: transform 1s var(--ease-out); }
 .about-collage__img:hover { z-index: 2; box-shadow: 0 28px 70px rgb(33 29 29 / .28); }   /* no wrapper scale: GSAP writes scale:none inline on it */
 .about-collage__img:hover img { transform: scale(1.1); }
 

@@ -198,16 +198,24 @@
     // Lightbox
     const lb = document.createElement('div');
     lb.className = 'lightbox'; lb.setAttribute('role', 'dialog'); lb.setAttribute('aria-modal', 'true'); lb.setAttribute('aria-label', 'Image preview');
-    lb.innerHTML = '<button class="lightbox__close" type="button" aria-label="Close"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button><div class="lightbox__stage"><img class="lightbox__img" alt=""><aside class="lightbox__info" aria-live="polite"></aside></div>';
+    lb.innerHTML = '<button class="lightbox__close" type="button" aria-label="Close"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button><div class="lightbox__stage"><div class="lightbox__gallery"><img class="lightbox__img" alt=""><img class="lightbox__extra lightbox__extra--a" alt=""><img class="lightbox__extra lightbox__extra--b" alt=""></div><aside class="lightbox__info" aria-live="polite"></aside></div>';
     document.body.appendChild(lb);
     const lbImg = $('.lightbox__img', lb);
+    const lbExtrasAll = $$('.lightbox__extra', lb);
     let opener = null;
     // Figma exported these JPGs with their rounded corners filled light grey; clip the preview to the same radius (measured: the grey corner arc is ~28px on a 492px-wide export, so 6% of the width)
     const fitRadius = () => { lbImg.style.borderRadius = '0'; const w = lbImg.getBoundingClientRect().width; lbImg.style.clipPath = `inset(${(w * 0.025).toFixed(1)}px round ${(w * 0.05).toFixed(1)}px)`; };   // trim 2.5% off every edge: removes the whole grey corner arc (it reaches ~1.7% in), then re-round
     lbImg.addEventListener('load', fitRadius); window.addEventListener('resize', fitRadius);
+    // Click the big picture to bring it in front of the two small ones (they dim and settle back); click a small one to hand the front back.
+    const lbGallery = $('.lightbox__gallery', lb);
+    lbImg.addEventListener('click', () => lbGallery.classList.toggle('is-front'));
+    lbExtrasAll.forEach((im) => im.addEventListener('click', () => lbGallery.classList.remove('is-front')));
     const lbInfo = $('.lightbox__info', lb);
     // `panel` (optional): the service-card text panel of that picture, shown beside the image (icon, title, the work, deliverables, number)
-    const openLb = (src, from, panel) => {
+    const lbExtras = lbExtrasAll;
+    const openLb = (src, from, panel, extras) => {
+      lbGallery.classList.remove('is-front');
+      lbExtras.forEach((im, i) => { const u = extras && extras[i]; if (u) im.src = u; im.style.display = u ? '' : 'none'; });
       lbInfo.textContent = '';
       if (panel) {
         const c = panel.cloneNode(true);
@@ -226,61 +234,12 @@
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeLb(); });
   }
 
-  /* ---------- Hero heading: bouncy letter entrance + the Positiv mark as every "t" (no hover) ----------
-     The text is split into masked words/letters (aria-label keeps it readable). With GSAP: letters spring up with a
-     back-ease stagger, each mark pops in with an elastic spin, then idles (an occasional squash-and-hop). Without GSAP (or with reduced motion) a plain CSS stagger / static state is used. */
-  const eyebrow = $('.hero__eyebrow');
-  if (eyebrow && !eyebrow.dataset.split) {
-    const text = eyebrow.textContent.trim();
-    eyebrow.setAttribute('aria-label', text);
-    eyebrow.dataset.split = '1';
-    eyebrow.textContent = '';
-    let idx = 0;
-    text.split(' ').forEach((w, wi, arr) => {
-      const word = document.createElement('span');
-      word.className = 'hero__mask'; word.setAttribute('aria-hidden', 'true');
-      [...w].forEach((ch) => {
-        const c = document.createElement('span');
-        c.className = 'hero__char'; c.style.setProperty('--i', idx++);
-        if (ch === 't') {
-          c.classList.add('hero__char--t');
-          c.innerHTML = `<span class="t-base">${ch}</span><svg class="t-stem" viewBox="61.79 1.9 11.08 22.07" aria-hidden="true"><path fill="#fff" d="M70.7672 20.5501C69.5899 20.3215 68.83 19.4028 68.8304 18.1959L68.8317 13.5938H64.9297L65.0085 18.9944C65.0369 20.9064 66.1129 22.662 67.8574 23.3833C69.4681 24.0496 71.1897 23.9665 72.8638 23.9665C72.8754 22.8889 72.8575 21.6911 72.8613 20.5797C72.0209 20.5839 71.4495 20.6828 70.7672 20.5501Z"/></svg><svg class="t-mark" viewBox="61.79 1.9 11.08 22.07" aria-hidden="true"><path fill="#f0f879" d="M71.8464 5.7464C70.7662 5.85237 69.7507 6.21659 68.8477 6.77229C68.7105 6.85699 68.5587 6.72891 68.6225 6.5808C69.0121 5.67506 69.2623 3.52733 69.3403 2.55276C69.3691 2.19522 69.0734 1.90234 68.7147 1.90234H66.0409C65.7415 1.90234 65.4658 2.11178 65.4266 2.4084C65.2056 4.09013 63.914 6.83362 62.2866 7.10939C61.9892 7.15945 61.7891 7.44649 61.7891 7.74854V10.4053C61.7891 10.7649 62.0848 11.0615 62.443 11.031C63.5549 10.9359 64.5975 10.5997 65.5205 10.0757C65.661 9.99598 65.807 10.1312 65.7373 10.2772C65.2189 11.3636 64.9262 12.5655 64.9266 13.7933H68.8327C68.8327 11.9372 70.2169 9.97888 72.0065 9.66514C72.3051 9.61299 72.5041 9.32346 72.5041 9.02057V6.3722C72.5041 6.01049 72.2063 5.71094 71.8464 5.7464Z"/></svg>`;
-        } else c.textContent = ch;
-        word.appendChild(c);
-      });
-      eyebrow.appendChild(word);
-      if (w === 'embedded') eyebrow.appendChild(document.createElement('br'));   /* Figma: "The embedded" / "Creative team for" on two lines */
-      else if (wi < arr.length - 1) eyebrow.appendChild(document.createTextNode(' '));
-    });
-
-    const chars = $$('.hero__char', eyebrow), marks = $$('.t-mark', eyebrow);
-    if (window.gsap && !reduceMotion) {
-      eyebrow.classList.add('is-gsap');
-      gsap.set(eyebrow, { opacity: 1 });
-      gsap.set(marks, { transformOrigin: '50% 80%' });
-      const tl = gsap.timeline({ delay: 0.15 });
-      tl.from(chars, { yPercent: 140, rotation: (i) => (i % 2 ? 10 : -10), transformOrigin: '0% 100%', opacity: 0, duration: 1.15, ease: 'back.out(1.8)', stagger: 0.04 }, 0)
-        .from(marks, { scale: 0, opacity: 0, duration: 1.4, ease: 'elastic.out(1, 0.45)', stagger: 0.3 }, 0.5)
-        .add(() => {                                                                      // idle hop (squash & stretch, no tilting), started once the entrance is done
-          marks.forEach((m, i) => {
-            gsap.timeline({ repeat: -1, repeatDelay: 2.2 + i * 1.2, delay: 0.8 + i * 1.4 })
-              .to(m, { yPercent: -16, scaleX: 0.94, scaleY: 1.1, duration: 0.26, ease: 'power2.out' })
-              .to(m, { yPercent: 0, scaleX: 1.12, scaleY: 0.84, duration: 0.17, ease: 'power2.in' })
-              .to(m, { scaleX: 1, scaleY: 1, duration: 1.05, ease: 'elastic.out(1, 0.3)' });
-          });
-        }, '>-0.2');
-    } else {                                                                             // CSS-only path
-      requestAnimationFrame(() => requestAnimationFrame(() => eyebrow.classList.add('is-in')));
-      setTimeout(() => eyebrow.classList.add('is-ready'), 400 + idx * 34 + 1000);
-    }
-  }
-
-  /* ---------- CTA heading: the same Positiv-mark "t" as the hero heading ----------
-     Reuses the hero's letter markup (masked chars, white stem + lime mark). The letters rise and the marks pop in each time the
+  /* ---------- CTA heading: the Positiv-mark "t" ----------
+     Masked letters, each "t" drawn as the logo mark (white stem + lime mark). The letters rise and the marks pop in each time the
      heading scrolls into view, then idle with the same squash-and-hop; without GSAP / with reduced motion it is simply static. */
   const ctaTitle = $('.cta__title');
-  const tTemplate = $('.hero__char--t');
-  if (ctaTitle && tTemplate && !ctaTitle.dataset.split) {
+  const tMark = (ch) => `<span class="t-base">${ch}</span><svg class="t-stem" viewBox="61.79 1.9 11.08 22.07" aria-hidden="true"><path fill="#fff" d="M70.7672 20.5501C69.5899 20.3215 68.83 19.4028 68.8304 18.1959L68.8317 13.5938H64.9297L65.0085 18.9944C65.0369 20.9064 66.1129 22.662 67.8574 23.3833C69.4681 24.0496 71.1897 23.9665 72.8638 23.9665C72.8754 22.8889 72.8575 21.6911 72.8613 20.5797C72.0209 20.5839 71.4495 20.6828 70.7672 20.5501Z"/></svg><svg class="t-mark" viewBox="61.79 1.9 11.08 22.07" aria-hidden="true"><path fill="#f0f879" d="M71.8464 5.7464C70.7662 5.85237 69.7507 6.21659 68.8477 6.77229C68.7105 6.85699 68.5587 6.72891 68.6225 6.5808C69.0121 5.67506 69.2623 3.52733 69.3403 2.55276C69.3691 2.19522 69.0734 1.90234 68.7147 1.90234H66.0409C65.7415 1.90234 65.4658 2.11178 65.4266 2.4084C65.2056 4.09013 63.914 6.83362 62.2866 7.10939C61.9892 7.15945 61.7891 7.44649 61.7891 7.74854V10.4053C61.7891 10.7649 62.0848 11.0615 62.443 11.031C63.5549 10.9359 64.5975 10.5997 65.5205 10.0757C65.661 9.99598 65.807 10.1312 65.7373 10.2772C65.2189 11.3636 64.9262 12.5655 64.9266 13.7933H68.8327C68.8327 11.9372 70.2169 9.97888 72.0065 9.66514C72.3051 9.61299 72.5041 9.32346 72.5041 9.02057V6.3722C72.5041 6.01049 72.2063 5.71094 71.8464 5.7464Z"/></svg>`;   // the Positiv-mark "t" (white stem + lime mark)
+  if (ctaTitle && !ctaTitle.dataset.split) {
     const nodes = [...ctaTitle.childNodes];
     ctaTitle.setAttribute('aria-label', ctaTitle.textContent.replace(/\s+/g, ' ').trim());
     ctaTitle.dataset.split = '1';
@@ -296,9 +255,9 @@
           [...w].forEach((ch) => {
             const c = document.createElement('span');
             c.className = 'hero__char'; c.style.setProperty('--i', idx++);
-            if (ch === 't') {
+            if (ch === 't' && w.toLowerCase() === 'creative') {                 // only the "t" of "creative" carries the Positiv mark
               c.classList.add('hero__char--t');
-              c.innerHTML = tTemplate.innerHTML.replace(/(<span class="t-base">)[^<]*(<\/span>)/, `$1${ch}$2`);
+              c.innerHTML = tMark(ch);
             } else c.textContent = ch;
             word.appendChild(c);
           });
@@ -398,46 +357,29 @@
       if ('IntersectionObserver' in window) new IntersectionObserver(check, { threshold: [0, 0.1, 0.2, 0.35, 0.5, 0.75, 1] }).observe(heading);
       else gsap.set(fw, { opacity: 1, yPercent: 0, filter: 'none', rotation: 0 });
     };
-    $$('.features__title, .about-title, .impact__title, .impact__sub, .clients__title, .services__eyebrow, .services__lines h4, .testimonials__title, .compare__title').forEach(revealHeading);
+    $$('.features__title, .about-title, .impact__title, .impact__sub, .clients__title, .services__eyebrow, .services__lines h4, .testimonials__title, .compare__title, .work-hero__title').forEach(revealHeading);
   }
 
   /* ---------- Hero word rotator ----------
-     GSAP version: each word is split into masked letters. The current word's letters shear up and out (power3.in,
-     staggered), then the next word's letters spring up from below with a back-ease and a slight rotation, while a
-     soft blur clears. Falls back to the CSS cross-fade
-     without GSAP, and stays static with reduced motion. */
+     The six partner phrases change as whole lines: the current one lifts away and fades with a soft blur, the next one rises in
+     the same way. Falls back to the CSS cross-fade without GSAP, and stays static with reduced motion. */
   const rotator = $('[data-rotator]');
   if (rotator && !reduceMotion) {
     const words = $$('.hero__word', rotator);
     if (window.gsap) {
       rotator.classList.add('is-gsap-rot');
-      const split = words.map((w) => {
-        const label = w.textContent.trim();
-        w.setAttribute('aria-label', label); w.textContent = '';
-        const chars = [];
-        label.split(' ').forEach((part, pi, arr) => {
-          const mask = document.createElement('span'); mask.className = 'rot-mask'; mask.setAttribute('aria-hidden', 'true');
-          [...part].forEach((ch) => { const c = document.createElement('span'); c.className = 'rot-char'; c.textContent = ch; mask.appendChild(c); chars.push(c); });
-          w.appendChild(mask);
-          if (pi < arr.length - 1) w.appendChild(document.createTextNode(' '));
-        });
-        return chars;
-      });
       let cur = 0;
       words.forEach((w, i) => { w.classList.toggle('is-active', i === 0); });
-      gsap.set(split.flatMap((c, i) => (i === 0 ? [] : c)), { yPercent: 125 });
-      const intro = gsap.from(split[0], { yPercent: 125, rotation: 7, transformOrigin: '0% 100%', duration: 1.1, ease: 'back.out(1.7)', stagger: 0.035, delay: 0.9 });
+      gsap.set(words.slice(1), { opacity: 0 });
+      const intro = gsap.from(words[0], { y: 40, opacity: 0, filter: 'blur(8px)', duration: 1, ease: 'power3.out', delay: 0.5 });
       const change = () => {
-        const next = (cur + 1) % words.length, outChars = split[cur], inChars = split[next];
-        const tl = gsap.timeline({ onComplete: () => { cur = next; schedule(); } });
-        tl.to(outChars, { yPercent: -125, rotation: -7, transformOrigin: '0% 100%', duration: 0.55, ease: 'power3.in', stagger: { each: 0.02 } }, 0)
-          .add(() => {
-            words[cur].classList.remove('is-active'); words[next].classList.add('is-active');
-          }, 0.5)
-          .fromTo(inChars, { yPercent: 125, rotation: 7, filter: 'blur(6px)' }, { yPercent: 0, rotation: 0, filter: 'blur(0px)', transformOrigin: '0% 100%', duration: 1, ease: 'back.out(1.7)', stagger: { each: 0.035 } }, 0.52);
+        const next = (cur + 1) % words.length;
+        gsap.timeline({ onComplete: () => { cur = next; schedule(); } })
+          .to(words[cur], { y: -36, opacity: 0, filter: 'blur(6px)', duration: 0.5, ease: 'power2.in' })
+          .add(() => { words[cur].classList.remove('is-active'); words[next].classList.add('is-active'); })
+          .fromTo(words[next], { y: 36, opacity: 0, filter: 'blur(6px)' }, { y: 0, opacity: 1, filter: 'blur(0px)', duration: 0.85, ease: 'power3.out' });
       };
-      let timer = null;
-      const schedule = () => { timer = gsap.delayedCall(2.4, () => { if (document.hidden) { schedule(); return; } change(); }); };
+      const schedule = () => { gsap.delayedCall(2.4, () => { if (document.hidden) { schedule(); return; } change(); }); };
       intro.eventCallback('onComplete', schedule);
     } else {
       let i = 0;
@@ -754,6 +696,7 @@
       gsap.fromTo(words, { yPercent: 115, rotation: 4 }, { yPercent: 0, rotation: 0, duration: 0.95, ease: 'power4.out', stagger: 0.07, transformOrigin: '0% 100%' });
       gsap.fromTo(rest, { opacity: 0, y: 22, filter: 'blur(5px)' }, { opacity: 1, y: 0, filter: 'blur(0px)', duration: 0.8, ease: 'power3.out', stagger: 0.06, delay: 0.12 });
     };
+    const SVC_SPEED = 1.8;
     let curPx = null, targetPx = 0, rafS = 0, lastS = 0, mainTile = 0;
     const applyS = (px) => {
       const scale = media.clientHeight / 800;
@@ -783,7 +726,7 @@
         const a = x * SPREAD, r = (a * Math.PI) / 180;
         tile.style.top = `${cy - tileH / 2}px`; tile.style.height = `${tileH}px`;
         tile.style.opacity = clamp01(2 - Math.abs(x)).toFixed(3);       // neighbours are fully there, the face behind the drum fades out
-        tile.style.transform = `translateY(${(R * Math.sin(r)).toFixed(1)}px) translateZ(${(R * Math.cos(r) - R).toFixed(1)}px) rotateX(${(-a).toFixed(2)}deg)`;
+        tile.style.transform = `translateY(${(x * (tileH + 30 * scale)).toFixed(1)}px)`;                 // pictures slide flat (no tilt); only the copy rolls on the drum
         tile.style.pointerEvents = Math.abs(x) < 1.4 ? '' : 'none';
       });
     };
@@ -797,7 +740,7 @@
     };
     const updateS = (instant) => {
       if (!mqS.matches) { panels.forEach((p) => p.removeAttribute('style')); tiles.forEach((t) => t.removeAttribute('style')); curPx = null; return; }
-      targetPx = (window.scrollY - pinStart) / window.innerHeight;                      // progress in vh units
+      targetPx = (window.scrollY - pinStart) / window.innerHeight * SVC_SPEED;           // progress in vh units; the services change SVC_SPEED× faster than the page scrolls
       if (curPx === null || instant === true || reduceMotion) { curPx = targetPx; applyS(curPx); return; }
       if (!rafS) { lastS = performance.now(); rafS = requestAnimationFrame(loopS); }
     };
@@ -806,14 +749,14 @@
       tile.insertAdjacentHTML('beforeend', '<button class="svc-tile__expand" type="button" aria-label="Expand image"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M10 20H4v-6M20 4l-7 7M4 20l7-7"/></svg></button>');
       const open = () => {
         const m = /url\(["']?([^"')]+)["']?\)/.exec(getComputedStyle(tile).backgroundImage);
-        if (m && openLightbox) openLightbox(m[1], tile.querySelector('.svc-tile__expand'), panels[tiles.indexOf(tile)]);
+        if (m && openLightbox) openLightbox(m[1], tile.querySelector('.svc-tile__expand'), panels[tiles.indexOf(tile)], (tile.dataset.extra || '').split(',').filter(Boolean));
       };
       // the picture in the main slot opens the lightbox; a peeking picture (above / below) jumps to its own service
       tile.addEventListener('click', () => {
         const i = tiles.indexOf(tile);
         if (i === mainTile || !mqS.matches) { open(); return; }
         const px = i === 0 ? 0.55 : E1 + STEP * (i - 1) + 0.4 * STEP;
-        window.scrollTo({ top: pinStart + px * window.innerHeight, behavior: 'smooth' });
+        window.scrollTo({ top: pinStart + (px / SVC_SPEED) * window.innerHeight, behavior: 'smooth' });
       });
     });
     window.addEventListener('scroll', () => updateS(), { passive: true });
@@ -1005,8 +948,18 @@
       index = Math.min(Math.max(i, 0), cardsT.length - 1);
       tRail.classList.toggle('is-dragging', !animate);
       tRail.style.transform = `translate3d(${-index * pitch}px,0,0)`;
-      tabs.forEach((t, n) => { t.classList.toggle('is-active', n === index); t.setAttribute('aria-selected', String(n === index)); });
+      tabs.forEach((t, n) => { t.classList.remove('is-active'); t.setAttribute('aria-selected', String(n === index)); });
+      void tRail.offsetWidth;                                         // restart the active bar's fill from empty
+      tabs[index].classList.add('is-active');
     };
+    // The active tab's bar fills up in grey -> black; when it is full the next card slides in by itself (loops back to the first).
+    // The fill pauses while the pointer is on the cards / tabs or the section is off screen.
+    tabs.forEach((t) => $('.testi-tab__bar', t).addEventListener('animationend', (e) => { if (e.animationName === 'testi-fill') go((index + 1) % cardsT.length); }));
+    const secT = tRail.closest('section');
+    const setPaused = (on) => secT.classList.toggle('is-paused', on);
+    ['mouseenter', 'focusin'].forEach((ev) => { viewport.addEventListener(ev, () => setPaused(true)); $('[data-testi-tabs]').addEventListener(ev, () => setPaused(true)); });
+    ['mouseleave', 'focusout'].forEach((ev) => { viewport.addEventListener(ev, () => setPaused(false)); $('[data-testi-tabs]').addEventListener(ev, () => setPaused(false)); });
+    if ('IntersectionObserver' in window) new IntersectionObserver((ens) => secT.classList.toggle('is-offscreen', !ens[ens.length - 1].isIntersecting), { threshold: 0.2 }).observe(secT);
     tabs.forEach((t, n) => t.addEventListener('click', () => go(n)));
     tabs.forEach((t, n) => t.addEventListener('keydown', (e) => {
       if (e.key === 'ArrowRight') { go(n + 1); tabs[index].focus(); }

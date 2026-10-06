@@ -371,7 +371,9 @@
       let cur = 0;
       words.forEach((w, i) => { w.classList.toggle('is-active', i === 0); });
       gsap.set(words.slice(1), { opacity: 0 });
-      const intro = gsap.from(words[0], { y: 40, opacity: 0, filter: 'blur(8px)', duration: 1, ease: 'power3.out', delay: 0.5 });
+      const introOn = document.documentElement.classList.contains('intro-on');
+      const intro = gsap.from(words[0], { y: 40, opacity: 0, filter: 'blur(8px)', duration: 1, ease: 'power3.out', delay: introOn ? 0.15 : 0.5, paused: introOn });
+      if (introOn) document.addEventListener('positiv:intro-done', () => intro.play(), { once: true });   // start when the intro curtain has lifted
       const change = () => {
         const next = (cur + 1) % words.length;
         gsap.timeline({ onComplete: () => { cur = next; schedule(); } })

@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>About — Positiv</title>
   <script>document.documentElement.classList.add('js')</script>
+  <script>try{if(!sessionStorage.getItem('positivIntro')&&!matchMedia('(prefers-reduced-motion: reduce)').matches){document.documentElement.classList.add('intro-on');setTimeout(function(){document.documentElement.classList.remove('intro-on')},9000)}}catch(e){}</script>
+  <link rel="stylesheet" href="css/intro.css?v=1">
   <meta name="description" content="Brand systems, sales assets and digital experiences for channel partners — unmistakably different.">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/favicon-32.png">
   <link rel="icon" type="image/png" sizes="48x48" href="assets/favicon/favicon-48.png">
@@ -574,6 +576,7 @@
 -->
 <script src="js/vendor/gsap.min.js" defer></script>
 <script src="js/main.js?v=20261006a" defer></script>
+<script src="js/intro.js?v=1" defer></script>
 <script src="js/about.js?v=20261006a" defer></script>
 </body>
 </html>

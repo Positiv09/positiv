@@ -198,14 +198,27 @@
     // Lightbox
     const lb = document.createElement('div');
     lb.className = 'lightbox'; lb.setAttribute('role', 'dialog'); lb.setAttribute('aria-modal', 'true'); lb.setAttribute('aria-label', 'Image preview');
-    lb.innerHTML = '<button class="lightbox__close" type="button" aria-label="Close"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button><img class="lightbox__img" alt="">';
+    lb.innerHTML = '<button class="lightbox__close" type="button" aria-label="Close"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button><div class="lightbox__stage"><img class="lightbox__img" alt=""><aside class="lightbox__info" aria-live="polite"></aside></div>';
     document.body.appendChild(lb);
     const lbImg = $('.lightbox__img', lb);
     let opener = null;
     // Figma exported these JPGs with their rounded corners filled light grey; clip the preview to the same radius (measured: the grey corner arc is ~28px on a 492px-wide export, so 6% of the width)
     const fitRadius = () => { lbImg.style.borderRadius = '0'; const w = lbImg.getBoundingClientRect().width; lbImg.style.clipPath = `inset(${(w * 0.025).toFixed(1)}px round ${(w * 0.05).toFixed(1)}px)`; };   // trim 2.5% off every edge: removes the whole grey corner arc (it reaches ~1.7% in), then re-round
     lbImg.addEventListener('load', fitRadius); window.addEventListener('resize', fitRadius);
-    const openLb = (src, from) => { lbImg.src = src; lb.classList.add('is-open'); heroPaused = true; opener = from; $('.lightbox__close', lb).focus(); };
+    const lbInfo = $('.lightbox__info', lb);
+    // `panel` (optional): the service-card text panel of that picture, shown beside the image (icon, title, the work, deliverables, number)
+    const openLb = (src, from, panel) => {
+      lbInfo.textContent = '';
+      if (panel) {
+        const c = panel.cloneNode(true);
+        c.removeAttribute('style'); c.removeAttribute('data-svc-panel'); c.className = 'lightbox__panel';
+        const t = $('.svc-panel__title', c); if (t) t.textContent = t.getAttribute('aria-label') || t.textContent;
+        $$('.svc-pill', c).forEach((a) => { const sp = document.createElement('span'); sp.className = 'svc-pill'; sp.textContent = a.textContent; a.replaceWith(sp); });
+        lbInfo.appendChild(c);
+      }
+      lb.classList.toggle('has-info', !!panel);
+      lbImg.src = src; lb.classList.add('is-open'); heroPaused = true; opener = from; $('.lightbox__close', lb).focus();
+    };
     openLightbox = openLb;
     const closeLb = () => { if (!lb.classList.contains('is-open')) return; lb.classList.remove('is-open'); heroPaused = false; opener?.focus?.({ preventScroll: true }); };
     // (the hero pictures no longer open on click; the lightbox is only used by the service-card pictures)
@@ -793,7 +806,7 @@
       tile.insertAdjacentHTML('beforeend', '<button class="svc-tile__expand" type="button" aria-label="Expand image"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M10 20H4v-6M20 4l-7 7M4 20l7-7"/></svg></button>');
       const open = () => {
         const m = /url\(["']?([^"')]+)["']?\)/.exec(getComputedStyle(tile).backgroundImage);
-        if (m && openLightbox) openLightbox(m[1], tile.querySelector('.svc-tile__expand'));
+        if (m && openLightbox) openLightbox(m[1], tile.querySelector('.svc-tile__expand'), panels[tiles.indexOf(tile)]);
       };
       // the picture in the main slot opens the lightbox; a peeking picture (above / below) jumps to its own service
       tile.addEventListener('click', () => {

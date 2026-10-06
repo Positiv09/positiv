@@ -99,8 +99,29 @@
   opacity: 0; visibility: hidden; transition: opacity .3s ease, visibility .3s;
 }
 .lightbox.is-open { opacity: 1; visibility: visible; }
+.lightbox__stage { display: flex; align-items: center; justify-content: center; gap: clamp(32px, 5vw, 88px); max-width: 100%; }
 .lightbox__img { max-width: min(1200px, 90vw); max-height: 88vh; object-fit: contain; transform: scale(.96); transition: transform .45s var(--ease-out); box-shadow: 0 30px 80px rgb(0 0 0 / .45); }
 .lightbox.is-open .lightbox__img { transform: none; }
+/* with a service: picture on the left, its copy on the right */
+.lightbox.has-info .lightbox__img { max-width: min(560px, 42vw); max-height: 84vh; border-radius: 20px; }
+.lightbox__info { display: none; }
+.lightbox.has-info .lightbox__info {
+  display: block; flex: 0 1 520px; min-width: 0; max-height: 84vh; overflow-y: auto; color: var(--c-paper);
+  opacity: 0; transform: translateX(28px); transition: opacity .6s ease .18s, transform .8s var(--ease-out) .18s;
+}
+.lightbox.has-info.is-open .lightbox__info { opacity: 1; transform: none; }
+.lightbox__panel { display: flex; flex-direction: column; align-items: flex-start; }
+.lightbox__panel .svc-panel__icon { margin-bottom: 28px; }
+.lightbox__panel .svc-panel__title { margin-bottom: 22px; font-size: clamp(36px, 4vw, 56px); line-height: 1.08; }
+.lightbox__panel .svc-panel__text { font-size: 18px; line-height: 28px; }
+.lightbox__panel .svc-panel__work { margin-bottom: 28px; }
+.lightbox__panel .svc-panel__pills { width: 100%; margin-bottom: 8px; }
+.lightbox__panel .svc-panel__num { margin-top: 36px; }
+@media (max-width: 900px) {
+  .lightbox.has-info .lightbox__stage { flex-direction: column; gap: 20px; }
+  .lightbox.has-info .lightbox__img { max-width: 80vw; max-height: 38vh; }
+  .lightbox.has-info .lightbox__info { max-height: 46vh; }
+}
 .lightbox__close { position: absolute; top: 24px; right: 24px; width: 48px; height: 48px; border-radius: 50%; display: grid; place-items: center; background: var(--c-lime); color: var(--c-ink); cursor: pointer; transition: transform .25s var(--ease-out); }
 .lightbox__close:hover { transform: rotate(90deg); }
 
@@ -128,12 +149,8 @@
 .logo-marquee--reverse .logo-marquee__track { animation-direction: reverse; }  /* row 2 runs the opposite way */
 .logo-marquee__set { display: flex; align-items: center; gap: 80px; padding-right: 80px; }  /* padding = gap, so the loop seam is invisible */
 .logo-marquee:hover .logo-marquee__track { animation-play-state: paused; }
-.logo-marquee.is-js { cursor: grab; touch-action: pan-y; user-select: none; -webkit-user-select: none; }
-.logo-marquee.is-js.is-dragging { cursor: grabbing; }
-@media (hover: hover) and (pointer: fine) {
-  .logo-marquee.is-js, .logo-marquee.is-js.is-dragging { cursor: none; }   /* replaced by .drag-cursor */
-}
-.drag-cursor { position: fixed; left: 0; top: 0; z-index: 2500; width: 0; height: 0; pointer-events: none; }
+.logo-marquee.is-js { cursor: default; touch-action: pan-y; user-select: none; -webkit-user-select: none; }   /* normal pointer over the logos (no custom drag ball) */
+.drag-cursor { display: none !important; position: fixed; left: 0; top: 0; z-index: 2500; width: 0; height: 0; pointer-events: none; }
 .drag-cursor__ball {
   position: absolute; left: -16px; top: -16px; width: 32px; height: 32px; border-radius: 50%;
   display: grid; place-items: center; background: var(--c-lime); color: var(--c-ink);

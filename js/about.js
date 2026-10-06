@@ -78,13 +78,13 @@
   const TEAM = [
     { name: 'Kevin Bruno', role: 'Creative Director', photo: IMG + 'team-kevin.png', avatar: IMG + 'team-avatar-1.png', pos: '50% 50%',
       bio: "I'm a web and UI/UX designer. For [X] years I've designed websites and digital experiences built to convert — not just to look good. I focus on accessible, conversion-focused design: websites," },
-    { name: 'Team Member 02', role: 'Role / Title', photo: IMG + 'collage-04.png', avatar: IMG + 'collage-04.png', pos: '55% 40%',
+    { name: 'Team Member 02', role: 'Role / Title', photo: IMG + 'collage-04.webp', avatar: IMG + 'collage-04.webp', pos: '55% 40%',
       bio: 'Placeholder profile — replace the photo, name, role and this text in the TEAM array of js/about.js.' },
-    { name: 'Team Member 03', role: 'Role / Title', photo: IMG + 'collage-06.png', avatar: IMG + 'collage-06.png', pos: '45% 35%',
+    { name: 'Team Member 03', role: 'Role / Title', photo: IMG + 'collage-06.webp', avatar: IMG + 'collage-06.webp', pos: '45% 35%',
       bio: 'Placeholder profile — replace the photo, name, role and this text in the TEAM array of js/about.js.' },
-    { name: 'Team Member 04', role: 'Role / Title', photo: IMG + 'collage-03.png', avatar: IMG + 'collage-03.png', pos: '60% 40%',
+    { name: 'Team Member 04', role: 'Role / Title', photo: IMG + 'collage-03.webp', avatar: IMG + 'collage-03.webp', pos: '60% 40%',
       bio: 'Placeholder profile — replace the photo, name, role and this text in the TEAM array of js/about.js.' },
-    { name: 'Team Member 05', role: 'Role / Title', photo: IMG + 'collage-02.png', avatar: IMG + 'collage-02.png', pos: '45% 60%',
+    { name: 'Team Member 05', role: 'Role / Title', photo: IMG + 'collage-02.webp', avatar: IMG + 'collage-02.webp', pos: '45% 60%',
       bio: 'Placeholder profile — replace the photo, name, role and this text in the TEAM array of js/about.js.' }
   ];
   const card = $('[data-team-card]'), bar = $('[data-team-progress]');

@@ -194,10 +194,10 @@
   width: 96%; height: 96%; border-radius: 15px; overflow: hidden;
   background-size: cover; background-position: 50%; background-repeat: no-repeat;
 }
-.feature-card--yellow .feature-card__media { background-image: url("../assets/img/feature-card-1.jpg"); }
-.feature-card--purple .feature-card__media { background-image: url("../assets/img/feature-card-2.jpg"); }
-.feature-card--white  .feature-card__media { background-image: url("../assets/img/feature-card-3.jpg"); }
-.feature-card--orange .feature-card__media { background-image: url("../assets/img/feature-card-4.jpg"); }
+.feature-card--yellow .feature-card__media { background-image: url("../assets/img/feature-card-1.webp"); }
+.feature-card--purple .feature-card__media { background-image: url("../assets/img/feature-card-2.webp"); }
+.feature-card--white  .feature-card__media { background-image: url("../assets/img/feature-card-3.webp"); }
+.feature-card--orange .feature-card__media { background-image: url("../assets/img/feature-card-4.webp"); }
 
 .feature-card__media-inner { width: 80%; padding-bottom: 60px; position: relative; }
 .feature-card__media-title {
@@ -258,10 +258,10 @@
   background-size: cover; background-position: 50%; background-repeat: no-repeat;
 }
 .portfolio-card__media--1 { background-image: url("../assets/img/portfolio-1.jpg"); }
-.portfolio-card__media--2 { background-image: url("../assets/img/portfolio-2.jpg"); }
-.portfolio-card__media--3 { background-image: url("../assets/img/portfolio-3.jpg"); }
+.portfolio-card__media--2 { background-image: url("../assets/img/portfolio-2.webp"); }
+.portfolio-card__media--3 { background-image: url("../assets/img/portfolio-3.webp"); }
 .portfolio-card__media--web { background-image: url("../assets/img/service-web.jpg"); }
-.portfolio-card__media--fig { background-image: url("../assets/img/portfolio-fig.jpg"); }
+.portfolio-card__media--fig { background-image: url("../assets/img/portfolio-fig.webp"); }
 .portfolio-card__info { display: flex; flex-direction: column; justify-content: space-between; height: calc(100% - 50px); }
 .portfolio-card__tag {
   display: inline-flex; align-items: center; justify-content: center; align-self: flex-start;
@@ -414,14 +414,14 @@
 .testimonial-card__role { margin-top: 10px; font-size: 16px; }
 .testimonial-card__visual { position: absolute; inset: 0; pointer-events: none; }
 .testimonial-card__shape { position: absolute; z-index: 1; top: 0; right: 0; width: 60%; height: 100%; background-position: 50%; background-repeat: no-repeat; background-size: 450px; }
-.testimonial-card__shape--a { background-image: url("../assets/img/shape-vector.png"); }
-.testimonial-card__shape--b { background-image: url("../assets/img/shape-intersect-a.png"); background-size: 500px; }
-.testimonial-card__shape--c { background-image: url("../assets/img/shape-intersect-b.png"); background-size: 500px; }
+.testimonial-card__shape--a { background-image: url("../assets/img/shape-vector.webp"); }
+.testimonial-card__shape--b { background-image: url("../assets/img/shape-intersect-a.webp"); background-size: 500px; }
+.testimonial-card__shape--c { background-image: url("../assets/img/shape-intersect-b.webp"); background-size: 500px; }
 .testimonial-card__person { position: absolute; z-index: 2; right: 5%; bottom: 0; width: 53%; height: 597px; background-size: cover; background-position: 50% 100%; background-repeat: no-repeat; }
-.testimonial-card__person--1 { background-image: url("../assets/img/testimonial-1.png"); }
-.testimonial-card__person--2 { background-image: url("../assets/img/testimonial-2.png"); }
-.testimonial-card__person--3 { background-image: url("../assets/img/testimonial-3.png"); }
-.testimonial-card__person--4 { background-image: url("../assets/img/testimonial-4.png"); }
+.testimonial-card__person--1 { background-image: url("../assets/img/testimonial-1.webp"); }
+.testimonial-card__person--2 { background-image: url("../assets/img/testimonial-2.webp"); }
+.testimonial-card__person--3 { background-image: url("../assets/img/testimonial-3.webp"); }
+.testimonial-card__person--4 { background-image: url("../assets/img/testimonial-4.webp"); }
 
 /* ---------- 7. COMPARISON TABLE --------------------------------------- */
 .compare-section { display: flex; flex-direction: column; align-items: center; padding: 120px 0; background: var(--c-ink); color: #fff; }
@@ -453,7 +453,7 @@
 .cta-section {
   display: flex; flex-direction: column; justify-content: space-between; gap: 100px;
   width: 100%; height: 1585px; color: #fff;
-  background: linear-gradient(rgb(33 29 29 / .47), var(--c-ink)), url("../assets/img/cta-bg.jpg");
+  background: linear-gradient(rgb(33 29 29 / .47), var(--c-ink)), url("../assets/img/cta-bg.webp");
   background-size: auto, cover; background-position: 0 0, 50%; background-repeat: no-repeat;
 }
 .cta__inner { display: flex; flex-direction: column; align-items: center; padding-top: 100px; }

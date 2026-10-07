@@ -112,3 +112,5 @@
   .m-mosaic:not(.is-filtered) .m-tile.is-in { transform: none; }
   .m-mosaic.is-filtered { grid-auto-rows: calc((100vw - 120px) / 12 * .86); }
 }
+
+@media (min-width: 992px) { .m-mosaic { width: 80%; margin: 0 auto; padding: 0 0 10px; } }  /* same width as the navbar */

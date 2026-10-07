@@ -78,3 +78,7 @@
 /* cinematic finish: soft vignette + a touch of film grain over the canvas */
 .lib::after { content: ""; position: absolute; inset: 0; z-index: 3; pointer-events: none; background: radial-gradient(120% 95% at 50% 52%, transparent 55%, rgb(5 3 2 / .55) 100%), url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .5 0'/></filter><rect width='160' height='160' filter='url(%23n)' opacity='.5'/></svg>"); background-blend-mode: normal; opacity: .55; mix-blend-mode: soft-light; }
 .lib__rbtn { white-space: nowrap; }
+
+.lib__sound { position: absolute; z-index: 8; left: 10px; top: 168px; display: inline-flex; align-items: center; gap: 8px; padding: 7px 14px 7px 11px; border: .5px solid rgb(239 239 235 / .35); border-radius: 20px; background: rgb(33 29 29 / .55); backdrop-filter: blur(6px); font-size: 13px; color: var(--c-paper-2); cursor: pointer; transition: color .3s ease, border-color .3s ease, background-color .3s ease; }
+.lib__sound:hover { color: var(--c-ink); background: var(--c-lime); border-color: var(--c-lime); } .lib__sound.is-off { opacity: .7; } .lib__sound.is-off .lib__waves { display: none; }
+@media (max-width: 991px) { .lib__sound { top: 146px; } }

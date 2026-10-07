@@ -138,3 +138,12 @@
 .m-outro__btn:active { transform: scale(.98); }
 
 @media (min-width: 992px) { .back-projects { left: 10%; } }   /* lines up with the logo / navbar edge */
+
+/* hover teaser: one line of story + a call to open the case study */
+.m-tile__teaser { max-width: 520px; font-size: 17px; line-height: 26px; color: var(--c-paper-2); }
+.m-tile__go { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; letter-spacing: .02em; color: var(--c-lime); }
+.m-tile__go i { font-style: normal; transition: transform .4s var(--ease-out); }
+.m-tile:hover .m-tile__go i { transform: translateX(6px); }
+.m-tile::after { height: 75%; }
+.m-tile__info { gap: 12px; }
+@media (max-width: 991px) { .m-tile__teaser { display: none; } .m-tile__go { display: none; } }

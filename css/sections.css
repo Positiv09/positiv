@@ -565,7 +565,8 @@
   transition: transform .7s var(--ease-out);
 }
 .cta__inner .btn:hover, .portfolio__all:hover { color: var(--c-lime); }
-.cta__inner .btn:hover::before, .cta__inner .btn:focus-visible::before, .portfolio__all:hover::before, .portfolio__all:focus-visible::before { transform: translate(-50%, -50%) scale(1.15); }
+.cta__inner .btn:hover::before, .cta__inner .btn:focus-visible::before, .portfolio__all:hover::before { transform: translate(-50%, -50%) scale(1.15); }
+.portfolio__all:focus-visible { outline: 2px solid var(--c-lime); outline-offset: 4px; }   /* keyboard / #view-all arrival: a ring, not the dark fill (its text would vanish) */
 .cta__inner .btn:active, .portfolio__all:active { transform: scale(.98); }
 @media (prefers-reduced-motion: reduce) { .cta__inner .btn, .cta__inner .btn::before { transition-duration: .01ms; } }
 .footer { width: 100%; padding: 70px 0 60px; color: #fff; }

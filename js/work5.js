@@ -153,7 +153,7 @@ add(scene, new THREE.PlaneGeometry(2.1, 9), M.rug, 0, 0.01, -0.3, false, true).r
 
 /* ---------------- real 3D models (Poly Haven, CC0): loader ---------------- */
 const gltfLoader = new GLTFLoader();
-const loadModel = (id, height) => new Promise((res) => gltfLoader.load(`assets/models/${id}/${id}_1k.gltf`, (g) => {
+const loadModel = (id, height) => new Promise((res) => gltfLoader.load(`assets/models/${id}/${id}.glb`, (g) => {
   const o = g.scene, bb0 = new THREE.Box3().setFromObject(o), localH = bb0.max.y - bb0.min.y, s = height / localH;
   o.scale.setScalar(s); o.updateMatrixWorld(true);
   const bb = new THREE.Box3().setFromObject(o); o.position.set(-(bb.min.x + bb.max.x) / 2, -bb.min.y, -(bb.min.z + bb.max.z) / 2);
@@ -377,7 +377,7 @@ const door = { root: new THREE.Group(), leaves: [], opening: false, t: 0 };
   const glow = canvasTex(256, 512, (c, w, h) => { const gr = c.createLinearGradient(0, 0, 0, h); gr.addColorStop(0, '#fffdf0'); gr.addColorStop(1, '#ffe7b0'); c.fillStyle = gr; c.fillRect(0, 0, w, h); });
   const lightGeo = new THREE.ShapeGeometry(archShape(1.86, 1.84)); const uv = lightGeo.attributes.uv, ps = lightGeo.attributes.position; for (let i = 0; i < uv.count; i++) uv.setXY(i, (ps.getX(i) + 0.93) / 1.86, ps.getY(i) / 2.77);
   const lp = new THREE.Mesh(lightGeo, new THREE.MeshBasicMaterial({ map: glow, toneMapped: false, fog: false })); lp.position.set(-0.045, 0.02, -0.06); g.add(lp);   // daylight behind the leaves
-  gltfLoader.load('assets/models/large_castle_door/large_castle_door_1k.gltf', (gl) => {
+  gltfLoader.load('assets/models/large_castle_door/large_castle_door.glb', (gl) => {
     const o = gl.scene; g.add(o);
     o.traverse((m) => { if (m.isMesh) { m.castShadow = true; m.receiveShadow = true; m.userData.isDoor = true; (Array.isArray(m.material) ? m.material : [m.material]).forEach((x) => { x.envMapIntensity = 0.8; }); } });
     const L = o.getObjectByName('large_castle_door_left'), Rt = o.getObjectByName('large_castle_door_right');

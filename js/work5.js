@@ -5,6 +5,7 @@
    The arched door leads back home. Project data below is placeholder (same order as project.html?p=N). */
 import * as THREE from 'three';
 import { GLTFLoader } from './vendor/jsm/loaders/GLTFLoader.js';
+import { RoundedBoxGeometry } from './vendor/jsm/geometries/RoundedBoxGeometry.js';
 
 const $ = (id) => document.getElementById(id);
 const stage = $('lib'), host = $('lib-canvas');
@@ -77,6 +78,9 @@ const labelTex = (text, sub, w = 1024, h = 300) => canvasTex(w, h, (g) => {
 const glowTex = (inner, outer) => canvasTex(128, 128, (g, w, h) => { const gr = g.createRadialGradient(w / 2, h / 2, 0, w / 2, h / 2, w / 2); gr.addColorStop(0, inner); gr.addColorStop(1, outer); g.fillStyle = gr; g.fillRect(0, 0, w, h); });
 const beamTex = () => canvasTex(64, 256, (g, w, h) => { const gr = g.createLinearGradient(0, 0, 0, h); gr.addColorStop(0, 'rgba(255,236,196,0.9)'); gr.addColorStop(1, 'rgba(255,236,196,0)'); g.fillStyle = gr; g.fillRect(0, 0, w, h); const gx = g.createLinearGradient(0, 0, w, 0); gx.addColorStop(0, 'rgba(0,0,0,1)'); gx.addColorStop(0.5, 'rgba(0,0,0,0)'); gx.addColorStop(1, 'rgba(0,0,0,1)'); g.globalCompositeOperation = 'destination-out'; g.fillStyle = gx; g.fillRect(0, 0, w, h); });
 
+const pageEdge = canvasTex(32, 128, (g, w, h) => { g.fillStyle = '#d3cab3'; g.fillRect(0, 0, w, h); for (let y = 0; y < h; y += 2) { g.fillStyle = `rgba(90,70,40,${0.05 + Math.random() * 0.14})`; g.fillRect(0, y, w, 1); } }, { repeat: [1, 2] });
+const aoTex = canvasTex(8, 64, (g, w, h) => { const gr = g.createLinearGradient(0, 0, 0, h); gr.addColorStop(0, 'rgba(0,0,0,.7)'); gr.addColorStop(1, 'rgba(0,0,0,0)'); g.fillStyle = gr; g.fillRect(0, 0, w, h); });
+
 /* dark spine atlas for the "coming soon" books: 32 x 4 spines (64 x 512 each); the vertex shader picks one per instance */
 const SP_COLS = 32, SP_ROWS = 4;
 const spineAtlas = canvasTex(2048, 2048, (g) => {
@@ -103,8 +107,8 @@ const M = {
   caseIn: new THREE.MeshStandardMaterial({ color: 0x120c08, roughness: 0.95 }),
   ceil: new THREE.MeshStandardMaterial({ color: 0x1b1612, roughness: 0.95 }),
   brass: new THREE.MeshStandardMaterial({ color: 0xb08d45, roughness: 0.32, metalness: 0.9 }),
-  rug: new THREE.MeshStandardMaterial({ map: rugTex(), roughness: 1 }),
-  page: new THREE.MeshStandardMaterial({ color: 0xd2c9b2, roughness: 0.95 }),
+  rug: pbr('carpet', [1.1, 4.5], { color: 0xc58585 }),
+  page: new THREE.MeshStandardMaterial({ map: pageEdge, color: 0xf2ead4, roughness: 0.95 }),
   leather: new THREE.MeshStandardMaterial({ color: 0x3a2018, roughness: 0.5 }),
   red: new THREE.MeshStandardMaterial({ color: 0x5e1a20, roughness: 0.9 }),
   pot: new THREE.MeshStandardMaterial({ color: 0x7a4f34, roughness: 0.8 }),
@@ -129,6 +133,17 @@ wallPanel(RX * 2, 0, -RZ, 0); wallPanel(RX * 2, 0, RZ, Math.PI); wallPanel(RZ * 
 for (let z = -4.5; z <= 5; z += 3) add(scene, box(RX * 2, 0.26, 0.26), M.woodLong, 0, RH - 0.13, z);
 add(scene, new THREE.PlaneGeometry(2.1, 9), M.rug, 0, 0.01, -0.3, false, true).rotation.x = -Math.PI / 2;
 
+/* ---------------- real 3D models (Poly Haven, CC0): loader ---------------- */
+const gltfLoader = new GLTFLoader();
+const loadModel = (id, height) => new Promise((res) => gltfLoader.load(`assets/models/${id}/${id}_1k.gltf`, (g) => {
+  const o = g.scene, bb0 = new THREE.Box3().setFromObject(o), localH = bb0.max.y - bb0.min.y, s = height / localH;
+  o.scale.setScalar(s); o.updateMatrixWorld(true);
+  const bb = new THREE.Box3().setFromObject(o); o.position.set(-(bb.min.x + bb.max.x) / 2, -bb.min.y, -(bb.min.z + bb.max.z) / 2);
+  const w = new THREE.Group(); w.add(o);
+  o.traverse((m) => { if (m.isMesh) { m.castShadow = true; m.receiveShadow = true; const mats = Array.isArray(m.material) ? m.material : [m.material]; mats.forEach((x) => { x.envMapIntensity = 0.85; }); } });
+  w.userData = { scale: s, localH, size: new THREE.Vector3().subVectors(bb.max, bb.min) }; res(w);
+}, undefined, () => res(null)));
+
 /* ---------------- bookcases ---------------- */
 const BC_H = 3.5, BC_D = 0.46, NLEV = 7, LEV = (k) => 0.2 + k * 0.5, PROJ_LEVEL = 3;
 const cases = []; const colliders = []; const projectBooks = [];
@@ -138,6 +153,7 @@ const bookcase = (cat, x, z, ry, W) => {
   add(g, box(W, 0.08, BC_D), M.wood, 0, BC_H - 0.04, 0); add(g, box(W + 0.1, 0.09, BC_D + 0.1), M.wood, 0, BC_H + 0.045, 0.03); add(g, box(W + 0.16, 0.14, BC_D + 0.14), M.wood, 0, BC_H + 0.16, 0.05);
   add(g, box(W, BC_H, 0.03), M.caseIn, 0, BC_H / 2, -BC_D / 2 + 0.015, false, true); add(g, box(W + 0.05, 0.16, BC_D + 0.05), M.wood, 0, 0.08, 0.02);
   for (let k = 0; k < NLEV; k++) add(g, box(W - 0.16, 0.045, BC_D - 0.02), M.wood, 0, LEV(k) - 0.022, 0);
+  { const aoM = new THREE.MeshBasicMaterial({ map: aoTex, transparent: true, depthWrite: false }); for (let k = 0; k < NLEV; k++) { const p = new THREE.Mesh(new THREE.PlaneGeometry(W - 0.2, 0.3), aoM); p.position.set(0, LEV(k) - 0.19, -BC_D / 2 + 0.036); g.add(p); } }
   const divs = Math.round(W / 1.55) - 1; for (let d = 1; d <= divs; d++) add(g, box(0.045, BC_H - 0.2, BC_D - 0.04), M.wood, -W / 2 + (W / (divs + 1)) * d, BC_H / 2, 0);
   g.updateMatrixWorld(true);
   const wm = new THREE.Box3().setFromObject(g); colliders.push({ minX: wm.min.x - 0.28, maxX: wm.max.x + 0.28, minZ: wm.min.z - 0.28, maxZ: wm.max.z + 0.28 });
@@ -176,19 +192,19 @@ const projectBook = (p, color) => {
   const g = new THREE.Group();
   const spine = new THREE.MeshStandardMaterial({ map: spineTex(p, color), roughness: 0.5, emissive: 0x000000, envMapIntensity: 0.9 });
   const cover = new THREE.MeshStandardMaterial({ color, roughness: 0.55 });
-  const b = new THREE.Mesh(box(PB.w, PB.h, PB.d), [cover, cover, M.page, M.page, spine, M.page]); b.castShadow = true; b.receiveShadow = true; g.add(b);
+  const b = new THREE.Mesh(new RoundedBoxGeometry(PB.w, PB.h, PB.d, 2, 0.012), [cover, cover, M.page, M.page, spine, M.page]); b.castShadow = true; b.receiveShadow = true; g.add(b);
   g.userData = { project: p, spine, base: 0, home: null, lift: 0 };
   return g;
 };
 
 /* dark filler books: ONE instanced mesh, per-instance spine from the atlas */
 const MAXF = 4200;
-const fillerGeo = box(1, 1, 1);
+const fillerGeo = new RoundedBoxGeometry(1, 1, 1, 2, 0.16);
 const cellAttr = new THREE.InstancedBufferAttribute(new Float32Array(MAXF * 2), 2); fillerGeo.setAttribute('aCell', cellAttr);
 const spineMat = new THREE.MeshStandardMaterial({ map: spineAtlas, roughness: 0.6, envMapIntensity: 0.6 });
 spineMat.onBeforeCompile = (sh) => { sh.vertexShader = 'attribute vec2 aCell;\n' + sh.vertexShader.replace('#include <uv_vertex>', '#include <uv_vertex>\n#ifdef USE_MAP\n vMapUv = uv * vec2(' + (1 / SP_COLS).toFixed(6) + ', ' + (1 / SP_ROWS).toFixed(6) + ') + aCell;\n#endif'); };
 const coverFill = new THREE.MeshStandardMaterial({ color: 0x1d1511, roughness: 0.7 });
-const pageDark = new THREE.MeshStandardMaterial({ color: 0x9d957f, roughness: 0.95 });
+const pageDark = new THREE.MeshStandardMaterial({ map: pageEdge, color: 0x9a927c, roughness: 0.95 });
 const fillerInst = new THREE.InstancedMesh(fillerGeo, [coverFill, coverFill, pageDark, pageDark, spineMat, pageDark], MAXF); fillerInst.castShadow = true; fillerInst.receiveShadow = true; fillerInst.frustumCulled = false;
 let fi = 0; const tmpM = new THREE.Matrix4(), tmpQ = new THREE.Quaternion(), tmpS = new THREE.Vector3(), tmpP = new THREE.Vector3();
 const fillCase = (c) => {
@@ -222,23 +238,12 @@ scene.updateMatrixWorld(true);
 
 /* rolling ladders on two cases */
 const ladder = (g, lx, W) => {
-  const l = new THREE.Group(); l.position.set(lx, 0, BC_D / 2 + 0.15); l.rotation.x = -0.1; g.add(l);
-  [-0.22, 0.22].forEach((x) => add(l, box(0.04, 3.7, 0.033), M.wood, x, 1.85, 0));
-  for (let k = 0; k < 12; k++) add(l, box(0.44, 0.032, 0.055), M.wood, 0, 0.35 + k * 0.29, 0.02);
+  loadModel('wooden_ladder_02', 3.5).then((l) => { if (!l) return; l.position.set(lx, 0, BC_D / 2 + 0.3); l.rotation.set(-0.1, Math.PI, 0); g.add(l); });
   add(g, box(W - 0.3, 0.022, 0.022), M.brass, 0, 3.8, BC_D / 2 + 0.04, false, false);
 };
 ladder(cases[1].g, -0.7, cases[1].W); ladder(cases[2].g, 0.9, cases[2].W);
 
 /* ---------------- real 3D models (Poly Haven, CC0) ---------------- */
-const gltfLoader = new GLTFLoader();
-const loadModel = (id, height) => new Promise((res) => gltfLoader.load(`assets/models/${id}/${id}_1k.gltf`, (g) => {
-  const o = g.scene, bb0 = new THREE.Box3().setFromObject(o), localH = bb0.max.y - bb0.min.y, s = height / localH;
-  o.scale.setScalar(s); o.updateMatrixWorld(true);
-  const bb = new THREE.Box3().setFromObject(o); o.position.set(-(bb.min.x + bb.max.x) / 2, -bb.min.y, -(bb.min.z + bb.max.z) / 2);
-  const w = new THREE.Group(); w.add(o);
-  o.traverse((m) => { if (m.isMesh) { m.castShadow = true; m.receiveShadow = true; const mats = Array.isArray(m.material) ? m.material : [m.material]; mats.forEach((x) => { x.envMapIntensity = 0.85; }); } });
-  w.userData = { scale: s, localH, size: new THREE.Vector3().subVectors(bb.max, bb.min) }; res(w);
-}, undefined, () => res(null)));
 const props = { plants: [], chair: null, lamp: null, flame: null };
 /* a plant bends away from you and rustles as you walk past: a spring-driven push + wind, applied in the vertex shader (height^2 weighting, so the roots stay put) */
 const makePlant = (w, x, z, ry) => {
@@ -294,11 +299,9 @@ let dustPoints = null;
   [[0, 3.6], [0, 0.3], [0, -3.2]].forEach(([x, z], i) => {
     const root = new THREE.Group(); root.position.set(x, RH, z); scene.add(root);
     const sw = new THREE.Group(); root.add(sw);
-    add(sw, new THREE.CylinderGeometry(0.009, 0.009, 1.0, 6), M.brass, 0, -0.5, 0, false, false);
-    add(sw, new THREE.ConeGeometry(0.32, 0.25, 24, 1, true), shadeM, 0, -1.1, 0, true, false).rotation.x = Math.PI;
-    add(sw, new THREE.SphereGeometry(0.07, 12, 10), bulbM, 0, -1.14, 0, false, false);
-    const halo = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTex('rgba(255,214,150,.4)', 'rgba(255,214,150,0)'), blending: THREE.AdditiveBlending, depthWrite: false, fog: false })); halo.scale.set(1.2, 1.2, 1); halo.position.set(0, -1.16, 0); sw.add(halo);
-    const pl = new THREE.PointLight(0xffc27a, 15, 8.5, 2); pl.position.set(0, -1.25, 0); sw.add(pl);
+    loadModel('lantern_chandelier_01', 0.9).then((m) => { if (m) { m.position.set(0, -0.95, 0); sw.add(m); } });
+    const halo = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTex('rgba(255,214,150,.4)', 'rgba(255,214,150,0)'), blending: THREE.AdditiveBlending, depthWrite: false, fog: false })); halo.scale.set(1.2, 1.2, 1); halo.position.set(0, -0.62, 0); sw.add(halo);
+    const pl = new THREE.PointLight(0xffc27a, 15, 8.5, 2); pl.position.set(0, -0.72, 0); sw.add(pl);
     pendants.push({ root: sw, light: pl, ang: 0, vel: 0, base: 15, phase: i * 1.7, x, z });
   });
   scene.add(new THREE.HemisphereLight(0xffe6c4, 0x261a12, 0.45));

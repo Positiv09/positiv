@@ -105,3 +105,12 @@
 .back-projects:hover, .back-projects:focus-visible { color: var(--c-ink); background: var(--c-lime); border-color: var(--c-lime); outline: 0; }
 .back-projects:hover .back-projects__arrow { transform: scaleX(-1) translateX(4px); }
 @media (max-width: 640px) { .back-projects { top: 96px; left: 12px; } }
+
+/* project cards: number and logo share one row (number left, logo right), then the title and a description of equal height - all three columns line up */
+.w-card__body { display: grid; grid-template-columns: auto 1fr; grid-template-rows: auto auto 1fr; column-gap: 12px; row-gap: 0; align-content: start; padding-top: 18px; margin-top: 22px; }
+.w-card__body > div { display: contents; }
+.w-card__num { grid-column: 1; grid-row: 1; align-self: center; font-size: 22px; line-height: 1; }
+.w-card__body .portfolio-card__logo { grid-column: 2; grid-row: 1; justify-self: end; align-self: center; width: 124px; height: 22px; margin: 0; }
+.w-card__scope { grid-column: 1 / -1; grid-row: 2; margin-top: 22px; font-size: 26px; line-height: 32px; }
+.w-card__desc { grid-column: 1 / -1; grid-row: 3; margin-top: 10px; min-height: 66px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; font-size: 15px; line-height: 22px; }
+@media (max-width: 640px) { .w-card__desc { min-height: 0; -webkit-line-clamp: unset; display: block; } }

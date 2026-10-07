@@ -19,7 +19,7 @@
   const corner = (slot, i) => {
     const sx = slot % 2 ? 1 : -1, sy = slot % 4 < 2 ? -1 : 1, sc = 0.6;
     const hw = small ? 110 : 260, hh = small ? 72 : 170;
-    const x = sx * Math.max((innerWidth / 2 - hw * sc - 26) / sc, hw + 60), y = sy * Math.max((innerHeight / 2 - hh * sc - (small ? 120 : 110)) / sc, hh + 20);
+    const x = sx * (small ? Math.max((innerWidth / 2 - hw * sc - 12) / sc, hw + 20) : (innerWidth * 0.235) / sc), y = sy * (small ? Math.max((innerHeight / 2 - hh * sc - 130) / sc, hh + 20) : (innerHeight * 0.2) / sc);   // close to the logo: easy to reach and browse
     return { x: x + ((i * 37) % 40) - 20, y: y + ((i * 53) % 30) - 15, sx, sy };
   };
   const frames = IMG.map((img, i) => {

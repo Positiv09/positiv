@@ -98,3 +98,10 @@
   .w-grid { grid-template-columns: 1fr; gap: 44px; }
   .w-card__go { opacity: 1; transform: none; }
 }
+
+/* "Back to projects": returns to the "View all projects" button on the home page */
+.back-projects { position: absolute; z-index: 3; left: 10px; top: 118px; display: inline-flex; align-items: center; gap: 10px; padding: 8px 16px 8px 12px; border: .5px solid rgb(239 239 235 / .35); border-radius: 22px; font-size: 14px; color: var(--c-paper-2); transition: color .3s ease, border-color .3s ease, background-color .3s ease; }
+.back-projects__arrow { display: inline-flex; transform: scaleX(-1); transition: transform .5s var(--ease-out); }
+.back-projects:hover, .back-projects:focus-visible { color: var(--c-ink); background: var(--c-lime); border-color: var(--c-lime); outline: 0; }
+.back-projects:hover .back-projects__arrow { transform: scaleX(-1) translateX(4px); }
+@media (max-width: 640px) { .back-projects { top: 96px; left: 12px; } }

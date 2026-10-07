@@ -882,3 +882,5 @@
   html { scroll-behavior: auto; }
 }
 @media (min-width: 600px) and (max-width: 991px) { .compare-table { min-width: 100%; } }
+
+#view-all { scroll-margin-top: 45vh; }   /* target of the "Back to projects" links: the button lands mid-screen */

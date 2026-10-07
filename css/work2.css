@@ -121,3 +121,9 @@
 .m-outro__title em { font-style: normal; font-family: var(--f-display); font-weight: 600; color: var(--c-lime); }
 .m-outro__lead { width: min(640px, 90%); margin: 22px auto 0; font-size: 18px; line-height: 28px; color: var(--c-paper-2); opacity: .9; }
 @media (max-width: 640px) { .m-outro { padding: 90px 0 100px; } .m-outro__title { font-size: 38px; line-height: 46px; } }
+
+/* filter counts: a small round badge, centred on the label */
+.m-filter { gap: 10px; padding: 0 12px 0 24px; line-height: 1; }
+.m-filter sup { display: inline-flex; align-items: center; justify-content: center; min-width: 26px; height: 26px; padding: 0 7px; border-radius: 13px; background: rgb(239 239 235 / .1); font-size: 12px; font-weight: 500; letter-spacing: 0; font-variant-numeric: tabular-nums; color: var(--c-paper-2); transform: none; transition: color .3s ease, background-color .3s ease; }
+.m-filter:hover sup { background: rgb(240 248 121 / .16); color: var(--c-lime); }
+.m-filter.is-active sup { background: rgb(33 29 29 / .12); color: var(--c-ink); }

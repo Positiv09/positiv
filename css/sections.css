@@ -540,12 +540,17 @@
 .cta__mark img, .cta-mark { width: 379px; height: 420px; display: block; overflow: visible; }
 /* the mark keeps its glass look; one soft strip of white light starts on the left edge, climbs, runs over the top and down the right
    side. An SVG mask fades it out as it nears the line below the logo, so the lower part is never lit; then it starts again. */
-.cta-mark__head { fill: none; stroke: #fff; stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: .14 .86; stroke-dashoffset: -.624;
-  filter: drop-shadow(0 0 4px rgb(255 255 255 / .8)) drop-shadow(0 0 12px rgb(255 255 255 / .5)); opacity: 0; animation: cta-move 7.5s cubic-bezier(.37, 0, .63, 1) infinite, cta-vis 7.5s linear infinite; }
+/* the light is a graded strip: three layers share one centre (--c) - a long faint thin one, a medium one and a short bright core - so it is
+   brightest in the middle and its ends taper off thin and transparent. */
+@property --c { syntax: '<number>'; inherits: false; initial-value: .694; }
+.cta-mark__head { --L: .05; fill: none; stroke: #fff; stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: var(--L) calc(1 - var(--L)); stroke-dashoffset: calc(var(--L) / 2 - var(--c));
+  filter: drop-shadow(0 0 4px rgb(255 255 255 / .7)); opacity: 0; animation: cta-move 7.5s cubic-bezier(.37, 0, .63, 1) infinite, cta-vis 7.5s linear infinite; }
+.cta-mark__head--m { --L: .11; stroke-width: 1.9; stroke-opacity: .5; }
+.cta-mark__head--w { --L: .24; stroke-width: 1.1; stroke-opacity: .22; filter: none; }
 .js .cta-mark:not(.is-live) .cta-mark__head { animation: none; }   /* waits until the mark is on screen (js/main.js adds .is-live) */
-@keyframes cta-move { 0% { stroke-dashoffset: -.624; } 82%, 100% { stroke-dashoffset: -1.43; } }
+@keyframes cta-move { 0% { --c: .694; } 82%, 100% { --c: 1.5; } }
 /* fade in while it is still dim at the left, fade out before the loop restarts, so the restart is never seen */
-@keyframes cta-vis { 0% { opacity: 0; } 14% { opacity: .55; } 62% { opacity: .55; } 80%, 100% { opacity: 0; } }
+@keyframes cta-vis { 0% { opacity: 0; } 14% { opacity: .75; } 62% { opacity: .75; } 80%, 100% { opacity: 0; } }
 @media (prefers-reduced-motion: reduce) { .cta-mark__head { animation: none; opacity: 0; } }
 .cta__title { width: 70%; margin: -80px 0 24px; text-align: center; font-family: var(--f-body); font-weight: 400; font-size: 64px; line-height: 64px; color: #fff; }
 .cta__title .hero__char { opacity: 1; transform: none; transition: none; }   /* same letters as the hero heading; GSAP drives the entrance */

@@ -462,10 +462,10 @@
 .testi-tab.is-active img, .testi-tab.is-active .portfolio-card__logo { opacity: 1; }
 .testi-tab:focus-visible { outline: 2px solid var(--c-purple); outline-offset: 6px; }
 
-.testimonials__viewport { width: 100%; margin-left: 0; overflow: hidden; touch-action: pan-y; cursor: grab; user-select: none; -webkit-user-select: none; }   /* spans the whole page: cards slide off to the screen's left edge and the next one peeks in on the right */
+.testimonials__viewport { width: 90%; margin-left: 10%; overflow: hidden; touch-action: pan-y; cursor: grab; user-select: none; -webkit-user-select: none; }   /* starts at the 10% line: nothing is ever visible in the left part of the screen; clipped at the page's right edge so the next card peeks in */
 .testimonials__viewport.is-dragging { cursor: grabbing; }
 .testimonials__viewport img { -webkit-user-drag: none; user-drag: none; }   /* dragging the cards must not start a text selection or a native image drag */
-.testimonials__rail { display: flex; gap: 16px; width: 100%; padding-left: 10%; transition: transform 1.2s cubic-bezier(.215, .61, .355, 1); }   /* ease-out-cubic, ≈1.3s as measured */
+.testimonials__rail { display: flex; gap: 16px; width: 100%; transition: transform 1.2s cubic-bezier(.215, .61, .355, 1); }   /* ease-out-cubic, ≈1.3s as measured */
 .testimonials__rail.is-dragging { transition: none; }
 .testimonial-card {
   position: relative; flex: 0 0 74.3%; height: 599px;   /* 74.3% of the viewport box = 1274px @1905 */
@@ -802,7 +802,6 @@
   .testi-tab { width: 22%; gap: 24px; }
   .testi-tab > img, .testi-tab .portfolio-card__logo { max-width: 100%; }
   .testimonials__viewport { width: 92%; margin: 0 auto; }
-  .testimonials__rail { padding-left: 0; }
   .testimonial-card { flex-basis: 100%; height: auto; display: flex; flex-direction: column; padding-top: 24px; }
   .testimonial-card__copy { position: static; width: auto; margin: 0 30px; }
   .testimonial-card__title { font-size: 16px; line-height: 24px; }

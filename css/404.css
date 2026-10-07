@@ -17,7 +17,7 @@
 .e-code-wrap { position: relative; display: grid; place-items: center; min-height: 340px; user-select: none; }
 .e-code { width: min(100%, 560px); height: auto; overflow: visible; animation: e-float 7s ease-in-out infinite; }
 @keyframes e-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-12px); } }
-.e-glass { fill: url(#e404Fill); stroke: url(#e404Line); stroke-width: 1.2; }
+.e-glass { fill: url(#e404Fill); stroke: url(#e404Line); stroke-width: 1.2; filter: drop-shadow(0 0 26px rgb(240 248 121 / .22)); }
 .e-light { fill: none; stroke: #fff; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: .09 .91; stroke-dashoffset: .09; opacity: 0;
   filter: drop-shadow(0 0 3px rgb(255 255 255 / .8)) drop-shadow(0 0 9px rgb(255 255 255 / .5));
   animation: e-run 7.5s cubic-bezier(.37, 0, .63, 1) infinite, e-vis 7.5s linear infinite; animation-delay: var(--d), var(--d); }

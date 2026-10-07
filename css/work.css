@@ -125,3 +125,7 @@
 
 /* same content width as the rest of the site (the navbar and the other pages use 80% of the window) */
 @media (max-width: 991px) { .w-hero__grid, .w-feature__card, .w-grid, .w-list__head { width: 90%; } }
+.w-hero__grid { align-items: start; }   /* the heading block starts at the same height as the first filter row, higher on the page */
+@media (max-width: 1100px) { .w-hero__grid { align-items: start; } }
+.w-hero__grid > div:first-child { padding-top: 70px; }
+@media (max-width: 1100px) { .w-hero__grid > div:first-child { padding-top: 20px; } }

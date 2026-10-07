@@ -65,3 +65,14 @@
 .wv__filter:active { transform: scale(.96); }
 .wv__filter:focus-visible { outline: 2px solid var(--c-lime); outline-offset: 3px; }
 @media (max-width: 991px) { .wv__filters { top: 150px; } .wv__filter { height: 34px; padding: 0 14px; font-size: 13px; } }
+
+/* the big logo in the middle of the world; the pictures sit around it at the four corners */
+.wv__logo { position: absolute; z-index: 1; left: 50%; top: 47%; width: min(52vmin, 560px); aspect-ratio: 391 / 432; transform: translate(-50%, -50%); pointer-events: none; filter: drop-shadow(0 0 60px rgb(240 248 121 / .22)); will-change: transform; perspective: 900px; }
+.wv__logo svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.wv__logo-run { stroke-dasharray: .1 .9; opacity: .9; filter: drop-shadow(0 0 6px #fff); animation: wv-run 7s linear infinite; }
+@keyframes wv-run { from { stroke-dashoffset: .1; } to { stroke-dashoffset: -.9; } }
+.wv__scene { z-index: 2; }
+.wv__intro { top: auto; bottom: 150px; transform: translate(-50%, 0); }
+.wv__intro h1 { font-size: 54px; line-height: 62px; }
+@media (max-width: 991px) { .wv__logo { top: 44%; width: 62vmin; } .wv__intro { bottom: 130px; } .wv__intro h1 { font-size: 34px; line-height: 40px; } }
+@media (prefers-reduced-motion: reduce) { .wv__logo-run { animation: none; opacity: 0; } }

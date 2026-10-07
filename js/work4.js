@@ -6,7 +6,7 @@
   const CAT = ['Brand · Sales', 'Web', 'Brand', 'Web · Campaign', 'Brand system', 'Sales assets', 'Brand', 'Campaign', 'Sales', 'Web', 'Marketing', 'Brand', 'Sales assets', 'Web'];
   const CATS = ['brand sales', 'web', 'brand', 'web campaign', 'brand', 'sales', 'brand', 'campaign', 'sales', 'web', 'campaign', 'brand', 'sales', 'web'];
   const MARK = 'M150.395 0.5H244.963C257.384 0.5 267.584 10.6174 266.597 22.9238C265.216 40.1243 262.313 67.6814 258.035 94.9336C253.755 122.202 248.106 149.108 241.249 165.042C240.034 167.862 240.865 170.538 242.698 172.091C244.473 173.594 247.149 174.014 249.691 172.576L249.937 172.432C281.394 153.101 316.713 140.351 354.274 136.422C367.156 135.074 378.5 144.959 378.5 157.871V251.421C378.5 261.9 370.016 272.02 359.698 273.991C302.932 284.846 258.065 342.094 249.959 401.12C248.507 411.686 239.496 419.5 228.82 419.5H134.042C121.184 419.5 111.42 408.319 112.564 395.499C115.653 360.916 125.196 327.315 139.94 296.366H139.941C141.21 293.699 140.453 290.938 138.74 289.215C137.023 287.487 134.318 286.782 131.729 288.25C99.5424 306.498 63.2213 318.293 24.4883 321.806C11.6803 322.968 0.5 313.147 0.5 300.327V206.524C0.500083 201.633 2.41029 196.501 5.5459 192.382C8.68198 188.262 13.0097 185.198 17.8066 184.375C46.5412 179.454 72.2308 153.025 91.7568 120.525C111.299 87.9993 124.755 49.2492 128.958 19.4414C130.43 8.99447 139.851 0.5 150.395 0.5Z';
-  const N = IMG.length, GAP = 900, START = 700;
+  const N = IMG.length, GAP = 900, START = 1150;
   const $ = (id) => document.getElementById(id);
   const sec = $('wv'), world = $('wv-world');
   if (!sec || !world) return;
@@ -15,26 +15,26 @@
   const rnd = (a, b) => a + Math.random() * (b - a);
 
   /* ---- build the world ---- */
+  /* the four corners of the screen (where a frame sits once it has flown close): pictures never cover the big logo in the middle */
+  const corner = (slot, i) => {
+    const sx = slot % 2 ? 1 : -1, sy = slot % 4 < 2 ? -1 : 1, sc = 0.6;
+    const hw = small ? 110 : 260, hh = small ? 72 : 170;
+    const x = sx * Math.max((innerWidth / 2 - hw * sc - 26) / sc, hw + 60), y = sy * Math.max((innerHeight / 2 - hh * sc - (small ? 120 : 110)) / sc, hh + 20);
+    return { x: x + ((i * 37) % 40) - 20, y: y + ((i * 53) % 30) - 15, sx, sy };
+  };
   const frames = IMG.map((img, i) => {
-    const side = i % 2 ? 1 : -1;
-    const x = side * (small ? rnd(60, 110) : rnd(300, 470)), y = rnd(small ? -70 : -130, small ? 70 : 90), z = -(START + i * GAP);
     const el = document.createElement('div'); el.className = 'wv-frame';
     el.innerHTML = `<span class="wv-frame__num">${String(i + 1).padStart(2, '0')}</span>
-      <a class="wv-frame__card" href="project.html?p=${i + 1}" data-cursor="View" style="background-image:url('assets/img/${img}')" aria-label="Angel East — ${CAT[i]}">
+      <a class="wv-frame__card" href="project4.html?p=${i + 1}" data-cursor="View" style="background-image:url('assets/img/${img}')" aria-label="Angel East — ${CAT[i]}">
         <span class="wv-frame__meta"><strong>Angel East</strong><em>${CAT[i]}</em></span></a>
       <span class="wv-frame__ref" style="background-image:url('assets/img/${img}')"></span>`;
-    el.style.transform = `translate3d(${x}px, ${y}px, ${z}px) rotateY(${-side * rnd(10, 18)}deg)`;
     world.appendChild(el);
     el.dataset.cat = CATS[i];
-    return { el, z, x, y, i, base: z, on: true };
+    const c = corner(i, i), z = -(START + i * GAP);
+    el.style.transform = `translate3d(${c.x}px, ${c.y}px, ${z}px) rotateY(${-c.sx * 14}deg) rotateX(${c.sy * 5}deg)`;
+    return { el, z, x: c.x, y: c.y, i, base: z, on: true };
   });
-  const rings = Array.from({ length: Math.ceil(N * 0.9) }, (_, i) => {
-    const w = rnd(560, 880), el = document.createElement('div'); el.className = 'wv-ring';
-    el.innerHTML = `<svg viewBox="-4 -4 387 428" width="${w}" height="${(w * 428) / 387}" fill="none" aria-hidden="true"><path d="${MARK}" stroke="rgb(240,248,121)" stroke-opacity=".55" stroke-width="1.6" fill="rgb(240,248,121)" fill-opacity=".035"/></svg>`;
-    const z = -(START - 300 + i * GAP * 1.1);
-    el.style.cssText = `left:${-w / 2}px;top:${(-w * 428) / 387 / 2}px;transform:translate3d(${rnd(-50, 50)}px,${rnd(-30, 30)}px,${z}px) rotateZ(${rnd(-6, 6)}deg)`;
-    world.appendChild(el); return { el, z };
-  });
+  const rings = [];   // the passing logo-gates are replaced by one big logo that stays in the centre (see #wv-logo)
   const dots = Array.from({ length: small ? 60 : 130 }, () => {
     const s = rnd(2, 5), z = -rnd(100, N * GAP + 600), el = document.createElement('div');
     el.className = 'wv-dot' + (Math.random() < 0.3 ? ' wv-dot--lime' : '');
@@ -44,7 +44,7 @@
   let M = N, range = (M - 1) * GAP + START + 500;
 
   /* ---- state ---- */
-  const intro = $('wv-intro'), hint = sec.querySelector('.wv__hint');
+  const logo = $('wv-logo'), intro = $('wv-intro'), hint = sec.querySelector('.wv__hint');
   const hud = { num: $('wv-num'), name: $('wv-name'), cat: $('wv-cat'), bar: $('wv-bar') };
   $('wv-total').textContent = String(N).padStart(2, '0');
   let target = 0, cam = 0, mx = 0, my = 0, tx = 0, ty = 0, active = -1, raf = 0, visible = true;
@@ -69,9 +69,10 @@
     rings.forEach((r) => { const e = r.z + cam; r.el.style.opacity = (fade(e) * 0.8).toFixed(3); });
     dots.forEach((d) => { const e = d.z + cam; d.el.style.opacity = (fade(e) * d.op).toFixed(3); });
     const p = clamp(cam / range, 0, 1);
-    intro.style.opacity = clamp(1 - p * 14, 0, 1).toFixed(3); intro.style.transform = `translate(-50%, calc(-50% - ${(p * 900).toFixed(0)}px)) scale(${(1 + p * 6).toFixed(3)})`;
+    intro.style.opacity = clamp(1 - p * 14, 0, 1).toFixed(3); intro.style.transform = `translate(-50%, calc(0px - ${(p * 900).toFixed(0)}px)) scale(${(1 + p * 6).toFixed(3)})`;
     hint.style.opacity = p > 0.06 ? 0.45 : 1;
     hud.bar.style.transform = `scaleX(${p.toFixed(4)})`;
+    if (logo) logo.style.transform = `translate(-50%, -50%) translate3d(${(mx * -26).toFixed(1)}px, ${(my * -16).toFixed(1)}px, 0) rotateY(${(mx * 8).toFixed(2)}deg) rotateX(${(my * -6).toFixed(2)}deg) scale(${(1 + Math.sin(cam / 380) * 0.012).toFixed(4)})`;
     if (best !== active) { active = best; hud.num.textContent = String(frames[best].slot + 1).padStart(2, '0'); hud.name.textContent = 'Angel East'; hud.cat.textContent = CAT[best]; }
     if (Math.abs(target * range - cam) > 0.5 || Math.abs(tx - mx) > 0.002 || Math.abs(ty - my) > 0.002) raf = requestAnimationFrame(frame);
   };
@@ -85,8 +86,8 @@
       f.slot = f.on ? slot++ : 0;
       const z = f.on ? -(START + f.slot * GAP) : -(START + N * GAP + 2000);
       f.z = z;
-      const side = f.slot % 2 ? 1 : -1;
-      f.el.style.transform = `translate3d(${f.x}px, ${f.y}px, ${z}px) rotateY(${-Math.sign(f.x || side) * 14}deg)`;
+      const c = corner(f.on ? f.slot : f.i, f.i); f.x = c.x; f.y = c.y;
+      f.el.style.transform = `translate3d(${c.x}px, ${c.y}px, ${z}px) rotateY(${-c.sx * 14}deg) rotateX(${c.sy * 5}deg)`;
       f.el.querySelector('.wv-frame__num').textContent = String(f.slot + 1).padStart(2, '0');
     });
     M = Math.max(slot, 1); range = (M - 1) * GAP + START + 500;

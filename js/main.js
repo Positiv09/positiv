@@ -778,6 +778,45 @@
     window.addEventListener('load', measureS);
     mqS.addEventListener?.('change', measureS);
     measureS();
+
+    /* One wheel gesture = one service (same behaviour as the "Four reasons" cards): while the stacked card is in view, a wheel gesture
+       glides to the next / previous service instead of scrolling freely. Snap points = where each service has fully settled.
+       Before the first and after the last service the page scrolls normally, so the section never traps the user. Desktop wheel only. */
+    if (!reduceMotion) {
+      let animS = false, lastWheelS = 0, rafSn = 0;
+      const snapPtsS = () => [0.55, ...[1, 2, 3].map((n) => E1 + STEP * (n - 1) - TILE_END + 0.12)].map((px) => Math.round(pinStart + (px / SVC_SPEED) * window.innerHeight));
+      const glideS = (target) => {
+        const from = window.scrollY, dist = target - from, dur = Math.min(1100, 600 + Math.abs(dist) * 0.35), t0 = performance.now();
+        animS = true;
+        const ease = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+        const step = (now) => {
+          const k = Math.min((now - t0) / dur, 1);
+          window.scrollTo({ top: from + dist * ease(k), behavior: 'instant' });
+          if (k < 1) rafSn = requestAnimationFrame(step);
+          else { animS = false; lastWheelS = performance.now(); }
+        };
+        cancelAnimationFrame(rafSn); rafSn = requestAnimationFrame(step);
+      };
+      window.addEventListener('wheel', (e) => {
+        if (!mqS.matches || e.ctrlKey || Math.abs(e.deltaY) < Math.abs(e.deltaX) || Math.abs(e.deltaY) < 4) return;
+        const now = performance.now(), newGesture = now - lastWheelS > 150;
+        lastWheelS = now;
+        const pts = snapPtsS(), y = window.scrollY, vh = window.innerHeight, down = e.deltaY > 0;
+        const first = pts[0], last = pts[pts.length - 1];
+        let target = null;
+        if (down) {
+          if (y >= first - 0.6 * vh && y < last - 4) target = pts.find((q) => q > y + 4);          // next service down
+        } else if (y <= last + 0.5 * vh && y > first + 4) {
+          target = [...pts].reverse().find((q) => q < y - 4);                                      // previous service up
+          if (target === undefined && y > last) target = last;
+        }
+        if (!down && y > last + 4 && y <= last + 0.5 * vh) target = last;                          // coming back from below
+        if (target == null) return;                                                                // outside the stack: normal scroll
+        e.preventDefault();                                                                        // inside: we own this gesture
+        if (animS || !newGesture) return;                                                          // ignore the tail of the same gesture
+        glideS(target);
+      }, { passive: false });
+    }
   }
 
   /* ---------- Feature cards: one wheel gesture = one card ----------

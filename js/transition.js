@@ -7,7 +7,7 @@
 
   const el = document.createElement('div');
   el.className = 'pt'; el.setAttribute('aria-hidden', 'true');
-  el.innerHTML = '<div class="pt__curve"></div><img class="pt__bolt" src="assets/logo.svg" alt="" width="150" height="38" draggable="false">';
+  el.innerHTML = '<div class="pt__curve"></div><img class="pt__bolt" src="/assets/logo.svg" alt="" width="150" height="38" draggable="false">';
   document.body.appendChild(el);
   const bolt = el.querySelector('.pt__bolt');
   const curveH = () => window.innerHeight * 0.14;

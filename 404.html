@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>Page not found — Positiv</title>
+  <script>try{var d=document.documentElement;if(!matchMedia('(prefers-reduced-motion: reduce)').matches&&sessionStorage.getItem('positivIntro')){d.classList.add('pt-cover');setTimeout(function(){d.classList.remove('pt-cover')},6000)}}catch(e){}</script>
+  <!-- Root-absolute paths on purpose: the host serves this file for any missing URL (e.g. /foo/bar), where relative paths would break. -->
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/assets/favicon/favicon-192.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/tokens.css?v=20261006a">
+  <link rel="stylesheet" href="/css/base.css?v=20261006a">
+  <link rel="stylesheet" href="/css/transition.css?v=2">
+  <link rel="stylesheet" href="/css/404.css?v=2">
+</head>
+<body class="e-page">
+
+<header class="e-head">
+  <a href="/index.html" class="e-logo" aria-label="Positiv, home"><img src="/assets/logo-dark.svg" alt="Positiv" width="118" height="30"></a>
+</header>
+
+<main id="main" class="e-main">
+  <!-- soft floating spheres (decorative) -->
+  <div class="e-orbs" aria-hidden="true">
+    <span class="orb" data-depth="0.5" style="left:7.5%;top:14%;width:112px;height:112px"><i></i></span>
+    <span class="orb orb--glow" data-depth="0.8" style="left:66.5%;top:12%;width:128px;height:128px"><i></i></span>
+    <span class="orb" data-depth="0.35" style="left:73.5%;top:26%;width:102px;height:76px"><i></i></span>
+    <span class="orb" data-depth="0.9" style="left:78%;top:31%;width:150px;height:150px"><i></i></span>
+    <span class="orb" data-depth="0.3" style="left:4%;top:60%;width:64px;height:64px"><i></i></span>
+    <span class="orb" data-depth="0.4" style="left:88%;top:6%;width:60px;height:60px"><i></i></span>
+    <span class="orb" data-depth="0.25" style="left:70%;top:11%;width:48px;height:36px"><i></i></span>
+    <span class="orb orb--lime" data-depth="0.6" style="left:90%;top:88%;width:170px;height:170px"><i></i></span>
+    <span class="spark" style="left:8%;top:21%"></span>
+    <span class="spark spark--lg" style="left:93%;top:80%"></span>
+  </div>
+
+  <svg class="e-wave" viewBox="0 0 1440 420" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+    <defs>
+      <linearGradient id="waveGrad" x1="0" y1="0" x2="1440" y2="0" gradientUnits="userSpaceOnUse">
+        <stop offset="0" stop-color="#b9b6ff" stop-opacity=".9"/><stop offset=".55" stop-color="#f2bfd0" stop-opacity=".85"/><stop offset="1" stop-color="#f9e08b" stop-opacity=".9"/>
+      </linearGradient>
+    </defs>
+    <path d="M20 378 C170 330 320 168 520 160 C660 154 740 86 880 54 C1010 26 1130 100 1262 124 C1340 138 1392 130 1424 124" fill="none" stroke="url(#waveGrad)" stroke-width="1.6" stroke-linecap="round"/>
+  </svg>
+
+  <section class="e-content">
+    <p class="e-code" aria-hidden="true">404</p>
+    <h1 class="e-title">The page escaped <em>reality.</em></h1>
+    <p class="e-text">Looks like this page wandered outside our digital universe. Let's bring you back to where positive experiences begin.</p>
+    <div class="e-actions">
+      <a href="/index.html" class="e-btn e-btn--lime">Back home</a>
+      <a href="/work.html" class="e-btn e-btn--white">Explore our work</a>
+    </div>
+  </section>
+</main>
+
+<script src="/js/vendor/gsap.min.js" defer></script>
+<script src="/js/transition.js?v=3" defer></script>
+<script src="/js/404.js?v=1" defer></script>
+</body>
+</html>

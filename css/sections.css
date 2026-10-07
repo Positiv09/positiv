@@ -581,7 +581,9 @@
 .footer__social { display: flex; }
 .footer__social a { display: grid; place-items: center; width: 45px; height: 45px; transition: opacity .25s, transform .25s; }
 .footer__social a:hover { opacity: .75; transform: translateY(-2px); }
-.footer__rule { height: .5px; background: var(--c-paper-2); }
+.footer__rule { position: relative; height: .5px; background: var(--c-paper-2); transition: opacity .35s ease; }
+.footer__rule::after { content: ""; position: absolute; left: 0; right: 0; top: -12px; bottom: -12px; }   /* taller hit area: the hairline itself is too thin to hover */
+.footer__rule:hover { opacity: .45; }
 
 @media (min-width: 1280px) {
   .cta-section { justify-content: space-around; gap: 120px; }

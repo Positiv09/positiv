@@ -13,6 +13,8 @@
   const $  = (s, c = document) => c.querySelector(s);
   const $$ = (s, c = document) => [...c.querySelectorAll(s)];
   const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  /* Placeholder links (href="#") have no destination yet: clicking them does nothing (no jump to the top of the page, no # in the URL). */
+  document.addEventListener('click', (e) => { const a = e.target.closest && e.target.closest('a[href="#"]'); if (a) e.preventDefault(); });
 
   /* ---------- Seamless marquees ---------- */
   // Vertical hero columns: one clone is enough (a set is taller than the viewport).

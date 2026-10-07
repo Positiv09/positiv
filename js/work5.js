@@ -533,16 +533,20 @@ const ray = new THREE.Raycaster(); ray.far = 3.4;
 const targets = [...projectBooks, fillerInst, door.root];
 let aimed = null;
 const label = $('lib-label'), labelCat = $('lib-label-cat'), labelName = $('lib-label-name'), labelHint = $('lib-label-hint');
+const AIM_OFFS = [[0, 0], [0.022, 0], [-0.022, 0], [0, 0.034], [0, -0.034]];   // centre ray first, then small ones around it: the thin spines are easy to hit even with the head-bob
 const aim = () => {
   camera.updateMatrixWorld(true);
-  ray.setFromCamera(new THREE.Vector2(0, 0), camera);
-  const hits = ray.intersectObjects(targets, true);
   let found = null;
-  for (const h of hits) {
-    if (h.object.userData.isDoor || h.object.userData.isDoorFrame) { found = { type: 'door' }; break; }
-    if (h.object === fillerInst) { found = { type: 'soon' }; break; }
-    let o = h.object; while (o && !o.userData.project) o = o.parent;
-    if (o) { found = { type: 'book', obj: o }; break; }
+  for (const [ox, oy] of AIM_OFFS) {
+    ray.setFromCamera(new THREE.Vector2(ox, oy), camera);
+    const hits = ray.intersectObjects(targets, true);
+    for (const h of hits) {
+      if (h.object.userData.isDoor || h.object.userData.isDoorFrame) { if (!ox && !oy) found = { type: 'door' }; break; }
+      if (h.object === fillerInst) { if (!ox && !oy) found = { type: 'soon' }; break; }
+      let o = h.object; while (o && !o.userData.project) o = o.parent;
+      if (o) { found = { type: 'book', obj: o }; break; }
+    }
+    if (found) break;
   }
   if (aimed?.type === 'book' && (!found || found.obj !== aimed.obj)) aimed.obj.userData.spine.emissive.set(0x000000);
   aimed = found;
@@ -551,7 +555,7 @@ const aim = () => {
   else if (found?.type === 'door') { labelCat.textContent = 'Exit'; labelName.textContent = 'Back to the home page'; labelHint.textContent = isTouch ? 'Tap Take' : 'Click to open the door'; }
   label.classList.toggle('is-on', !!found && mode === 'play'); $('lib-take').classList.toggle('is-on', !!found && found.type !== 'soon' && mode === 'play' && isTouch);
 };
-const interact = () => { if (!aimed || mode !== 'play') return; if (aimed.type === 'door') return openDoor(); if (aimed.type === 'book') takeBook(aimed.obj); };
+const interact = () => { if (mode === 'play') aim(); if (!aimed || mode !== 'play') return; if (aimed.type === 'door') return openDoor(); if (aimed.type === 'book') takeBook(aimed.obj); };
 const openDoor = () => { if (door.opening || !door.leaves.length) return; door.opening = true; door.t = 0; mode = 'leaving'; aimed = null; label.classList.remove('is-on'); stage.classList.add('is-leaving'); audio.creak(); setTimeout(() => { location.href = 'index.html'; }, 3300); };
 
 /* ---------------- the book in your hands ---------------- */

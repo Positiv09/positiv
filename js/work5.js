@@ -81,22 +81,39 @@ const beamTex = () => canvasTex(64, 256, (g, w, h) => { const gr = g.createLinea
 const pageEdge = canvasTex(32, 128, (g, w, h) => { g.fillStyle = '#d3cab3'; g.fillRect(0, 0, w, h); for (let y = 0; y < h; y += 2) { g.fillStyle = `rgba(90,70,40,${0.05 + Math.random() * 0.14})`; g.fillRect(0, y, w, 1); } }, { repeat: [1, 2] });
 const aoTex = canvasTex(8, 64, (g, w, h) => { const gr = g.createLinearGradient(0, 0, 0, h); gr.addColorStop(0, 'rgba(0,0,0,.7)'); gr.addColorStop(1, 'rgba(0,0,0,0)'); g.fillStyle = gr; g.fillRect(0, 0, w, h); });
 
-/* dark spine atlas for the "coming soon" books: 32 x 4 spines (64 x 512 each); the vertex shader picks one per instance */
+/* spine atlases (32 x 4 spines of 64 x 512): each spine is a crop of a REAL leather / linen photograph (diffuse, normal and roughness from the same crop),
+   tinted dark, with gilded bands and title. The vertex shader picks one cell per instance. They are redrawn once the photographs have loaded. */
 const SP_COLS = 32, SP_ROWS = 4;
-const spineAtlas = canvasTex(2048, 2048, (g) => {
-  const cols = ['#1d1612', '#261b15', '#1a1f1b', '#2b1e1b', '#15171c', '#2a231c', '#1f1a22', '#32251b', '#171210', '#201a16'];
-  for (let r = 0; r < SP_ROWS; r++) for (let c = 0; c < SP_COLS; c++) {
-    const x = c * 64, y = r * 512, col = pick(cols);
-    g.save(); g.beginPath(); g.rect(x, y, 64, 512); g.clip(); g.translate(x, y);
-    const gr = g.createLinearGradient(0, 0, 64, 0); gr.addColorStop(0, 'rgba(255,255,255,.10)'); gr.addColorStop(0.4, 'rgba(255,255,255,0)'); gr.addColorStop(1, 'rgba(0,0,0,.4)');
-    g.fillStyle = col; g.fillRect(0, 0, 64, 512); g.fillStyle = gr; g.fillRect(0, 0, 64, 512);
-    for (let i = 0; i < 80; i++) { g.fillStyle = `rgba(${Math.random() < 0.5 ? '0,0,0' : '255,235,200'},${rnd(0.02, 0.08)})`; g.fillRect(rnd(0, 64), rnd(0, 512), rnd(1, 3), rnd(6, 70)); }
-    const gold = Math.random() < 0.6 ? '#86693a' : '#9a8f78', band = (yy) => { g.fillStyle = gold; g.globalAlpha = 0.7; g.fillRect(0, yy, 64, 3); g.globalAlpha = 1; };
-    band(28); band(36); band(512 - 40); band(512 - 32);
-    g.save(); g.translate(32, 256); g.rotate(-Math.PI / 2); g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillStyle = gold; g.font = `${pick(['600', '500'])} ${rnd(19, 25)}px "Optima Nova", Georgia, serif`; g.globalAlpha = 0.8;
-    g.fillText(pick(BOOK_TITLES).toUpperCase(), 0, 0); g.restore(); g.restore();
-  }
-});
+const BK_SRC = ['fabric_leather_01', 'fabric_leather_02', 'rough_linen'];
+const bkCells = [];
+for (let r = 0; r < SP_ROWS; r++) for (let c = 0; c < SP_COLS; c++) bkCells.push({ x: c * 64, y: r * 512, src: (Math.random() * BK_SRC.length) | 0, sx: Math.floor(rnd(0, 448)), col: pick(['#4a3a30', '#5a3028', '#2e3a30', '#3a3340', '#2c2a2e', '#4d4034', '#3b2a22', '#1f2a36', '#563a2a', '#303a40']), gold: Math.random() < 0.65 ? '#8f713a' : '#a39a82', title: pick(BOOK_TITLES), fs: rnd(19, 25), w: pick(['600', '500']), mid: Math.random() < 0.4 });
+const mkCanvas = (w, h) => { const c = document.createElement('canvas'); c.width = w; c.height = h; return c; };
+const atlasC = { d: mkCanvas(2048, 2048), n: mkCanvas(2048, 2048), r: mkCanvas(2048, 2048) };
+const drawAtlas = (imgs) => {
+  const gd = atlasC.d.getContext('2d'), gn = atlasC.n.getContext('2d'), gr = atlasC.r.getContext('2d');
+  gn.fillStyle = '#8080ff'; gn.fillRect(0, 0, 2048, 2048); gr.fillStyle = '#b8b8b8'; gr.fillRect(0, 0, 2048, 2048);
+  bkCells.forEach((s) => {
+    const sel = imgs && imgs[s.src];
+    gd.save(); gd.beginPath(); gd.rect(s.x, s.y, 64, 512); gd.clip(); gd.translate(s.x, s.y);
+    if (sel) { gd.drawImage(sel.d, s.sx, 0, 64, 512, 0, 0, 64, 512); gd.globalCompositeOperation = 'multiply'; gd.fillStyle = s.col; gd.fillRect(0, 0, 64, 512); gd.globalCompositeOperation = 'source-over';
+      gn.drawImage(sel.n, s.sx, 0, 64, 512, s.x, s.y, 64, 512); gr.drawImage(sel.r, s.sx, 0, 64, 512, s.x, s.y, 64, 512); }
+    else { gd.fillStyle = s.col; gd.fillRect(0, 0, 64, 512); }
+    const sh = gd.createLinearGradient(0, 0, 64, 0); sh.addColorStop(0, 'rgba(255,255,255,.12)'); sh.addColorStop(0.35, 'rgba(255,255,255,0)'); sh.addColorStop(1, 'rgba(0,0,0,.45)'); gd.fillStyle = sh; gd.fillRect(0, 0, 64, 512);   // rounded spine shading
+    for (let i = 0; i < 14; i++) { gd.fillStyle = `rgba(0,0,0,${0.03 + (i % 3) * 0.02})`; gd.fillRect((i * 37) % 64, (i * 113) % 512, 1, 30 + (i * 17) % 80); }                                 // scuffs
+    const band = (yy, hh = 3) => { gd.fillStyle = s.gold; gd.globalAlpha = 0.75; gd.fillRect(0, yy, 64, hh); gd.globalAlpha = 1; gr.fillStyle = '#707070'; gr.fillRect(s.x, s.y + yy, 64, hh); };
+    band(28); band(36); band(512 - 40); band(512 - 32); if (s.mid) { band(190); band(198); }
+    gd.save(); gd.translate(32, 256); gd.rotate(-Math.PI / 2); gd.textAlign = 'center'; gd.textBaseline = 'middle'; gd.fillStyle = s.gold; gd.globalAlpha = 0.85; gd.font = `${s.w} ${s.fs}px "Optima Nova", Georgia, serif`; gd.fillText(s.title.toUpperCase(), 0, 0); gd.restore();
+    gd.restore();
+  });
+};
+drawAtlas(null);
+const atlasTex = (c, srgb) => { const t = new THREE.CanvasTexture(c); t.colorSpace = srgb ? THREE.SRGBColorSpace : THREE.NoColorSpace; t.anisotropy = maxAniso; return t; };
+const spineAtlas = atlasTex(atlasC.d, true), spineNormal = atlasTex(atlasC.n, false), spineRough = atlasTex(atlasC.r, false);
+const imgPromise = (src) => new Promise((res) => { const i = new Image(); i.onload = () => res(i); i.onerror = () => res(null); i.src = src; });
+const bookPhotos = Promise.all(BK_SRC.flatMap((n) => ['diff', 'nor_gl', 'rough'].map((m) => imgPromise(`assets/tex/bk_${n}_${m}.jpg`)))).then((all) => {
+  const sets = BK_SRC.map((_, i) => ({ d: all[i * 3], n: all[i * 3 + 1], r: all[i * 3 + 2] })); return sets.every((s) => s.d && s.n && s.r) ? sets : null; });
+bookPhotos.then((sets) => { if (!sets) return; drawAtlas(sets); spineAtlas.needsUpdate = spineNormal.needsUpdate = spineRough.needsUpdate = true; projSpines.forEach((s) => s.redraw(sets)); });
+const projSpines = [];
 
 /* ---------------- materials ---------------- */
 const M = {
@@ -105,6 +122,7 @@ const M = {
   wood: pbr('wood', [1, 1], { color: 0xcbb8a4, envMapIntensity: 0.7 }),
   woodLong: pbr('wood', [3, 0.5], { color: 0xcbb8a4, envMapIntensity: 0.7 }),
   caseIn: new THREE.MeshStandardMaterial({ color: 0x120c08, roughness: 0.95 }),
+  back: pbr('wood', [2, 2], { color: 0x4a3c32, envMapIntensity: 0.4 }),
   ceil: new THREE.MeshStandardMaterial({ color: 0x1b1612, roughness: 0.95 }),
   brass: new THREE.MeshStandardMaterial({ color: 0xb08d45, roughness: 0.32, metalness: 0.9 }),
   rug: pbr('carpet', [1.1, 4.5], { color: 0xc58585 }),
@@ -147,14 +165,33 @@ const loadModel = (id, height) => new Promise((res) => gltfLoader.load(`assets/m
 /* ---------------- bookcases ---------------- */
 const BC_H = 3.5, BC_D = 0.46, NLEV = 6, LEV = (k) => 0.2 + k * 0.55, PROJ_LEVEL = 3;
 const cases = []; const colliders = []; const projectBooks = [];
+const rbox = (w, h, d, r = 0.012) => new RoundedBoxGeometry(w, h, d, 2, r);
+const groovesTex = canvasTex(256, 256, (g, w, h) => { g.clearRect(0, 0, w, h); for (let x = 0; x < w; x += 64) { g.fillStyle = 'rgba(0,0,0,.55)'; g.fillRect(x, 0, 3, h); g.fillStyle = 'rgba(255,230,190,.12)'; g.fillRect(x + 3, 0, 2, h); } });
 const bookcase = (cat, x, z, ry, W) => {
   const g = new THREE.Group(); g.position.set(x, 0, z); g.rotation.y = ry; scene.add(g);
-  add(g, box(0.08, BC_H, BC_D), M.wood, -W / 2 + 0.04, BC_H / 2, 0); add(g, box(0.08, BC_H, BC_D), M.wood, W / 2 - 0.04, BC_H / 2, 0);
-  add(g, box(W, 0.08, BC_D), M.wood, 0, BC_H - 0.04, 0); add(g, box(W + 0.1, 0.09, BC_D + 0.1), M.wood, 0, BC_H + 0.045, 0.03); add(g, box(W + 0.16, 0.14, BC_D + 0.14), M.wood, 0, BC_H + 0.16, 0.05);
-  add(g, box(W, BC_H, 0.03), M.caseIn, 0, BC_H / 2, -BC_D / 2 + 0.015, false, true); add(g, box(W + 0.05, 0.16, BC_D + 0.05), M.wood, 0, 0.08, 0.02);
-  for (let k = 0; k < NLEV; k++) add(g, box(W - 0.16, 0.045, BC_D - 0.02), M.wood, 0, LEV(k) - 0.022, 0);
+  // carcass: rounded-edge side panels with a raised panel on the end and a fluted pilaster on the front edge
+  [-1, 1].forEach((s) => {
+    add(g, rbox(0.09, BC_H, BC_D, 0.01), M.wood, s * (W / 2 - 0.045), BC_H / 2, 0);
+    add(g, rbox(0.05, BC_H - 0.34, 0.034, 0.01), M.wood, s * (W / 2 - 0.025), BC_H / 2 + 0.04, BC_D / 2 + 0.014);
+    add(g, rbox(0.012, BC_H - 0.7, BC_D - 0.16, 0.004), M.wood, s * (W / 2 + 0.005), BC_H / 2, 0);   // raised panel on the outer face
+  });
+  add(g, rbox(W + 0.08, 0.14, BC_D + 0.08, 0.012), M.wood, 0, 0.07, 0.02); add(g, rbox(W + 0.14, 0.05, BC_D + 0.14, 0.012), M.wood, 0, 0.025, 0.04);   // stepped plinth
+  add(g, rbox(W, 0.09, BC_D, 0.01), M.wood, 0, BC_H - 0.045, 0);
+  add(g, rbox(W + 0.06, 0.06, BC_D + 0.06, 0.01), M.wood, 0, BC_H + 0.03, 0.03);                                                                       // cornice
+  add(g, rbox(W + 0.12, 0.05, BC_D + 0.1, 0.012), M.wood, 0, BC_H + 0.085, 0.05);
+  add(g, rbox(W + 0.2, 0.07, BC_D + 0.14, 0.016), M.wood, 0, BC_H + 0.15, 0.07);
+  for (let dx = -W / 2 + 0.06; dx < W / 2 - 0.03; dx += 0.075) add(g, box(0.036, 0.035, 0.03), M.wood, dx, BC_H + 0.117, BC_D / 2 + 0.065, false, true);   // dentils
+  // back: dark beadboard
+  add(g, box(W - 0.1, BC_H - 0.16, 0.03), M.back, 0, BC_H / 2 + 0.02, -BC_D / 2 + 0.015, false, true);
+  const gv = new THREE.Mesh(new THREE.PlaneGeometry(W - 0.1, BC_H - 0.16), new THREE.MeshBasicMaterial({ map: (() => { const t = groovesTex.clone(); t.needsUpdate = true; t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set((W - 0.1) / 0.1, 1); return t; })(), transparent: true, depthWrite: false })); gv.position.set(0, BC_H / 2 + 0.02, -BC_D / 2 + 0.032); g.add(gv);
+  for (let k = 0; k < NLEV; k++) {
+    const y = LEV(k);
+    add(g, rbox(W - 0.17, 0.05, BC_D - 0.02, 0.01), M.wood, 0, y - 0.025, 0);
+    add(g, rbox(W - 0.17, 0.018, 0.02, 0.006), M.wood, 0, y - 0.058, BC_D / 2 - 0.005);                                                                // apron under the board edge
+    add(g, box(W - 0.17, 0.006, 0.006), M.brass, 0, y + 0.002, BC_D / 2 - 0.004, false, false);                                                      // brass edge strip
+  }
   { const aoM = new THREE.MeshBasicMaterial({ map: aoTex, transparent: true, depthWrite: false }); for (let k = 0; k < NLEV; k++) { const p = new THREE.Mesh(new THREE.PlaneGeometry(W - 0.2, 0.3), aoM); p.position.set(0, LEV(k) - 0.19, -BC_D / 2 + 0.036); g.add(p); } }
-  const divs = Math.round(W / 1.55) - 1; for (let d = 1; d <= divs; d++) add(g, box(0.045, BC_H - 0.2, BC_D - 0.04), M.wood, -W / 2 + (W / (divs + 1)) * d, BC_H / 2, 0);
+  const divs = Math.round(W / 1.55) - 1; for (let d = 1; d <= divs; d++) add(g, rbox(0.045, BC_H - 0.2, BC_D - 0.04, 0.008), M.wood, -W / 2 + (W / (divs + 1)) * d, BC_H / 2, 0);
   g.updateMatrixWorld(true);
   const wm = new THREE.Box3().setFromObject(g); colliders.push({ minX: wm.min.x - 0.28, maxX: wm.max.x + 0.28, minZ: wm.min.z - 0.28, maxZ: wm.max.z + 0.28 });
   const c = { cat, g, W }; cases.push(c); return c;
@@ -185,19 +222,22 @@ cases.forEach((c) => {
   add(g, box(0.018, 0.018, 0.3), M.brass, 0, hy + 0.3, hz + 0.14, false, false);
   const shade = add(g, new THREE.CylinderGeometry(0.03, 0.03, 0.62, 16), M.brass, 0, hy + 0.3, hz + 0.3, false, false); shade.rotation.z = Math.PI / 2;
   const strip = new THREE.Mesh(new THREE.PlaneGeometry(0.58, 0.05), new THREE.MeshBasicMaterial({ color: 0xffe3a0, toneMapped: false })); strip.rotation.x = Math.PI / 2; strip.position.set(0, hy + 0.268, hz + 0.3); g.add(strip);
+  const pl = new THREE.SpotLight(0xffd7a0, 14, 7, 0.95, 0.95, 1.5); pl.position.set(0, hy + 0.26, hz + 0.3); pl.target.position.set(0, 1.5, BC_D / 2 - 0.05); g.add(pl, pl.target);   // the picture light washes the shelves below it
 });
 
 /* project books: pale, cool colours (they open); everything else is dark (coming soon) */
 const PB = { w: 0.064, h: 0.38, d: 0.25 };
 const COOL = ['#4c7d99', '#6f9fb8', '#8fb6c9', '#547f8a', '#6f8fb0', '#a4c3d1', '#5b86a3', '#7fa7bd'];
-const spineTex = (p, color) => canvasTex(128, 640, (g, w, h) => {
-  g.fillStyle = color; g.fillRect(0, 0, w, h); noise(g, w, h, 12);
-  const gr = g.createLinearGradient(0, 0, w, 0); gr.addColorStop(0, 'rgba(255,255,255,.2)'); gr.addColorStop(0.45, 'rgba(255,255,255,0)'); gr.addColorStop(1, 'rgba(0,0,0,.3)'); g.fillStyle = gr; g.fillRect(0, 0, w, h);
+const spineDraw = (p, color, linen) => (g, w, h) => {
+  g.fillStyle = color; g.fillRect(0, 0, w, h);
+  if (linen) { g.drawImage(linen, Math.floor(rnd(0, 384)), 0, 128, 512, 0, 0, w, h); g.globalCompositeOperation = 'multiply'; g.fillStyle = color; g.fillRect(0, 0, w, h); g.globalCompositeOperation = 'source-over'; } else noise(g, w, h, 12);
+  const gr = g.createLinearGradient(0, 0, w, 0); gr.addColorStop(0, 'rgba(255,255,255,.22)'); gr.addColorStop(0.45, 'rgba(255,255,255,0)'); gr.addColorStop(1, 'rgba(0,0,0,.32)'); g.fillStyle = gr; g.fillRect(0, 0, w, h);
   g.fillStyle = 'rgba(255,255,255,.8)'; g.fillRect(0, 34, w, 5); g.fillRect(0, h - 40, w, 5); g.fillRect(0, 48, w, 2); g.fillRect(0, h - 52, w, 2);
   g.save(); g.translate(w / 2, h / 2); g.rotate(-Math.PI / 2); g.textAlign = 'center'; g.textBaseline = 'middle';
   g.fillStyle = '#10161b'; g.font = '700 46px "Optima Nova", Georgia, serif'; g.fillText(p.name, 0, -8);
   g.fillStyle = 'rgba(16,22,27,.75)'; g.font = '500 20px Poppins, sans-serif'; g.fillText(`${CAT_LABEL[p.cat].toUpperCase()}  ·  ${String(p.i + 1).padStart(2, '0')}`, 0, 30); g.restore();
-});
+};
+const spineTex = (p, color) => { const t = canvasTex(128, 640, spineDraw(p, color, null)); projSpines.push({ t, redraw: (sets) => { const g = t.image.getContext('2d'); spineDraw(p, color, sets[2].d)(g, 128, 640); t.needsUpdate = true; } }); return t; };
 const projectBook = (p, color) => {
   const g = new THREE.Group();
   const spine = new THREE.MeshStandardMaterial({ map: spineTex(p, color), roughness: 0.5, emissive: 0x000000, envMapIntensity: 0.9 });
@@ -211,8 +251,8 @@ const projectBook = (p, color) => {
 const MAXF = 4200;
 const fillerGeo = new RoundedBoxGeometry(1, 1, 1, 2, 0.16);
 const cellAttr = new THREE.InstancedBufferAttribute(new Float32Array(MAXF * 2), 2); fillerGeo.setAttribute('aCell', cellAttr);
-const spineMat = new THREE.MeshStandardMaterial({ map: spineAtlas, roughness: 0.6, envMapIntensity: 0.6 });
-spineMat.onBeforeCompile = (sh) => { sh.vertexShader = 'attribute vec2 aCell;\n' + sh.vertexShader.replace('#include <uv_vertex>', '#include <uv_vertex>\n#ifdef USE_MAP\n vMapUv = uv * vec2(' + (1 / SP_COLS).toFixed(6) + ', ' + (1 / SP_ROWS).toFixed(6) + ') + aCell;\n#endif'); };
+const spineMat = new THREE.MeshStandardMaterial({ map: spineAtlas, normalMap: spineNormal, normalScale: new THREE.Vector2(1.1, 1.1), roughnessMap: spineRough, roughness: 1, envMapIntensity: 0.6 });
+spineMat.onBeforeCompile = (sh) => { sh.vertexShader = 'attribute vec2 aCell;\n' + sh.vertexShader.replace('#include <uv_vertex>', '#include <uv_vertex>\n#ifdef USE_MAP\n vMapUv = uv * vec2(' + (1 / SP_COLS).toFixed(6) + ', ' + (1 / SP_ROWS).toFixed(6) + ') + aCell;\n#endif\n#ifdef USE_NORMALMAP\n vNormalMapUv = uv * vec2(' + (1 / SP_COLS).toFixed(6) + ', ' + (1 / SP_ROWS).toFixed(6) + ') + aCell;\n#endif\n#ifdef USE_ROUGHNESSMAP\n vRoughnessMapUv = uv * vec2(' + (1 / SP_COLS).toFixed(6) + ', ' + (1 / SP_ROWS).toFixed(6) + ') + aCell;\n#endif'); };
 const coverFill = new THREE.MeshStandardMaterial({ color: 0x1d1511, roughness: 0.7 });
 const pageDark = new THREE.MeshStandardMaterial({ map: pageEdge, color: 0x9a927c, roughness: 0.95 });
 const fillerInst = new THREE.InstancedMesh(fillerGeo, [coverFill, coverFill, pageDark, pageDark, spineMat, pageDark], MAXF); fillerInst.castShadow = true; fillerInst.receiveShadow = true; fillerInst.frustumCulled = false;
@@ -223,8 +263,8 @@ const fillCase = (c) => {
     const y = LEV(li), x0 = -W / 2 + 0.1, x1 = W / 2 - 0.1; let x = x0;
     // the project books of this case sit on ONE board, at random places along it
     const proj = li === PROJ_LEVEL ? mine.map((p) => p) : [];
-    const spots = proj.map(() => rnd(x0 + 0.3, x1 - 0.3)).sort((a, b) => a - b);
-    for (let k = 1; k < spots.length; k++) if (spots[k] - spots[k - 1] < 0.45) spots[k] = Math.min(spots[k - 1] + 0.45, x1 - 0.2);
+    const side = c.cat === 'web' ? -1 : c.cat === 'sales' ? 1 : 0, lo = x0 + 0.3 + (side < 0 ? 0.55 : 0), hi = x1 - 0.3 - (side > 0 ? 0.55 : 0);   // keep project books clear of the ladder
+    const seg = (hi - lo) / Math.max(proj.length, 1), spots = proj.map((_, k) => lo + seg * (k + 0.1 + 0.8 * Math.random()));   // one per equal slice, random inside it: never touching, never in a row
     let pi = 0;
     while (x < x1 - 0.05 && fi < MAXF - 1) {
       if (pi < proj.length && x >= spots[pi] - 0.02) {
@@ -251,7 +291,7 @@ const ladder = (g, lx, W) => {
   loadModel('wooden_ladder_02', 3.5).then((l) => { if (!l) return; l.position.set(lx, 0, BC_D / 2 + 0.3); l.rotation.set(-0.1, Math.PI, 0); g.add(l); });
   add(g, box(W - 0.3, 0.022, 0.022), M.brass, 0, 3.8, BC_D / 2 + 0.04, false, false);
 };
-ladder(cases[1].g, -0.7, cases[1].W); ladder(cases[2].g, 0.9, cases[2].W);
+ladder(cases[1].g, -(cases[1].W / 2 - 0.27), cases[1].W); ladder(cases[2].g, cases[2].W / 2 - 0.27, cases[2].W);
 
 /* ---------------- real 3D models (Poly Haven, CC0) ---------------- */
 const props = { plants: [], chair: null, lamp: null, flame: null };
@@ -312,12 +352,13 @@ let dustPoints = null;
     loadModel('lantern_chandelier_01', 0.9).then((m) => { if (m) { m.position.set(0, -0.95, 0); sw.add(m); } });
     const halo = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTex('rgba(255,214,150,.4)', 'rgba(255,214,150,0)'), blending: THREE.AdditiveBlending, depthWrite: false, fog: false })); halo.scale.set(1.2, 1.2, 1); halo.position.set(0, -0.62, 0); sw.add(halo);
     const pl = new THREE.PointLight(0xffc27a, 15, 8.5, 2); pl.position.set(0, -0.72, 0); sw.add(pl);
+    if (i === 1) { pl.castShadow = true; pl.shadow.mapSize.set(1024, 1024); pl.shadow.bias = -0.0006; pl.shadow.radius = 3; }   // the middle lamp casts real shadows of the table, chair and plants
     pendants.push({ root: sw, light: pl, ang: 0, vel: 0, base: 15, phase: i * 1.7, x, z });
   });
-  scene.add(new THREE.HemisphereLight(0xffe6c4, 0x261a12, 0.45));
+  scene.add(new THREE.HemisphereLight(0xffe6c4, 0x261a12, 0.32));
   const beam = beamTex();
   [[0.3, 2.4, 0xcfe0ff], [-0.3, -2.0, 0xffe2b0]].forEach(([x, z, col]) => {
-    const sp = new THREE.SpotLight(col, 85, 11, 0.4, 0.6, 1.2); sp.position.set(x, RH - 0.1, z); sp.target.position.set(x * 0.4, 0, z - 0.5); sp.castShadow = true; sp.shadow.mapSize.set(1024, 1024); sp.shadow.bias = -0.0004; sp.shadow.radius = 4; scene.add(sp, sp.target);
+    const sp = new THREE.SpotLight(col, 85, 11, 0.4, 0.6, 1.2); sp.position.set(x, RH - 0.1, z); sp.target.position.set(x * 0.4, 0, z - 0.5); sp.castShadow = true; sp.shadow.mapSize.set(2048, 2048); sp.shadow.bias = -0.0004; sp.shadow.radius = 4; scene.add(sp, sp.target);
     add(scene, box(1.3, 0.05, 0.8), new THREE.MeshBasicMaterial({ color: new THREE.Color(col).multiplyScalar(2.0), toneMapped: false }), x, RH - 0.025, z, false, false);
     const cone = new THREE.Mesh(new THREE.CylinderGeometry(0.6, 1.6, RH - 0.1, 28, 1, true), new THREE.MeshBasicMaterial({ map: beam, color: col, transparent: true, opacity: 0.17, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide, fog: false }));
     cone.position.set(x * 0.7, (RH - 0.1) / 2, z - 0.25); scene.add(cone);
@@ -493,6 +534,7 @@ const targets = [...projectBooks, fillerInst, door.root];
 let aimed = null;
 const label = $('lib-label'), labelCat = $('lib-label-cat'), labelName = $('lib-label-name'), labelHint = $('lib-label-hint');
 const aim = () => {
+  camera.updateMatrixWorld(true);
   ray.setFromCamera(new THREE.Vector2(0, 0), camera);
   const hits = ray.intersectObjects(targets, true);
   let found = null;

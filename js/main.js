@@ -1016,13 +1016,15 @@
       tRail.appendChild(c);
     });
     let wrapTimer = 0;
+    // cards before the active one fade out as they slide off to the left, so nothing of them shows beside the active card at rest
+    const markPast = (active) => cardsT.forEach((c, n) => c.classList.toggle('is-past', n < active));
     const finishWrap = () => {
       if (!wrapTimer) return;
       clearTimeout(wrapTimer); wrapTimer = 0;
-      tRail.classList.add('is-dragging'); tRail.style.transform = 'translate3d(0,0,0)'; void tRail.offsetWidth;
+      tRail.classList.add('is-dragging'); markPast(0); tRail.style.transform = 'translate3d(0,0,0)'; void tRail.offsetWidth;
     };
     const goWrap = () => {
-      index = 0;
+      index = 0; markPast(cardsT.length);
       tRail.classList.remove('is-dragging');
       tRail.style.transform = `translate3d(${-cardsT.length * pitch}px,0,0)`;
       tabs.forEach((t, n) => { t.classList.remove('is-active'); t.setAttribute('aria-selected', String(n === 0)); });
@@ -1033,6 +1035,7 @@
     const go = (i, animate = true) => {
       clearTimeout(wrapTimer); wrapTimer = 0;
       index = Math.min(Math.max(i, 0), cardsT.length - 1);
+      markPast(index);
       tRail.classList.toggle('is-dragging', !animate);
       tRail.style.transform = `translate3d(${-index * pitch}px,0,0)`;
       tabs.forEach((t, n) => { t.classList.remove('is-active'); t.setAttribute('aria-selected', String(n === index)); });
@@ -1065,6 +1068,7 @@
       if (!drag) return;
       drag.dx = e.clientX - drag.x;
       viewport.classList.add('is-dragging'); tRail.classList.add('is-dragging');
+      if (index > 0) cardsT[index - 1].classList.remove('is-past');          // dragging right brings the previous card back
       tRail.style.transform = `translate3d(${drag.base + drag.dx}px,0,0)`;
     });
     const endT = () => {

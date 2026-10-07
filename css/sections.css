@@ -471,6 +471,9 @@
   position: relative; flex: 0 0 74.3%; height: 599px;   /* 74.3% of the viewport box = 1274px @1905 */
   border: 1px solid silver; border-radius: var(--r-media); background: #edebf5; overflow: hidden;
 }
+.testimonial-card { transition: opacity .7s ease .35s; }
+.testimonial-card.is-past { opacity: 0; }   /* cards before the active one fade as they slide off to the left */
+.testimonials__rail.is-dragging .testimonial-card { transition: none; }
 .testimonial-card--lime  { background: #f7f9e5; }
 .testimonial-card--white { background: #fff; }
 .testimonial-card--peach { background: #f8eeeb; }

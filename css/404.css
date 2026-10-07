@@ -2,7 +2,7 @@
    emphasis, a big outlined "404", the pill buttons with the inverting hover, and stat-style rows to get back on track. */
 .error-page { background: var(--c-ink); color: #fff; }
 
-.e-hero { position: relative; padding: 170px 0 100px; background: var(--c-ink); overflow: hidden; }
+.e-hero { position: relative; display: flex; flex-direction: column; justify-content: center; min-height: 100vh; padding: 150px 0 70px; background: var(--c-ink); overflow: hidden; }   /* no footer on this page: the dark hero fills the screen */
 .e-hero::before { content: ""; position: absolute; right: -8%; top: -12%; width: 52vw; height: 52vw; border-radius: 50%; background: radial-gradient(circle, rgb(240 248 121 / .10), transparent 65%); pointer-events: none; }
 .e-hero__grid { position: relative; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 560px); gap: 60px; align-items: center; width: min(1200px, 90%); margin: 0 auto; }
 

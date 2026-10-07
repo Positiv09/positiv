@@ -129,3 +129,10 @@
 .m-filter.is-active sup { background: rgb(33 29 29 / .12); color: var(--c-ink); }
 
 .m-outro__btn { width: auto; margin-top: 36px; padding: 0 36px; }
+
+/* same circular-fill hover as the hero buttons (dark fill, lime text and outline) */
+.m-outro__btn { position: relative; overflow: hidden; isolation: isolate; --fill: var(--c-ink); border: 1px solid var(--c-lime); transition: color .45s var(--ease-out) .05s, transform .4s var(--ease-out); }
+.m-outro__btn::before { content: ""; position: absolute; z-index: -1; left: 50%; top: 100%; width: 150%; aspect-ratio: 1; border-radius: 50%; background: var(--fill); transform: translate(-50%, -50%) scale(0); transition: transform .7s var(--ease-out); }
+.m-outro__btn:hover, .m-outro__btn:focus-visible { color: var(--c-lime); }
+.m-outro__btn:hover::before, .m-outro__btn:focus-visible::before { transform: translate(-50%, -50%) scale(1.15); }
+.m-outro__btn:active { transform: scale(.98); }

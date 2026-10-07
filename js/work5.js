@@ -29,10 +29,11 @@ const BOOK_TITLES = ['The Art of Brand', 'Sales Fluency', 'Channel Craft', 'Typo
 let renderer;
 try { renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' }); } catch (e) { renderer = null; }
 if (!renderer) { $('lib-fallback').hidden = false; $('lib-start').hidden = true; throw new Error('no webgl'); }
-renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.7));
+let quality = 1.25;   // adaptive: drops further if the frame rate is low (see the loop)
+renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, quality));
 renderer.outputColorSpace = THREE.SRGBColorSpace;
-renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.05;
-renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.toneMapping = THREE.ACESFilmicToneMapping; renderer.toneMappingExposure = 1.4;
+renderer.shadowMap.enabled = true; renderer.shadowMap.type = THREE.PCFShadowMap; renderer.shadowMap.autoUpdate = false;   // shadows are refreshed every few frames only
 host.appendChild(renderer.domElement);
 const scene = new THREE.Scene();
 const FOG = 0x0f0b09;
@@ -222,7 +223,7 @@ cases.forEach((c) => {
   add(g, box(0.018, 0.018, 0.3), M.brass, 0, hy + 0.3, hz + 0.14, false, false);
   const shade = add(g, new THREE.CylinderGeometry(0.03, 0.03, 0.62, 16), M.brass, 0, hy + 0.3, hz + 0.3, false, false); shade.rotation.z = Math.PI / 2;
   const strip = new THREE.Mesh(new THREE.PlaneGeometry(0.58, 0.05), new THREE.MeshBasicMaterial({ color: 0xffe3a0, toneMapped: false })); strip.rotation.x = Math.PI / 2; strip.position.set(0, hy + 0.268, hz + 0.3); g.add(strip);
-  const pl = new THREE.SpotLight(0xffd7a0, 14, 7, 0.95, 0.95, 1.5); pl.position.set(0, hy + 0.26, hz + 0.3); pl.target.position.set(0, 1.5, BC_D / 2 - 0.05); g.add(pl, pl.target);   // the picture light washes the shelves below it
+  // (no spot light here: five extra lights on every surface were the main cost; the brass strip above still glows)
 });
 
 /* project books: pale, cool colours (they open); everything else is dark (coming soon) */
@@ -255,7 +256,7 @@ const spineMat = new THREE.MeshStandardMaterial({ map: spineAtlas, normalMap: sp
 spineMat.onBeforeCompile = (sh) => { sh.vertexShader = 'attribute vec2 aCell;\n' + sh.vertexShader.replace('#include <uv_vertex>', '#include <uv_vertex>\n#ifdef USE_MAP\n vMapUv = uv * vec2(' + (1 / SP_COLS).toFixed(6) + ', ' + (1 / SP_ROWS).toFixed(6) + ') + aCell;\n#endif\n#ifdef USE_NORMALMAP\n vNormalMapUv = uv * vec2(' + (1 / SP_COLS).toFixed(6) + ', ' + (1 / SP_ROWS).toFixed(6) + ') + aCell;\n#endif\n#ifdef USE_ROUGHNESSMAP\n vRoughnessMapUv = uv * vec2(' + (1 / SP_COLS).toFixed(6) + ', ' + (1 / SP_ROWS).toFixed(6) + ') + aCell;\n#endif'); };
 const coverFill = new THREE.MeshStandardMaterial({ color: 0x1d1511, roughness: 0.7 });
 const pageDark = new THREE.MeshStandardMaterial({ map: pageEdge, color: 0x9a927c, roughness: 0.95 });
-const fillerInst = new THREE.InstancedMesh(fillerGeo, [coverFill, coverFill, pageDark, pageDark, spineMat, pageDark], MAXF); fillerInst.castShadow = true; fillerInst.receiveShadow = true; fillerInst.frustumCulled = false;
+const fillerInst = new THREE.InstancedMesh(fillerGeo, [coverFill, coverFill, pageDark, pageDark, spineMat, pageDark], MAXF); fillerInst.castShadow = false; fillerInst.receiveShadow = true; fillerInst.frustumCulled = false;
 let fi = 0; const tmpM = new THREE.Matrix4(), tmpQ = new THREE.Quaternion(), tmpS = new THREE.Vector3(), tmpP = new THREE.Vector3();
 const fillCase = (c) => {
   const g = c.g, W = c.W, mine = PROJECTS.filter((p) => p.cat === c.cat);
@@ -351,14 +352,13 @@ let dustPoints = null;
     const sw = new THREE.Group(); root.add(sw);
     loadModel('lantern_chandelier_01', 0.9).then((m) => { if (m) { m.position.set(0, -0.95, 0); sw.add(m); } });
     const halo = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTex('rgba(255,214,150,.4)', 'rgba(255,214,150,0)'), blending: THREE.AdditiveBlending, depthWrite: false, fog: false })); halo.scale.set(1.2, 1.2, 1); halo.position.set(0, -0.62, 0); sw.add(halo);
-    const pl = new THREE.PointLight(0xffc27a, 15, 8.5, 2); pl.position.set(0, -0.72, 0); sw.add(pl);
-    if (i === 1) { pl.castShadow = true; pl.shadow.mapSize.set(1024, 1024); pl.shadow.bias = -0.0006; pl.shadow.radius = 3; }   // the middle lamp casts real shadows of the table, chair and plants
-    pendants.push({ root: sw, light: pl, ang: 0, vel: 0, base: 15, phase: i * 1.7, x, z });
+    const pl = new THREE.PointLight(0xffc27a, 22, 9, 2); pl.position.set(0, -0.72, 0); sw.add(pl);
+    pendants.push({ root: sw, light: pl, ang: 0, vel: 0, base: 22, phase: i * 1.7, x, z });
   });
-  scene.add(new THREE.HemisphereLight(0xffe6c4, 0x261a12, 0.32));
+  scene.add(new THREE.HemisphereLight(0xffe6c4, 0x3a2a1e, 0.7));
   const beam = beamTex();
   [[0.3, 2.4, 0xcfe0ff], [-0.3, -2.0, 0xffe2b0]].forEach(([x, z, col]) => {
-    const sp = new THREE.SpotLight(col, 85, 11, 0.4, 0.6, 1.2); sp.position.set(x, RH - 0.1, z); sp.target.position.set(x * 0.4, 0, z - 0.5); sp.castShadow = true; sp.shadow.mapSize.set(2048, 2048); sp.shadow.bias = -0.0004; sp.shadow.radius = 4; scene.add(sp, sp.target);
+    const sp = new THREE.SpotLight(col, 85, 11, 0.4, 0.6, 1.2); sp.position.set(x, RH - 0.1, z); sp.target.position.set(x * 0.4, 0, z - 0.5); sp.castShadow = (x > 0); sp.shadow.mapSize.set(1024, 1024); sp.shadow.bias = -0.0004; sp.shadow.radius = 4; scene.add(sp, sp.target);
     add(scene, box(1.3, 0.05, 0.8), new THREE.MeshBasicMaterial({ color: new THREE.Color(col).multiplyScalar(2.0), toneMapped: false }), x, RH - 0.025, z, false, false);
     const cone = new THREE.Mesh(new THREE.CylinderGeometry(0.6, 1.6, RH - 0.1, 28, 1, true), new THREE.MeshBasicMaterial({ map: beam, color: col, transparent: true, opacity: 0.17, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide, fog: false }));
     cone.position.set(x * 0.7, (RH - 0.1) / 2, z - 0.25); scene.add(cone);
@@ -679,7 +679,7 @@ window.addEventListener('keydown', (e) => { if (e.code === 'KeyM' && !e.repeat &
 /* ---------------- loop ---------------- */
 const resize = () => { const w = host.clientWidth, h = host.clientHeight; renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix(); };
 window.addEventListener('resize', resize); resize();
-let bobT = 0, onScreen = true, clock = 0;
+let bobT = 0, onScreen = true, clock = 0, frameN = 0, fpsAcc = 0, fpsN = 0;
 if ('IntersectionObserver' in window) new IntersectionObserver((en) => { onScreen = en[0].isIntersecting; }).observe(stage);
 const dustArr = dustPoints.geometry.attributes.position;
 const tick = (now) => {
@@ -695,6 +695,8 @@ const tick = (now) => {
     p.light.intensity = p.base * (0.96 + Math.sin(clock * 7 + p.phase) * 0.012 + Math.sin(clock * 3.1 + p.phase * 2) * 0.018);
   });
   projectBooks.forEach((b) => { if (!b.visible) return; const want = aimed?.obj === b && mode === 'play' ? 0.07 : 0; b.userData.lift += (want - b.userData.lift) * Math.min(dt * 10, 1); b.position.z = b.userData.base + b.userData.lift; });
+  frameN++; if (frameN % 4 === 0) renderer.shadowMap.needsUpdate = true;
+  fpsAcc += dt; fpsN++; if (fpsAcc > 2.5) { const fps = fpsN / fpsAcc; fpsAcc = 0; fpsN = 0; if (fps < 38 && quality > 0.8 && mode === 'play') { quality = Math.max(0.8, quality - 0.25); renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, quality)); resize(); } }
   stepPhysics(dt); updateProps(dt, clock);
   if (mode === 'play') {
     const f = (keys.f ? 1 : 0) - (keys.b ? 1 : 0) - touch.vz, s = (keys.r ? 1 : 0) - (keys.l ? 1 : 0) + touch.vx;

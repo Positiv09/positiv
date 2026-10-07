@@ -66,3 +66,15 @@
 @media (max-width: 991px) { .lib__title { font-size: 48px; line-height: 56px; } .lib__keys { display: none; } .back-projects { top: 96px; } .lib__reader-top { top: 96px; } .lib__x { top: 96px; right: 14px; } }
 @media (max-width: 640px) { .lib__rbtn { padding: 0 14px; height: 42px; font-size: 14px; } .lib__reader-bar { gap: 8px; bottom: 20px; } .lib__reader-top strong { font-size: 20px; } }
 @media (prefers-reduced-motion: reduce) { .lib__start, .lib__label, .lib__fade { transition-duration: .01ms; } }
+
+
+/* hold / open states of the book in hand */
+.lib__only-hold, .lib__only-open { display: none; }
+.lib[data-read="hold"] .lib__only-hold { display: inline-flex; }
+.lib[data-read="open"] .lib__only-open, .lib[data-read="opening"] .lib__only-open { display: inline-flex; }
+.lib[data-read="opening"] .lib__only-open { opacity: .4; pointer-events: none; }
+.lib[data-read="taking"] .lib__reader-bar, .lib[data-read="putting"] .lib__reader-bar, .lib[data-read="closing"] .lib__reader-bar, .lib[data-read="closingToPut"] .lib__reader-bar, .lib[data-read="loading"] .lib__reader-bar { opacity: .35; pointer-events: none; }
+.lib[data-read="open"] .lib__pageno.lib__only-open, .lib[data-read="opening"] .lib__pageno.lib__only-open { display: inline-block; }
+/* cinematic finish: soft vignette + a touch of film grain over the canvas */
+.lib::after { content: ""; position: absolute; inset: 0; z-index: 3; pointer-events: none; background: radial-gradient(120% 95% at 50% 52%, transparent 55%, rgb(5 3 2 / .55) 100%), url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 .5 0'/></filter><rect width='160' height='160' filter='url(%23n)' opacity='.5'/></svg>"); background-blend-mode: normal; opacity: .55; mix-blend-mode: soft-light; }
+.lib__rbtn { white-space: nowrap; }

@@ -20,7 +20,7 @@
   <link rel="stylesheet" href="css/base.css?v=20261006a">
   <link rel="stylesheet" href="css/menu.css?v=20261006a">
   <link rel="stylesheet" href="css/sections.css?v=20261008c">
-  <link rel="stylesheet" href="css/work5.css?v=1">
+  <link rel="stylesheet" href="css/work5.css?v=3">
   <script type="importmap">{"imports":{"three":"./js/vendor/three.module.min.js"}}</script>
 </head>
 <body class="is-about is-work5">
@@ -371,10 +371,13 @@
     <div class="lib__reader-top"><span id="lib-read-cat">Brand</span><strong id="lib-read-title">Project</strong></div>
     <button type="button" class="lib__x" id="lib-close" aria-label="Put the book back"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
     <div class="lib__reader-bar">
-      <button type="button" class="lib__rbtn" id="lib-prev" aria-label="Previous pages">&larr; Prev</button>
-      <span class="lib__pageno" id="lib-page">1 / 4</span>
-      <button type="button" class="lib__rbtn" id="lib-next" aria-label="Next pages">Next &rarr;</button>
-      <a class="lib__rbtn lib__rbtn--primary" id="lib-open" href="project.html?p=1">Open the full project</a>
+      <button type="button" class="lib__rbtn lib__only-hold" id="lib-putback" aria-label="Put the book back on the shelf">Put it back</button>
+      <button type="button" class="lib__rbtn lib__rbtn--primary lib__only-hold" id="lib-openbook">Open the book</button>
+      <button type="button" class="lib__rbtn lib__only-open" id="lib-prev" aria-label="Previous pages">&larr; Prev</button>
+      <span class="lib__pageno lib__only-open" id="lib-page">1 / 4</span>
+      <button type="button" class="lib__rbtn lib__only-open" id="lib-next" aria-label="Next pages">Next &rarr;</button>
+      <button type="button" class="lib__rbtn lib__only-open" id="lib-closebook">Close the book</button>
+      <a class="lib__rbtn lib__rbtn--primary lib__only-open" id="lib-open" href="project.html?p=1">Open the full project</a>
     </div>
   </div>
 
@@ -382,7 +385,7 @@
     <div class="lib__panel">
       <p class="lib__eyebrow">Our work</p>
       <h1 class="lib__title">Walk into the <em>library.</em></h1>
-      <p class="lib__lead">Every shelf is a category, every book is a project. Wander around, pull a book off the shelf and read it. The lit door brings you back home.</p>
+      <p class="lib__lead">Five bookcases: Brand, Web, Sales and Campaign, plus one that is coming soon. Our projects are the pale blue books. Pull one off the shelf, open it, turn the pages, and put it back. The lit door brings you home.</p>
       <button type="button" class="lib__btn" id="lib-start-btn">Enter the library</button>
       <div class="lib__keys"><span><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> walk</span><span>Mouse look</span><span><kbd>Shift</kbd> run</span><span>Click take a book</span><span><kbd>Esc</kbd> pause</span></div>
       <a class="lib__classic" href="work.html">Prefer the classic list?</a>
@@ -460,6 +463,6 @@
 <script src="js/vendor/gsap.min.js" defer></script>
 <script src="js/main.js?v=20261007m" defer></script>
 <script src="js/intro.js?v=1" defer></script>
-<script type="module" src="js/work5.js?v=7"></script>
+<script type="module" src="js/work5.js?v=8"></script>
 </body>
 </html>

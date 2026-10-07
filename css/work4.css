@@ -19,7 +19,8 @@
 .wv-frame__ref { position: absolute; left: 0; right: 0; top: 100%; height: 100%; transform: scaleY(-1); opacity: .12; background: inherit; border-radius: 14px; pointer-events: none; -webkit-mask-image: linear-gradient(to bottom, #000, transparent 55%); mask-image: linear-gradient(to bottom, #000, transparent 55%); }
 
 /* light rings (gates) and particles */
-.wv-ring { position: absolute; border-radius: 50%; border: 1px solid rgb(240 248 121 / .5); box-shadow: 0 0 40px rgb(240 248 121 / .15), inset 0 0 40px rgb(240 248 121 / .08); opacity: 0; will-change: transform, opacity; }
+.wv-ring { position: absolute; opacity: 0; will-change: transform, opacity; filter: drop-shadow(0 0 28px rgb(240 248 121 / .18)); }
+.wv-ring svg { display: block; }
 .wv-dot { position: absolute; border-radius: 50%; background: #fff; opacity: 0; will-change: transform, opacity; }
 .wv-dot--lime { background: var(--c-lime); box-shadow: 0 0 10px rgb(240 248 121 / .8); }
 
@@ -53,3 +54,14 @@
 }
 @media (max-width: 640px) { .back-projects { top: 96px; left: 12px; } .wv__intro h1 { font-size: 40px; line-height: 48px; } }
 @media (prefers-reduced-motion: reduce) { .wv { height: auto; } .wv__sticky { position: relative; height: auto; min-height: 100vh; padding: 130px 0 60px; } .wv__scene, .wv__bg { position: relative; } .wv__intro, .wv__hud { position: relative; transform: none; left: auto; top: auto; margin: 0 auto; } }
+
+/* filters inside the world */
+.wv__filters { position: absolute; z-index: 6; left: 50%; top: 118px; display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; width: min(640px, 90%); transform: translateX(-50%); }
+.wv__filter { display: inline-flex; align-items: center; gap: 4px; height: 38px; padding: 0 18px; border: .5px solid rgb(239 239 235 / .45); border-radius: 19px; background: rgb(33 29 29 / .55); backdrop-filter: blur(6px); font-size: 14px; color: var(--c-paper-2); transition: color .3s ease, background-color .3s ease, border-color .3s ease, transform .4s var(--ease-out); }
+.wv__filter sup { font-size: 10px; color: #8e8e8e; transform: translateY(-3px); }
+.wv__filter:hover { border-color: var(--c-lime); color: var(--c-lime); }
+.wv__filter.is-active { background: var(--c-lime); border-color: var(--c-lime); color: var(--c-ink); }
+.wv__filter.is-active sup { color: rgb(33 29 29 / .6); }
+.wv__filter:active { transform: scale(.96); }
+.wv__filter:focus-visible { outline: 2px solid var(--c-lime); outline-offset: 3px; }
+@media (max-width: 991px) { .wv__filters { top: 150px; } .wv__filter { height: 34px; padding: 0 14px; font-size: 13px; } }

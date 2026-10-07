@@ -19,3 +19,12 @@
 .pv-panel--quote p strong { display: block; font-weight: 500; font-size: 17px; color: #fff; }
 .pv-panel--quote p { margin-top: 18px; font-size: 14px; color: #b2b2b2; }
 @media (max-width: 991px) { .pv-item--cover, .pv-item--next { left: -190px; top: -130px; width: 380px; height: 260px; } .pv-item--text { left: -150px; width: 300px; height: 280px; top: -140px; } .pv-item--quote { left: -170px; width: 340px; top: -190px; height: 380px; } .pv-panel { padding: 20px 22px; } .pv-panel h2 { font-size: 24px; line-height: 30px; } .pv-panel p { font-size: 14px; line-height: 22px; } .pv-panel--quote blockquote { font-size: 20px; line-height: 28px; } .pv .wv__intro h1 { font-size: 34px; line-height: 40px; } }
+
+/* bigger, closer, easier to read and click */
+.pv-item--cover, .pv-item--next { left: -380px; top: -250px; width: 760px; height: 500px; }
+.pv .wv-frame:not(.pv-item--cover):not(.pv-item--next):not(.pv-item--text):not(.pv-item--quote) { left: -300px; top: -195px; width: 600px; height: 390px; }
+.pv-item--text { left: -280px; top: -175px; width: 560px; height: 350px; }
+.pv-item--quote { left: -420px; top: -190px; width: 840px; height: 380px; }
+.pv-panel { padding: 34px 40px; } .pv-panel h2 { font-size: 40px; line-height: 46px; } .pv-panel p { font-size: 21px; line-height: 31px; }
+.pv-panel--quote blockquote { font-size: 32px; line-height: 42px; }
+@media (max-width: 991px) { .pv-item--cover, .pv-item--next { left: -200px; top: -140px; width: 400px; height: 280px; } .pv .wv-frame:not(.pv-item--cover):not(.pv-item--next):not(.pv-item--text):not(.pv-item--quote) { left: -150px; top: -100px; width: 300px; height: 200px; } .pv-item--text { left: -160px; top: -150px; width: 320px; height: 300px; } .pv-item--quote { left: -175px; top: -200px; width: 350px; height: 400px; } .pv-panel { padding: 22px; } .pv-panel h2 { font-size: 26px; line-height: 32px; } .pv-panel p { font-size: 15px; line-height: 23px; } .pv-panel--quote blockquote { font-size: 21px; line-height: 29px; } }

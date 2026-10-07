@@ -11,7 +11,7 @@
   const OUTCOME = 'Partner teams now start from the same strong foundation. Conversations open with a consistent story and assets are produced in hours instead of weeks.';
   const QUOTE = ['Working with Positiv was a seamless experience from start to finish. Their team transformed complex ideas into visually compelling designs that elevated our brand presence.', 'Positiv became more than a design partner - they became an extension of our team.'];
   const WHO = [['Alexis Johnson', 'CEO of Light Node Ventures'], ['Mansour Al Derei', 'Trendz Podcast Host | Investor']];
-  const N = IMG.length, GAP = 940, START = 700;
+  const N = IMG.length, GAP = 720, START = 520;
   const $ = (id) => document.getElementById(id);
   const sec = $('wv'), world = $('wv-world');
   if (!sec || !world) return;
@@ -22,8 +22,8 @@
   $('pv-cat').textContent = CAT[i0]; $('pv-title').textContent = TITLES[i0]; $('pv-sub').textContent = `Angel East · ${CAT[i0]}`;
 
   /* the corners (as in work4): pictures stay away from the big logo */
-  const corner = (k) => { const sx = k % 2 ? 1 : -1, sy = k % 4 < 2 ? -1 : 1, sc = 0.6, hw = small ? 110 : 250, hh = small ? 72 : 160;
-    return { sx, sy, x: sx * Math.max((innerWidth / 2 - hw * sc - 26) / sc, hw + 60), y: sy * Math.max((innerHeight / 2 - hh * sc - (small ? 120 : 110)) / sc, hh + 20) }; };
+  const corner = (k) => { const sx = k % 2 ? 1 : -1, sy = k % 4 < 2 ? -1 : 1;   // near the big logo: easy to read and to click
+    return { sx, sy, x: sx * (small ? 118 : (innerWidth * 0.27) / 0.7), y: sy * (small ? 150 : (innerHeight * 0.21) / 0.7) }; };
 
   /* the stops of the journey */
   const items = [
@@ -45,25 +45,25 @@
     else if (it.k === 'text') el.innerHTML = `<div class="pv-panel"><span>${String(n).padStart(2, '0')}</span><h2>${it.h}</h2><p>${it.t}</p></div>`;
     else if (it.k === 'quote') { const q = i0 % 2; el.innerHTML = `<div class="pv-panel pv-panel--quote"><svg width="48" height="36" viewBox="0 0 64 48" fill="currentColor"><path d="M0 48V28C0 12 9 2 26 0v10C17 12 13 17 13 24h13v24H0zm38 0V28C38 12 47 2 64 0v10c-9 2-13 7-13 14h13v24H38z"/></svg><blockquote>${QUOTE[q]}</blockquote><p><strong>${WHO[q][0]}</strong>${WHO[q][1]}</p></div>`; }
     else { const nx = (i0 + 1) % N; el.innerHTML = `<a class="wv-frame__card pv-next" href="project4.html?p=${nx + 1}" data-cursor="View" style="background-image:url('${img(nx)}')"><span class="wv-frame__meta"><strong>Next project</strong><em>${CAT[nx]}</em></span></a><a class="pv-all" href="work4.html">All projects</a>`; }
-    const z = -(START + n * GAP);
+    const z = -(START + n * GAP + (n === items.length - 1 ? 560 : 0));   // extra room before the last frame, so the quote has left the screen
     el.style.transform = `translate3d(${c.x}px, ${c.y}px, ${z}px) rotateY(${-c.sx * 12}deg) rotateX(${c.sy * 4}deg)`;
     world.appendChild(el); return { el, z };
   });
   const dots = Array.from({ length: small ? 50 : 110 }, () => { const s = 2 + Math.random() * 3, z = -(100 + Math.random() * (N * GAP)), el = document.createElement('div'); el.className = 'wv-dot' + (Math.random() < 0.3 ? ' wv-dot--lime' : '');
     el.style.cssText = `width:${s}px;height:${s}px;transform:translate3d(${(Math.random() - 0.5) * 1800}px,${(Math.random() - 0.5) * 1000}px,${z}px)`; world.appendChild(el); return { el, z, op: 0.25 + Math.random() * 0.65 }; });
-  const range = (items.length - 1) * GAP + START + 500;
+  const range = (items.length - 1) * GAP + 560 + START - 380;   // the last frame (next project) stops at focus distance: reachable and clickable
   sec.style.height = `calc(100vh + ${Math.round(items.length * 60 + 140)}vh)`;
 
   const intro = $('wv-intro'), hint = sec.querySelector('.wv__hint'), logo = $('wv-logo'), hud = { num: $('wv-num'), name: $('wv-name'), bar: $('wv-bar') };
   let target = 0, cam = 0, mx = 0, my = 0, tx = 0, ty = 0, active = -1, raf = 0, visible = true;
   const clamp = (v, a, b) => Math.min(Math.max(v, a), b);
   const measure = () => { const r = sec.getBoundingClientRect(), max = sec.offsetHeight - innerHeight; target = clamp(-r.top / max, 0, 1); };
-  const fade = (e) => e < -3600 ? 0 : e < -2200 ? (e + 3600) / 1400 : e < 150 ? 1 : e < 620 ? 1 - (e - 150) / 470 : 0;
+  const fade = (e) => e < -3000 ? 0 : e < -1700 ? (e + 3000) / 1300 : e < 60 ? 1 : e < 300 ? 1 - (e - 60) / 240 : 0;
   const frame = () => {
     raf = 0; cam += (target * range - cam) * (reduce ? 1 : 0.075); mx += (tx - mx) * 0.06; my += (ty - my) * 0.06;
     world.style.transform = `translate3d(${(-mx * 60).toFixed(1)}px, ${(-my * 36).toFixed(1)}px, ${cam.toFixed(1)}px) rotateX(${(my * -6).toFixed(2)}deg) rotateY(${(mx * 9).toFixed(2)}deg)`;
     let best = 0, bd = 1e9;
-    nodes.forEach((n, i) => { const e = n.z + cam; n.el.style.opacity = fade(e).toFixed(3); n.el.style.pointerEvents = e > -2200 && e < 150 ? 'auto' : 'none'; const d = Math.abs(e + 700); if (d < bd) { bd = d; best = i; } });
+    nodes.forEach((n, i) => { const e = n.z + cam; n.el.style.opacity = fade(e).toFixed(3); n.el.style.pointerEvents = e > -1500 && e < 120 ? 'auto' : 'none'; const d = Math.abs(e + 420); if (d < bd) { bd = d; best = i; } });
     dots.forEach((d) => { d.el.style.opacity = (fade(d.z + cam) * d.op).toFixed(3); });
     const p = clamp(cam / range, 0, 1);
     intro.style.opacity = clamp(1 - p * 14, 0, 1).toFixed(3); intro.style.transform = `translate(-50%, calc(0px - ${(p * 900).toFixed(0)}px)) scale(${(1 + p * 6).toFixed(3)})`;

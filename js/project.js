@@ -56,4 +56,11 @@
   const step = () => Math.max(rail.clientWidth * 0.8, 300);
   $('#p-prev').addEventListener('click', () => rail.scrollBy({ left: -step(), behavior: 'smooth' }));
   $('#p-next').addEventListener('click', () => rail.scrollBy({ left: step(), behavior: 'smooth' }));
+  // drag the rail with the mouse (a drag never opens a card)
+  let down = false, moved = 0, sx = 0, sl = 0;
+  rail.addEventListener('pointerdown', (e) => { if (e.pointerType !== 'mouse' || e.button !== 0) return; down = true; moved = 0; sx = e.clientX; sl = rail.scrollLeft; });
+  window.addEventListener('pointermove', (e) => { if (!down) return; const dx = e.clientX - sx; moved = Math.max(moved, Math.abs(dx)); if (moved > 5) { rail.classList.add('is-dragging'); rail.scrollLeft = sl - dx; } });
+  window.addEventListener('pointerup', () => { if (!down) return; down = false; setTimeout(() => rail.classList.remove('is-dragging'), 0); });
+  rail.addEventListener('click', (e) => { if (moved > 5) { e.preventDefault(); e.stopPropagation(); moved = 0; } }, true);
+  rail.addEventListener('dragstart', (e) => e.preventDefault());
 })();

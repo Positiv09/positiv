@@ -75,3 +75,4 @@
 
 .p-quote__mark { display: block; margin: 0 auto; }
 @media (min-width: 992px) { .p-rail { scroll-padding-left: 10%; } }
+.p-rail { cursor: grab; } .p-rail.is-dragging { cursor: grabbing; scroll-snap-type: none; user-select: none; } .p-rail.is-dragging .p-card { pointer-events: none; }

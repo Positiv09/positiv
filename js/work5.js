@@ -491,7 +491,7 @@ let stepDist = 0;
 const SENS = 0.0022;
 const look = (dx, dy) => { player.yaw -= dx * SENS; player.pitch = Math.max(-1.3, Math.min(1.3, player.pitch - dy * SENS)); };
 const canvas = renderer.domElement;
-document.addEventListener('pointerlockchange', () => { locked = document.pointerLockElement === canvas; if (!locked && mode === 'play') setMode('paused'); if (locked && mode === 'paused') setMode('play'); });
+document.addEventListener('pointerlockchange', () => { locked = document.pointerLockElement === canvas; if (!locked && mode === 'play') setMode('paused'); if (locked && mode === 'paused') setMode('play'); if (locked && (mode === 'reading' || mode === 'leaving')) document.exitPointerLock(); });   // a lock granted late (first click) must never stay on while you read: the buttons need the cursor
 document.addEventListener('mousemove', (e) => { if (locked && mode === 'play') look(e.movementX, e.movementY); });
 let drag = null;
 canvas.addEventListener('pointerdown', (e) => { if (e.pointerType === 'touch') return; drag = { x: e.clientX, y: e.clientY }; });
@@ -500,8 +500,8 @@ window.addEventListener('pointerup', () => { drag = null; });
 canvas.addEventListener('click', (e) => {
   if (mode === 'reading') { if (R.state === 'hold') openCover(); return; }
   if (mode === 'start' || mode === 'paused') return;
-  if (!locked && mode === 'play' && e.pointerType !== 'touch') { try { canvas.requestPointerLock(); } catch (er) { /* ignore */ } }
-  if (mode === 'play') interact();
+  if (mode === 'play') interact();   // first: a click on a book / the door must not start a pointer lock
+  if (mode === 'play' && !locked && e.pointerType !== 'touch') { try { canvas.requestPointerLock(); } catch (er) { /* ignore */ } }
 });
 canvas.addEventListener('wheel', (e) => { if (mode === 'play') e.preventDefault(); }, { passive: false });
 const keyName = (e) => ({ KeyW: 'f', KeyZ: 'f', ArrowUp: 'f', KeyS: 'b', ArrowDown: 'b', KeyA: 'l', KeyQ: 'l', ArrowLeft: 'l', KeyD: 'r', ArrowRight: 'r', ShiftLeft: 'run', ShiftRight: 'run' }[e.code]);
@@ -671,7 +671,10 @@ $('lib-start-btn').addEventListener('click', () => {
   if (!isTouch) { try { canvas.requestPointerLock(); } catch (e) { /* drag-look still works */ } }
 });
 setMode('start'); setRead('none');
-const soundBtn = $('lib-sound'); if (soundBtn) soundBtn.addEventListener('click', () => { audio.ensure(); audio.setOn(!audio.on); soundBtn.setAttribute('aria-pressed', String(audio.on)); soundBtn.classList.toggle('is-off', !audio.on); soundBtn.querySelector('span').textContent = audio.on ? 'Sound on' : 'Sound off'; });
+const soundBtn = $('lib-sound');
+const toggleSound = () => { audio.ensure(); audio.setOn(!audio.on); if (soundBtn) { soundBtn.setAttribute('aria-pressed', String(audio.on)); soundBtn.classList.toggle('is-off', !audio.on); soundBtn.querySelector('span').textContent = audio.on ? 'Sound on' : 'Sound off'; } };
+if (soundBtn) soundBtn.addEventListener('click', toggleSound);
+window.addEventListener('keydown', (e) => { if (e.code === 'KeyM' && !e.repeat && mode !== 'start') toggleSound(); });
 
 /* ---------------- loop ---------------- */
 const resize = () => { const w = host.clientWidth, h = host.clientHeight; renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix(); };
@@ -724,5 +727,5 @@ requestAnimationFrame(tick);
 (document.fonts && document.fonts.load ? Promise.all([document.fonts.load('600 40px "Optima Nova"'), document.fonts.load('500 20px Poppins')]).catch(() => {}) : Promise.resolve()).then(() => { $('lib-loading').classList.add('is-done'); });
 
 /* tiny hook for manual testing from the console */
-window.__lib = { player, camera, scene, projectBooks, fillerInst, loose, stacks, door, R, setMode, interact, aim, takeBook, openCover, closeCover, putBack, flip, get mode() { return mode; },
+window.__lib = { toggleSound, player, camera, scene, projectBooks, fillerInst, loose, stacks, door, R, setMode, interact, aim, takeBook, openCover, closeCover, putBack, flip, get mode() { return mode; },
   face(i) { const b = projectBooks[i]; const v = b.getWorldPosition(new THREE.Vector3()); const dir = new THREE.Vector3(0, 0, 1).applyQuaternion(b.getWorldQuaternion(new THREE.Quaternion())); player.pos.set(v.x + dir.x * 1.3, 1.65, v.z + dir.z * 1.3); const dx = v.x - player.pos.x, dz = v.z - player.pos.z; player.yaw = Math.atan2(-dx, -dz); player.pitch = Math.atan2(v.y - player.pos.y, Math.hypot(dx, dz)); syncCam(); } };

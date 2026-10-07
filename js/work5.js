@@ -4,6 +4,7 @@
    open), flip through the pages (images + information), close it and put it back. First person: WASD / ZQSD / arrows, mouse look (click = pointer lock, drag works), Shift = run.
    The arched door leads back home. Project data below is placeholder (same order as project.html?p=N). */
 import * as THREE from 'three';
+import { GLTFLoader } from './vendor/jsm/loaders/GLTFLoader.js';
 
 const $ = (id) => document.getElementById(id);
 const stage = $('lib'), host = $('lib-canvas');
@@ -228,28 +229,66 @@ const ladder = (g, lx, W) => {
 };
 ladder(cases[1].g, -0.7, cases[1].W); ladder(cases[2].g, 0.9, cases[2].W);
 
+/* ---------------- real 3D models (Poly Haven, CC0) ---------------- */
+const gltfLoader = new GLTFLoader();
+const loadModel = (id, height) => new Promise((res) => gltfLoader.load(`assets/models/${id}/${id}_1k.gltf`, (g) => {
+  const o = g.scene, bb0 = new THREE.Box3().setFromObject(o), localH = bb0.max.y - bb0.min.y, s = height / localH;
+  o.scale.setScalar(s); o.updateMatrixWorld(true);
+  const bb = new THREE.Box3().setFromObject(o); o.position.set(-(bb.min.x + bb.max.x) / 2, -bb.min.y, -(bb.min.z + bb.max.z) / 2);
+  const w = new THREE.Group(); w.add(o);
+  o.traverse((m) => { if (m.isMesh) { m.castShadow = true; m.receiveShadow = true; const mats = Array.isArray(m.material) ? m.material : [m.material]; mats.forEach((x) => { x.envMapIntensity = 0.85; }); } });
+  w.userData = { scale: s, localH, size: new THREE.Vector3().subVectors(bb.max, bb.min) }; res(w);
+}, undefined, () => res(null)));
+const props = { plants: [], chair: null, lamp: null, flame: null };
+/* a plant bends away from you and rustles as you walk past: a spring-driven push + wind, applied in the vertex shader (height^2 weighting, so the roots stay put) */
+const makePlant = (w, x, z, ry) => {
+  w.position.set(x, 0, z); w.rotation.y = ry; scene.add(w);
+  const u = { uPush: { value: new THREE.Vector2() }, uTime: { value: 0 }, uH: { value: w.userData.localH }, uRustle: { value: 0 } };
+  w.traverse((m) => { if (!m.isMesh) return; (Array.isArray(m.material) ? m.material : [m.material]).forEach((mat) => {
+    mat.onBeforeCompile = (sh) => { Object.assign(sh.uniforms, u);
+      sh.vertexShader = 'uniform vec2 uPush; uniform float uTime; uniform float uH; uniform float uRustle;\n' + sh.vertexShader.replace('#include <begin_vertex>', '#include <begin_vertex>\n float hh = clamp(transformed.y / uH, 0.0, 1.0); float bend = hh * hh;\n transformed.xz += uPush * bend + vec2(sin(uTime * 1.7 + transformed.y * 7.0 + transformed.x * 9.0), cos(uTime * 1.3 + transformed.z * 8.0)) * (0.006 + uRustle * 0.035) * uH * bend;'); };
+    mat.needsUpdate = true; }); });
+  colliders.push({ minX: x - 0.3, maxX: x + 0.3, minZ: z - 0.3, maxZ: z + 0.3 });
+  props.plants.push({ w, u, x, z, ry, push: new THREE.Vector2(), vel: new THREE.Vector2() });
+};
+function buildProps() {
+  loadModel('round_wooden_table_01', 0.76).then((t) => { if (!t) return; t.position.set(0.7, 0, 2.4); scene.add(t); const r = Math.max(t.userData.size.x, t.userData.size.z) / 2 + 0.05; colliders.push({ minX: 0.7 - r, maxX: 0.7 + r, minZ: 2.4 - r, maxZ: 2.4 + r }); });
+  loadModel('vintage_oil_lamp', 0.34).then((l) => { if (!l) return; l.position.set(0.55, 0.77, 2.3); scene.add(l);
+    const f = new THREE.PointLight(0xffb15c, 4.2, 5, 2); f.position.set(0.55, 1.02, 2.3); scene.add(f); props.lamp = f;
+    const flame = new THREE.Sprite(new THREE.SpriteMaterial({ map: glowTex('rgba(255,200,120,.9)', 'rgba(255,170,80,0)'), blending: THREE.AdditiveBlending, depthWrite: false, fog: false })); flame.scale.set(0.22, 0.22, 1); flame.position.set(0.55, 0.99, 2.3); scene.add(flame); props.flame = flame; });
+  loadModel('brass_vase_01', 0.26).then((v) => { if (!v) return; v.position.set(0.98, 0.77, 2.55); scene.add(v); });
+  loadModel('ArmChair_01', 0.95).then((c) => { if (!c) return; c.position.set(-1.25, 0, 4.5); c.rotation.y = 0.8 + Math.PI; scene.add(c); props.chair = { obj: c, x: -1.25, z: 4.5, vx: 0, vz: 0, yaw: c.rotation.y }; });
+  loadModel('potted_plant_01', 1.5).then((w) => w && makePlant(w, -2.6, 5.3, 0.4));
+  loadModel('potted_plant_02', 1.15).then((w) => w && makePlant(w, 2.6, 5.3, 2.0));
+  loadModel('potted_plant_02', 1.05).then((w) => w && makePlant(w, -2.65, -5.15, 4.0));
+}
+const updateProps = (dt, clock) => {
+  const sp = Math.hypot(player.vel.x, player.vel.z);
+  props.plants.forEach((p) => {
+    const dx = p.x - player.pos.x, dz = p.z - player.pos.z, d = Math.hypot(dx, dz) || 1, near = Math.max(0, 1 - d / 1.1);
+    const k = near * (0.04 + Math.min(sp, 3) * 0.045);
+    const wx = (dx / d) * k, wz = (dz / d) * k, c = Math.cos(p.ry), s = Math.sin(p.ry);
+    const tx = (c * wx - s * wz) / p.w.userData.scale, tz = (s * wx + c * wz) / p.w.userData.scale;
+    p.vel.x += ((tx - p.push.x) * 55 - p.vel.x * 6) * dt; p.vel.y += ((tz - p.push.y) * 55 - p.vel.y * 6) * dt; p.push.x += p.vel.x * dt; p.push.y += p.vel.y * dt;
+    p.u.uPush.value.copy(p.push); p.u.uTime.value = clock; p.u.uRustle.value = near * Math.min(sp / 2, 1) + Math.hypot(p.vel.x, p.vel.y) * 0.4;
+  });
+  if (props.chair) {
+    const c = props.chair;
+    if (mode === 'play') { const dx = c.x - player.pos.x, dz = c.z - player.pos.z, d = Math.hypot(dx, dz) || 1, r = 0.78;
+      if (d < r) { const push = r - d; c.x += (dx / d) * push * 0.9; c.z += (dz / d) * push * 0.9; c.vx += (dx / d) * (0.4 + sp * 0.5); c.vz += (dz / d) * (0.4 + sp * 0.5); const ty = Math.atan2(dx, dz) + Math.PI; c.yaw += Math.atan2(Math.sin(ty - c.yaw), Math.cos(ty - c.yaw)) * Math.min(dt * 1.2 * sp, 0.2); } }
+    c.x += c.vx * dt; c.z += c.vz * dt; const fr = Math.exp(-dt * 4.5); c.vx *= fr; c.vz *= fr;
+    const tdx = c.x - 0.7, tdz = c.z - 2.4, td = Math.hypot(tdx, tdz) || 1; if (td < 1.05) { c.x = 0.7 + (tdx / td) * 1.05; c.z = 2.4 + (tdz / td) * 1.05; c.vx *= 0.3; c.vz *= 0.3; }
+    c.x = Math.min(Math.max(c.x, -2.15), 2.15); c.z = Math.min(Math.max(c.z, -5.0), 5.3);
+    c.obj.position.set(c.x, 0, c.z); c.obj.rotation.y = c.yaw;
+  }
+  if (props.lamp) { const fl = 0.86 + Math.sin(clock * 11) * 0.06 + Math.sin(clock * 23.7) * 0.04 + Math.sin(clock * 5.3) * 0.05; props.lamp.intensity = 4.2 * fl; if (props.flame) props.flame.material.opacity = 0.7 + fl * 0.3; }
+};
+
 /* ---------------- furniture, plants, lamps ---------------- */
 const pendants = [], dust = [];
 let dustPoints = null;
 {
-  const t = new THREE.Group(); t.position.set(0.7, 0, 2.4); scene.add(t);
-  add(t, new THREE.CylinderGeometry(0.62, 0.62, 0.05, 36), M.wood, 0, 0.76, 0); add(t, new THREE.CylinderGeometry(0.08, 0.14, 0.72, 14), M.wood, 0, 0.36, 0); add(t, new THREE.CylinderGeometry(0.36, 0.42, 0.05, 28), M.wood, 0, 0.025, 0);
-  add(t, box(0.28, 0.04, 0.2), M.leather, -0.18, 0.8, 0.14); add(t, box(0.26, 0.022, 0.19), M.page, -0.18, 0.835, 0.14).rotation.y = 0.2; add(t, box(0.24, 0.05, 0.17), M.red, 0.1, 0.81, -0.2).rotation.y = -0.4;
-  const lamp = new THREE.Group(); lamp.position.set(0.22, 0.785, 0.12); t.add(lamp);
-  add(lamp, new THREE.CylinderGeometry(0.06, 0.08, 0.03, 20), M.brass, 0, 0.015, 0); add(lamp, new THREE.CylinderGeometry(0.011, 0.011, 0.32, 8), M.brass, 0, 0.18, 0);
-  add(lamp, new THREE.CylinderGeometry(0.09, 0.15, 0.15, 24, 1, true), new THREE.MeshStandardMaterial({ color: 0x1f5a40, side: THREE.DoubleSide, emissive: 0x3a8a60, emissiveIntensity: 0.55, roughness: 0.5 }), 0, 0.38, 0, false, false);
-  const bulb = new THREE.PointLight(0xffcf8a, 4.5, 4.5, 2); bulb.position.set(0.92, 1.1, 2.55); scene.add(bulb);
-  colliders.push({ minX: 0.0, maxX: 1.4, minZ: 1.7, maxZ: 3.1 });
-  const c = new THREE.Group(); c.position.set(-1.25, 0, 4.5); c.rotation.y = 0.8; scene.add(c);
-  add(c, box(0.9, 0.28, 0.85), M.red, 0, 0.3, 0); add(c, box(0.9, 0.6, 0.2), M.red, 0, 0.66, -0.32); add(c, box(0.17, 0.4, 0.85), M.red, -0.47, 0.48, 0); add(c, box(0.17, 0.4, 0.85), M.red, 0.47, 0.48, 0); add(c, box(0.68, 0.1, 0.62), M.red, 0, 0.47, 0.06);
-  [[-0.4, -0.38], [0.4, -0.38], [-0.4, 0.38], [0.4, 0.38]].forEach(([a, b]) => add(c, box(0.055, 0.17, 0.055), M.wood, a, 0.085, b));
-  colliders.push({ minX: -1.95, maxX: -0.55, minZ: 3.85, maxZ: 5.2 });
-  [[-2.7, 5.4], [2.7, 5.4]].forEach(([x, z]) => {
-    const pl = new THREE.Group(); pl.position.set(x, 0, z); scene.add(pl);
-    add(pl, new THREE.CylinderGeometry(0.24, 0.18, 0.46, 16), M.pot, 0, 0.23, 0);
-    for (let i = 0; i < 12; i++) { const l = add(pl, new THREE.SphereGeometry(rnd(0.12, 0.22), 8, 6), M.leaf, rnd(-0.22, 0.22), 0.68 + rnd(0, 0.7), rnd(-0.22, 0.22)); l.scale.set(1, rnd(0.6, 1.4), 1); }
-    colliders.push({ minX: x - 0.4, maxX: x + 0.4, minZ: z - 0.4, maxZ: z + 0.4 });
-  });
+  buildProps();
   const bulbM = new THREE.MeshStandardMaterial({ color: 0xfff1cf, emissive: 0xffd89a, emissiveIntensity: 2.2 });
   const shadeM = new THREE.MeshStandardMaterial({ color: 0x1d3328, side: THREE.DoubleSide, roughness: 0.35, metalness: 0.5 });
   [[0, 3.6], [0, 0.3], [0, -3.2]].forEach(([x, z], i) => {
@@ -301,9 +340,10 @@ const door = { hingeL: null, hingeR: null, open: 0, opening: false, root: new TH
 const loose = []; const stacks = [];
 {
   const BW = 0.2, BH = 0.045, BD = 0.29;
-  const tops = ['#25324a', '#5c2326', '#2c4a3a', '#4a3350', '#6a5020', '#2f2f35', '#7a2a25'].map((c) => new THREE.MeshStandardMaterial({ color: c, roughness: 0.6 }));
+  const leN = photo('assets/tex/leather_nor_gl.jpg', [1, 1]), leR = photo('assets/tex/leather_rough.jpg', [1, 1]);
+  const tops = ['#25324a', '#5c2326', '#2c4a3a', '#4a3350', '#6a5020', '#2f2f35', '#7a2a25'].map((c) => new THREE.MeshStandardMaterial({ color: c, normalMap: leN, roughnessMap: leR, roughness: 1, normalScale: new THREE.Vector2(0.8, 0.8) }));
   const mkBook = (w, h, d, mat) => { const m = new THREE.Mesh(box(w, h, d), [mat, mat, M.page, mat, mat, M.page]); m.castShadow = true; m.receiveShadow = true; return m; };
-  [[-2.1, 4.9, 8], [2.2, 4.2, 10], [-2.2, -3.9, 6], [2.1, -4.0, 9], [0.4, 5.3, 5]].forEach(([sx, sz, n], si) => {
+  [[-2.2, 1.9, 8], [2.2, 3.9, 10], [-2.2, -3.9, 6], [2.1, -4.0, 9], [0.5, -2.6, 5]].forEach(([sx, sz, n], si) => {
     const stack = { cx: sx, cz: sz, books: [], fallen: false }; let y = 0;
     for (let k = 0; k < n; k++) {
       const h = BH * rnd(0.8, 1.7), w = BW * rnd(0.8, 1.1), d = BD * rnd(0.85, 1.1), m = mkBook(w, h, d, tops[(si + k) % tops.length]);
@@ -553,7 +593,7 @@ const tick = (now) => {
     p.light.intensity = p.base * (0.96 + Math.sin(clock * 7 + p.phase) * 0.012 + Math.sin(clock * 3.1 + p.phase * 2) * 0.018);
   });
   projectBooks.forEach((b) => { if (!b.visible) return; const want = aimed?.obj === b && mode === 'play' ? 0.07 : 0; b.userData.lift += (want - b.userData.lift) * Math.min(dt * 10, 1); b.position.z = b.userData.base + b.userData.lift; });
-  stepPhysics(dt);
+  stepPhysics(dt); updateProps(dt, clock);
   if (mode === 'play') {
     const f = (keys.f ? 1 : 0) - (keys.b ? 1 : 0) - touch.vz, s = (keys.r ? 1 : 0) - (keys.l ? 1 : 0) + touch.vx;
     const speed = (keys.run ? 3.9 : 2.1), sin = Math.sin(player.yaw), cos = Math.cos(player.yaw);

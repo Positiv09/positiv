@@ -43,13 +43,28 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   font-size: 18px; line-height: 1; white-space: nowrap;
   transition: transform .35s var(--ease-out), background-color .25s, color .25s;
 }
-.btn:hover { transform: translateY(-2px); }
 .btn--lime    { background: var(--c-lime); color: var(--c-ink); }
 .btn--outline { border: 1px solid var(--c-lime); color: var(--c-lime); }
 .btn--outline:hover { background: var(--c-lime); color: var(--c-ink); }
 .btn--block { width: 100%; height: 52px; font-size: 16px; margin-top: 20px; }
 .btn--purple { background: var(--c-purple); color: #fff; }
 .btn--orange { background: var(--c-orange); color: #fff; }
+
+/* Card buttons (Explore …): same inverting hover as the hero buttons - a circular fill grows from the bottom edge.
+   Lime → dark fill, lime text; purple / orange → dark fill, white text. */
+.btn--block {
+  position: relative; overflow: hidden; isolation: isolate; --fill: var(--c-ink);
+  transition: color .45s var(--ease-out) .05s, transform .4s var(--ease-out);
+}
+.btn--block::before {
+  content: ""; position: absolute; z-index: -1; left: 50%; top: 100%; width: 150%; aspect-ratio: 1; border-radius: 50%;
+  background: var(--fill); transform: translate(-50%, -50%) scale(0);
+  transition: transform .7s var(--ease-out);
+}
+.btn--block.btn--lime:hover { color: var(--c-lime); }
+.btn--block:hover::before, .btn--block:focus-visible::before { transform: translate(-50%, -50%) scale(1.15); }
+.btn--block:active { transform: scale(.98); }
+@media (prefers-reduced-motion: reduce) { .btn--block, .btn--block::before { transition-duration: .01ms; } }
 
 /* ---------- Pill tags ---------- */
 .pill {

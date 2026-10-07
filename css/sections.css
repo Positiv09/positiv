@@ -374,9 +374,9 @@
 
 .video-frame {
   position: absolute; pointer-events: auto; left: 2%; top: 13vh; width: 96%; height: 85vh;   /* JS overrides these every frame on desktop */
-  border-radius: 24px; overflow: hidden; cursor: none; background: #151933;
+  border-radius: 24px; overflow: hidden; cursor: none; background: var(--c-paper);   /* same as the page behind: no dark hairline at fractional pixels / rounded corners while it resizes */
 }
-.video-frame video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.video-frame video { position: absolute; inset: -1px; width: calc(100% + 2px); height: calc(100% + 2px); object-fit: cover; }   /* 1px overscan, clipped by the frame */
 
 .services__headline { display: flex; flex-direction: column; align-items: center; width: 100%; text-align: center; color: var(--c-title); }
 .services__eyebrow { position: relative; z-index: 3; margin-bottom: 20px; font-size: 18px; font-weight: 400; }   /* stays readable above the video while it drops in */
@@ -408,7 +408,8 @@
 .svc-label--deliv { margin: 0 0 10px; }
 .svc-panel__text { color: var(--c-paper); font-size: 16px; line-height: 20px; }
 .svc-panel__pills { display: flex; flex-wrap: wrap; gap: 16px; width: 80%; margin-bottom: 20px; }
-.svc-pill { display: flex; align-items: center; height: 40px; padding: 0 10px; border: .5px solid var(--c-paper); border-radius: 20px; color: var(--c-paper); font-size: 12px; line-height: 20px; transition: background-color .25s, color .25s; }
+/* deliverable tags: same pill look and hover as before, but not clickable (spans) */
+.svc-pill { display: flex; align-items: center; height: 40px; padding: 0 10px; border: .5px solid var(--c-paper); border-radius: 20px; color: var(--c-paper); font-size: 12px; line-height: 20px; cursor: default; transition: background-color .25s, color .25s; }
 .svc-pill:hover { background: var(--c-paper); color: var(--c-ink); }
 .svc-panel__num { align-self: flex-start; margin-top: 64px; padding: 10px 20px; border: .5px solid var(--c-paper); border-radius: 30px; color: var(--c-lime); font-size: 14px; font-weight: 700; letter-spacing: 1.12px; line-height: 20px; }
 
@@ -527,15 +528,11 @@
 .compare-table .is-last-row { border-bottom: .5px solid var(--c-line) !important; }
 .compare-table .is-last-row.is-last-col { border-bottom-right-radius: var(--r-media); }
 .compare-table svg { width: 28px; height: 28px; }
-/* hover: each cell lights up on its own */
-.compare-table > div { transition: background-color .3s ease, color .3s ease; }
-.compare-table svg { transition: transform .35s var(--ease-out); }
-.compare-table > div:not(.cell--spacer):not(.cell--brand):hover { background-color: rgb(240 248 121 / .10); }
-.compare-table > .cell--col-head:hover { background-color: #4a4545; color: #fff; }
-.compare-table > .cell--label:hover { color: var(--c-lime); }
-.compare-table > div.cell--us:not(.cell--brand):hover { background-color: var(--c-ink-2); }   /* Positiv column: the cell darkens and its check turns white */
-.compare-table > .cell--us:hover svg { color: #fff; }
-.compare-table > div:hover svg { transform: scale(1.2); }
+/* hover (as on the live site): the hovered cell's content grows a little and gets a soft glow - the cell itself doesn't change */
+.compare-table .cell__txt, .compare-table svg { transition: transform .3s var(--ease-out), filter .3s ease; }
+.compare-table .cell__txt { display: inline-block; }
+.compare-table > div:not(.cell--spacer):not(.cell--brand):hover .cell__txt,
+.compare-table > div:not(.cell--spacer):not(.cell--brand):hover svg { transform: scale(1.05); filter: drop-shadow(0 0 10px rgb(204 255 0 / .6)); }
 
 
 /* ---------- 8. CTA + FOOTER — rules taken from the staging stylesheet, per breakpoint ------------------- */
@@ -547,7 +544,15 @@
 }
 .cta__inner { display: flex; flex-direction: column; align-items: center; padding-top: 100px; }
 .cta__mark { width: 379px; height: 425px; }
-.cta__mark img { width: 379px; height: 420px; }
+.cta__mark img, .cta-mark { width: 379px; height: 420px; display: block; overflow: visible; }
+/* the mark keeps its glass look; one soft strip of white light starts on the left edge, climbs, runs over the top and down the right
+   side. An SVG mask fades it out as it nears the line below the logo, so the lower part is never lit; then it starts again. */
+.cta-mark__head { fill: none; stroke: #fff; stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: .14 .86; stroke-dashoffset: -.624;
+  filter: drop-shadow(0 0 4px #fff) drop-shadow(0 0 12px rgb(255 255 255 / .75)); opacity: 0; animation: cta-move 7.5s cubic-bezier(.37, 0, .63, 1) infinite, cta-vis 7.5s linear infinite; }
+@keyframes cta-move { 0% { stroke-dashoffset: -.624; } 82%, 100% { stroke-dashoffset: -1.43; } }
+/* fade in while it is still dim at the left, fade out before the loop restarts, so the restart is never seen */
+@keyframes cta-vis { 0% { opacity: 0; } 14% { opacity: 1; } 62% { opacity: 1; } 80%, 100% { opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .cta-mark__head { animation: none; opacity: 0; } }
 .cta__title { width: 70%; margin: -80px 0 24px; text-align: center; font-family: var(--f-body); font-weight: 400; font-size: 64px; line-height: 64px; color: #fff; }
 .cta__title .hero__char { opacity: 1; transform: none; transition: none; }   /* same letters as the hero heading; GSAP drives the entrance */
 .cta__text { width: 70%; padding-bottom: 48px; text-align: center; font-size: 20px; line-height: 28px; font-weight: 400; }
@@ -747,7 +752,7 @@
   .cta-section { height: auto; gap: 60px; padding: 80px 0 0; }
   .footer { margin-top: 0; }
   .cta__mark { width: 240px; height: 270px; margin-bottom: -50px; }
-  .cta__mark img { width: 240px; height: auto; }
+  .cta__mark img, .cta-mark { width: 240px; height: auto; }
   .cta__title { width: 80%; font-size: 40px; line-height: 50px; }
   .cta__text { width: 70%; }
 

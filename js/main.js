@@ -371,7 +371,7 @@
       let cur = 0;
       words.forEach((w, i) => { w.classList.toggle('is-active', i === 0); });
       gsap.set(words.slice(1), { opacity: 0 });
-      const introOn = document.documentElement.classList.contains('intro-on');
+      const introOn = document.documentElement.classList.contains('intro-on') || document.documentElement.classList.contains('pt-cover');   // also waits for the page-transition curtain
       const intro = gsap.from(words[0], { y: 40, opacity: 0, filter: 'blur(8px)', duration: 1, ease: 'power3.out', delay: introOn ? 0.15 : 0.5, paused: introOn });
       if (introOn) document.addEventListener('positiv:intro-done', () => intro.play(), { once: true });   // start when the intro curtain has lifted
       const change = () => {
@@ -761,7 +761,24 @@
         window.scrollTo({ top: pinStart + (px / SVC_SPEED) * window.innerHeight, behavior: 'smooth' });
       });
     });
-    window.addEventListener('scroll', () => updateS(), { passive: true });
+    // Never rest mid-animation: when the scroll stops while a picture/text transition is running, it finishes on its own
+    // (forward in the scrolling direction). The page scroll is not touched, so nothing is ever held or trapped.
+    let settleT = 0, lastY = window.scrollY, dirS = 1;
+    const settle = () => {
+      if (!mqS.matches || curPx === null) return;
+      for (let n = 1; n <= 3; n++) {
+        const end = E1 + STEP * (n - 1) - TILE_END, start = end - TILE_W;
+        if (targetPx > start + 0.001 && targetPx < end - 0.001) {
+          targetPx = dirS >= 0 ? end : start;
+          if (!rafS) { lastS = performance.now(); rafS = requestAnimationFrame(loopS); }
+          return;
+        }
+      }
+    };
+    window.addEventListener('scroll', () => {
+      const y = window.scrollY; if (y !== lastY) dirS = y > lastY ? 1 : -1; lastY = y;
+      updateS(); clearTimeout(settleT); if (!reduceMotion) settleT = setTimeout(settle, 140);
+    }, { passive: true });
     window.addEventListener('resize', measureS);
     window.addEventListener('load', measureS);
     mqS.addEventListener?.('change', measureS);
@@ -946,7 +963,30 @@
     const cardsT = $$('.testimonial-card', tRail);
     let index = 0, pitch = 0;
     const measureT = () => { pitch = cardsT[1] ? cardsT[1].offsetLeft - cardsT[0].offsetLeft : cardsT[0].offsetWidth; go(index, false); };
+    // A copy of the first card sits after the last one: on the last card it peeks in from the side like the others, and the
+    // automatic advance slides into it, then jumps back (unseen) to the real first card, so the rail loops.
+    [cardsT[0], cardsT[1]].filter(Boolean).forEach((src) => {   // the second copy keeps the rail full while the first copy is in front
+      const c = src.cloneNode(true);
+      c.setAttribute('aria-hidden', 'true'); c.setAttribute('inert', ''); c.removeAttribute('data-card');
+      tRail.appendChild(c);
+    });
+    let wrapTimer = 0;
+    const finishWrap = () => {
+      if (!wrapTimer) return;
+      clearTimeout(wrapTimer); wrapTimer = 0;
+      tRail.classList.add('is-dragging'); tRail.style.transform = 'translate3d(0,0,0)'; void tRail.offsetWidth;
+    };
+    const goWrap = () => {
+      index = 0;
+      tRail.classList.remove('is-dragging');
+      tRail.style.transform = `translate3d(${-cardsT.length * pitch}px,0,0)`;
+      tabs.forEach((t, n) => { t.classList.remove('is-active'); t.setAttribute('aria-selected', String(n === 0)); });
+      void tRail.offsetWidth;
+      tabs[0].classList.add('is-active');
+      wrapTimer = setTimeout(finishWrap, 1300);
+    };
     const go = (i, animate = true) => {
+      clearTimeout(wrapTimer); wrapTimer = 0;
       index = Math.min(Math.max(i, 0), cardsT.length - 1);
       tRail.classList.toggle('is-dragging', !animate);
       tRail.style.transform = `translate3d(${-index * pitch}px,0,0)`;
@@ -956,21 +996,23 @@
     };
     // The active tab's bar fills up in grey -> black; when it is full the next card slides in by itself (loops back to the first).
     // The fill pauses while the pointer is on the cards / tabs or the section is off screen.
-    tabs.forEach((t) => $('.testi-tab__bar', t).addEventListener('animationend', (e) => { if (e.animationName === 'testi-fill') go((index + 1) % cardsT.length); }));
+    tabs.forEach((t) => $('.testi-tab__bar', t).addEventListener('animationend', (e) => { if (e.animationName === 'testi-fill') { if (index === cardsT.length - 1) goWrap(); else go(index + 1); } }));
     const secT = tRail.closest('section');
     const setPaused = (on) => secT.classList.toggle('is-paused', on);
     ['mouseenter', 'focusin'].forEach((ev) => { viewport.addEventListener(ev, () => setPaused(true)); $('[data-testi-tabs]').addEventListener(ev, () => setPaused(true)); });
     ['mouseleave', 'focusout'].forEach((ev) => { viewport.addEventListener(ev, () => setPaused(false)); $('[data-testi-tabs]').addEventListener(ev, () => setPaused(false)); });
     if ('IntersectionObserver' in window) new IntersectionObserver((ens) => secT.classList.toggle('is-offscreen', !ens[ens.length - 1].isIntersecting), { threshold: 0.2 }).observe(secT);
-    tabs.forEach((t, n) => t.addEventListener('click', () => go(n)));
+    const last = () => cardsT.length - 1;
+    tabs.forEach((t, n) => t.addEventListener('click', () => { if (n === 0 && index === last()) goWrap(); else go(n); }));   // last → first always slides forward
     tabs.forEach((t, n) => t.addEventListener('keydown', (e) => {
-      if (e.key === 'ArrowRight') { go(n + 1); tabs[index].focus(); }
+      if (e.key === 'ArrowRight') { if (n === last()) goWrap(); else go(n + 1); tabs[index].focus(); }
       if (e.key === 'ArrowLeft') { go(n - 1); tabs[index].focus(); }
     }));
     // drag / swipe: follow the pointer, then snap to the nearest card (flick past 18% of a card or 60px changes card)
     let drag = null;
     viewport.addEventListener('pointerdown', (e) => {
       if (e.button !== 0 || e.target.closest('a,button')) return;
+      finishWrap();
       drag = { x: e.clientX, base: -index * pitch, dx: 0 };
       viewport.setPointerCapture(e.pointerId);
     });
@@ -984,7 +1026,8 @@
       if (!drag) return;
       const dx = drag.dx; drag = null;
       viewport.classList.remove('is-dragging');
-      go(index + (Math.abs(dx) > Math.max(60, pitch * 0.18) ? (dx < 0 ? 1 : -1) : 0));
+      const step = Math.abs(dx) > Math.max(60, pitch * 0.18) ? (dx < 0 ? 1 : -1) : 0;
+      if (step === 1 && index === last()) goWrap(); else go(index + step);
     };
     viewport.addEventListener('pointerup', endT);
     viewport.addEventListener('pointercancel', endT);

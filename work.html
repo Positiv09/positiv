@@ -6,7 +6,9 @@
   <title>Work — Positiv</title>
   <script>document.documentElement.classList.add('js')</script>
   <script>try{if(!sessionStorage.getItem('positivIntro')&&!matchMedia('(prefers-reduced-motion: reduce)').matches){document.documentElement.classList.add('intro-on');setTimeout(function(){document.documentElement.classList.remove('intro-on')},9000)}}catch(e){}</script>
+  <script>try{var d=document.documentElement;if(!d.classList.contains('intro-on')&&!matchMedia('(prefers-reduced-motion: reduce)').matches&&sessionStorage.getItem('positivIntro')){d.classList.add('pt-cover');setTimeout(function(){d.classList.remove('pt-cover')},6000)}}catch(e){}</script>
   <link rel="stylesheet" href="css/intro.css?v=1">
+  <link rel="stylesheet" href="css/transition.css?v=2">
   <meta name="description" content="Brand systems, sales assets and digital experiences for channel partners — unmistakably different.">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/favicon-32.png">
   <link rel="icon" type="image/png" sizes="48x48" href="assets/favicon/favicon-48.png">
@@ -19,9 +21,8 @@
   <link rel="stylesheet" href="css/tokens.css?v=20261006a">
   <link rel="stylesheet" href="css/base.css?v=20261006a">
   <link rel="stylesheet" href="css/menu.css?v=20261006a">
-  <link rel="stylesheet" href="css/sections.css?v=20261006a">
-  <link rel="stylesheet" href="css/about.css?v=20261006a">
-  <link rel="stylesheet" href="css/work.css?v=20261006a">
+  <link rel="stylesheet" href="css/sections.css?v=20261007n">
+  <link rel="stylesheet" href="css/work.css?v=20261007c">
 </head>
 <body class="is-about is-work">
 
@@ -356,72 +357,154 @@
 </svg>
 </div></div></div></div></div></div></section>
 
-<main id="main" class="about-page work-page">
+<main id="main" class="work-page">
 
-<section class="section work-hero" data-section="work">
-  <p class="work-hero__eyebrow">Our work</p>
-  <h1 class="work-hero__title">Selected <em>projects</em></h1>
-  <p class="work-hero__sub">A look at the brand systems, sales assets and digital experiences we build for channel partners.</p>
+<!-- ---------- Hero ---------- -->
+<section class="section w-hero" data-section="work">
+  <div class="w-hero__grid">
+    <div>
+      <p class="w-eyebrow">Our work</p>
+      <h1 class="w-hero__title work-hero__title">Selected <em>projects</em></h1>
+      <p class="w-hero__lead">A look at the brand systems, sales assets and digital experiences we build for channel partners.</p>
+    </div>
+    <div class="w-filters" role="group" aria-label="Filter projects">
+      <button type="button" class="w-filter is-active" data-filter="all"><span class="w-filter__label">Everything</span><span class="w-filter__name">All work</span><span class="w-filter__count" data-count="all">06</span></button>
+      <button type="button" class="w-filter" data-filter="brand"><span class="w-filter__label">Identity</span><span class="w-filter__name">Brand</span><span class="w-filter__count" data-count="brand">02</span></button>
+      <button type="button" class="w-filter" data-filter="sales"><span class="w-filter__label">Decks &amp; proposals</span><span class="w-filter__name">Sales</span><span class="w-filter__count" data-count="sales">02</span></button>
+      <button type="button" class="w-filter" data-filter="web"><span class="w-filter__label">Sites &amp; campaigns</span><span class="w-filter__name">Web</span><span class="w-filter__count" data-count="web">02</span></button>
+    </div>
+  </div>
 </section>
 
-<section class="section work-list" data-section="work-list">
-  <div class="work-grid">
-      <article class="work-card">
-        <div class="portfolio-card__media portfolio-card__media--fig"><div class="pc-hover" aria-hidden="true"><img class="pc-hover__logo" src="assets/logos/portfolio-hover-logo.svg" alt="" draggable="false"><div class="pc-hover__text"><div><strong>Angel East</strong><span>Investment</span></div><img src="assets/icons/positiv-bolt.svg" alt="" draggable="false"></div></div></div>
-        <div class="work-card__info">
-          <div><span class="portfolio-card__tag">Investment</span>
-          <span class="portfolio-card__logo" role="img" aria-label="Angel East"><img src="assets/logos/angel-east-a.svg" alt="" draggable="false"><img src="assets/logos/angel-east-b.svg" alt="" draggable="false"></span></div>
-          <p>Angel East is an investment firm focused on supporting innovative and high-potential companies. It connects entrepreneurs with investors and provides capital to help businesses grow and scale.</p>
+<!-- ---------- Featured ---------- -->
+<section class="section w-feature" data-section="work-feature">
+  <article class="w-feature__card rv">
+    <a href="contact.html" class="w-feature__media" style="background-image:url('assets/img/portfolio-fig.webp')" aria-label="Angel East — featured project">
+      <span class="w-feature__pill">Featured project</span>
+    </a>
+    <div class="w-feature__info">
+      <span class="w-pill">Investment</span>
+      <span class="portfolio-card__logo" role="img" aria-label="Angel East"><img src="assets/logos/angel-east-a.svg" alt="" draggable="false"><img src="assets/logos/angel-east-b.svg" alt="" draggable="false"></span>
+      <h2 class="w-feature__title">Connecting founders with the capital to <em>scale.</em></h2>
+      <p class="w-feature__text">Angel East is an investment firm focused on supporting innovative and high-potential companies. It connects entrepreneurs with investors and provides capital to help businesses grow and scale.</p>
+      <dl class="w-feature__meta">
+        <div><dt>Industry</dt><dd>Investment</dd></div>
+        <div><dt>Scope</dt><dd>Brand &amp; sales assets</dd></div>
+        <div><dt>Format</dt><dd>Ongoing partnership</dd></div>
+      </dl>
+      <a href="contact.html" class="btn btn--lime btn--block">Start a similar project</a>
+    </div>
+  </article>
+</section>
+
+<!-- ---------- All projects ---------- -->
+<section class="section w-list" data-section="work-list">
+  <div class="w-list__head rv">
+    <h2 class="w-h2 c-h2">Every project, <em>one standard.</em></h2>
+    <p class="w-list__sub" id="w-status" aria-live="polite">Showing all 6 projects</p>
+  </div>
+  <div class="w-grid" id="w-grid">
+      <article class="w-card rv" data-cat="brand">
+        <a href="contact.html" class="w-card__media" style="background-image:url('assets/img/portfolio-2.webp')" aria-label="Angel East — Brand system">
+          <span class="w-card__tag">Brand</span>
+          <span class="w-card__go"><svg width="22" height="14" viewBox="0 0 22 14" fill="none" aria-hidden="true"><path d="M1 7h19m0 0L14.5 1.5M20 7l-5.5 5.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        </a>
+        <div class="w-card__body">
+          <span class="w-card__num">01</span>
+          <div>
+            <span class="portfolio-card__logo" role="img" aria-label="Angel East"><img src="assets/logos/angel-east-a.svg" alt="" draggable="false"><img src="assets/logos/angel-east-b.svg" alt="" draggable="false"></span>
+            <p class="w-card__scope">Brand system</p>
+            <p class="w-card__desc">A brand system built for the room, not the award show: one identity, applied the same way by every partner team.</p>
+          </div>
         </div>
       </article>
-      <article class="work-card">
-        <div class="portfolio-card__media portfolio-card__media--fig"><div class="pc-hover" aria-hidden="true"><img class="pc-hover__logo" src="assets/logos/portfolio-hover-logo.svg" alt="" draggable="false"><div class="pc-hover__text"><div><strong>Angel East</strong><span>SAAS</span></div><img src="assets/icons/positiv-bolt.svg" alt="" draggable="false"></div></div></div>
-        <div class="work-card__info">
-          <div><span class="portfolio-card__tag">SAAS</span>
-          <span class="portfolio-card__logo" role="img" aria-label="Angel East"><img src="assets/logos/angel-east-a.svg" alt="" draggable="false"><img src="assets/logos/angel-east-b.svg" alt="" draggable="false"></span></div>
-          <p>Twelve years on sales floors tells us what wins deals — and what doesn't. Reps abandon master decks when they're built</p>
+      <article class="w-card rv" data-cat="sales">
+        <a href="contact.html" class="w-card__media" style="background-image:url('assets/img/portfolio-1.jpg')" aria-label="Angel East — Sales assets">
+          <span class="w-card__tag">Sales</span>
+          <span class="w-card__go"><svg width="22" height="14" viewBox="0 0 22 14" fill="none" aria-hidden="true"><path d="M1 7h19m0 0L14.5 1.5M20 7l-5.5 5.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        </a>
+        <div class="w-card__body">
+          <span class="w-card__num">02</span>
+          <div>
+            <span class="portfolio-card__logo" role="img" aria-label="Angel East"><img src="assets/logos/angel-east-a.svg" alt="" draggable="false"><img src="assets/logos/angel-east-b.svg" alt="" draggable="false"></span>
+            <p class="w-card__scope">Sales assets</p>
+            <p class="w-card__desc">Twelve years on sales floors tells us what wins deals — and what doesn't. Reps abandon master decks when they're built for show.</p>
+          </div>
         </div>
       </article>
-      <article class="work-card">
-        <div class="portfolio-card__media portfolio-card__media--fig"><div class="pc-hover" aria-hidden="true"><img class="pc-hover__logo" src="assets/logos/portfolio-hover-logo.svg" alt="" draggable="false"><div class="pc-hover__text"><div><strong>Angel East</strong><span>SAAS</span></div><img src="assets/icons/positiv-bolt.svg" alt="" draggable="false"></div></div></div>
-        <div class="work-card__info">
-          <div><span class="portfolio-card__tag">SAAS</span>
-          <span class="portfolio-card__logo" role="img" aria-label="Angel East"><img src="assets/logos/angel-east-a.svg" alt="" draggable="false"><img src="assets/logos/angel-east-b.svg" alt="" draggable="false"></span></div>
-          <p>Twelve years on sales floors tells us what wins deals — and what doesn't. Reps abandon master decks when they're built</p>
+      <article class="w-card rv" data-cat="web">
+        <a href="contact.html" class="w-card__media" style="background-image:url('assets/img/service-web.jpg')" aria-label="Angel East — Digital experience">
+          <span class="w-card__tag">Web</span>
+          <span class="w-card__go"><svg width="22" height="14" viewBox="0 0 22 14" fill="none" aria-hidden="true"><path d="M1 7h19m0 0L14.5 1.5M20 7l-5.5 5.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        </a>
+        <div class="w-card__body">
+          <span class="w-card__num">03</span>
+          <div>
+            <span class="portfolio-card__logo" role="img" aria-label="Angel East"><img src="assets/logos/angel-east-a.svg" alt="" draggable="false"><img src="assets/logos/angel-east-b.svg" alt="" draggable="false"></span>
+            <p class="w-card__scope">Digital experience</p>
+            <p class="w-card__desc">A partner-facing site that answers the buyer's next question before they have to ask it.</p>
+          </div>
         </div>
       </article>
-      <article class="work-card">
-        <div class="portfolio-card__media portfolio-card__media--fig"><div class="pc-hover" aria-hidden="true"><img class="pc-hover__logo" src="assets/logos/portfolio-hover-logo.svg" alt="" draggable="false"><div class="pc-hover__text"><div><strong>Angel East</strong><span>SAAS</span></div><img src="assets/icons/positiv-bolt.svg" alt="" draggable="false"></div></div></div>
-        <div class="work-card__info">
-          <div><span class="portfolio-card__tag">SAAS</span>
-          <span class="portfolio-card__logo" role="img" aria-label="Angel East"><img src="assets/logos/angel-east-a.svg" alt="" draggable="false"><img src="assets/logos/angel-east-b.svg" alt="" draggable="false"></span></div>
-          <p>Twelve years on sales floors tells us what wins deals — and what doesn't. Reps abandon master decks when they're built</p>
+      <article class="w-card rv" data-cat="sales">
+        <a href="contact.html" class="w-card__media" style="background-image:url('assets/img/portfolio-3.webp')" aria-label="Angel East — Sales assets">
+          <span class="w-card__tag">Sales</span>
+          <span class="w-card__go"><svg width="22" height="14" viewBox="0 0 22 14" fill="none" aria-hidden="true"><path d="M1 7h19m0 0L14.5 1.5M20 7l-5.5 5.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        </a>
+        <div class="w-card__body">
+          <span class="w-card__num">04</span>
+          <div>
+            <span class="portfolio-card__logo" role="img" aria-label="Angel East"><img src="assets/logos/angel-east-a.svg" alt="" draggable="false"><img src="assets/logos/angel-east-b.svg" alt="" draggable="false"></span>
+            <p class="w-card__scope">Sales assets</p>
+            <p class="w-card__desc">Pitch and proposal systems that reps adopt by name and refresh every quarter.</p>
+          </div>
         </div>
       </article>
-      <article class="work-card">
-        <div class="portfolio-card__media portfolio-card__media--fig"><div class="pc-hover" aria-hidden="true"><img class="pc-hover__logo" src="assets/logos/portfolio-hover-logo.svg" alt="" draggable="false"><div class="pc-hover__text"><div><strong>Angel East</strong><span>SAAS</span></div><img src="assets/icons/positiv-bolt.svg" alt="" draggable="false"></div></div></div>
-        <div class="work-card__info">
-          <div><span class="portfolio-card__tag">SAAS</span>
-          <span class="portfolio-card__logo" role="img" aria-label="Angel East"><img src="assets/logos/angel-east-a.svg" alt="" draggable="false"><img src="assets/logos/angel-east-b.svg" alt="" draggable="false"></span></div>
-          <p>Twelve years on sales floors tells us what wins deals — and what doesn't. Reps abandon master decks when they're built</p>
+      <article class="w-card rv" data-cat="brand">
+        <a href="contact.html" class="w-card__media" style="background-image:url('assets/img/service-brand.webp')" aria-label="Angel East — Brand system">
+          <span class="w-card__tag">Brand</span>
+          <span class="w-card__go"><svg width="22" height="14" viewBox="0 0 22 14" fill="none" aria-hidden="true"><path d="M1 7h19m0 0L14.5 1.5M20 7l-5.5 5.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        </a>
+        <div class="w-card__body">
+          <span class="w-card__num">05</span>
+          <div>
+            <span class="portfolio-card__logo" role="img" aria-label="Angel East"><img src="assets/logos/angel-east-a.svg" alt="" draggable="false"><img src="assets/logos/angel-east-b.svg" alt="" draggable="false"></span>
+            <p class="w-card__scope">Brand system</p>
+            <p class="w-card__desc">Guidelines, templates and co-branding kits that keep channel partners on-message.</p>
+          </div>
         </div>
       </article>
-      <article class="work-card">
-        <div class="portfolio-card__media portfolio-card__media--fig"><div class="pc-hover" aria-hidden="true"><img class="pc-hover__logo" src="assets/logos/portfolio-hover-logo.svg" alt="" draggable="false"><div class="pc-hover__text"><div><strong>Angel East</strong><span>SAAS</span></div><img src="assets/icons/positiv-bolt.svg" alt="" draggable="false"></div></div></div>
-        <div class="work-card__info">
-          <div><span class="portfolio-card__tag">SAAS</span>
-          <span class="portfolio-card__logo" role="img" aria-label="Angel East"><img src="assets/logos/angel-east-a.svg" alt="" draggable="false"><img src="assets/logos/angel-east-b.svg" alt="" draggable="false"></span></div>
-          <p>Twelve years on sales floors tells us what wins deals — and what doesn't. Reps abandon master decks when they're built</p>
+      <article class="w-card rv" data-cat="web">
+        <a href="contact.html" class="w-card__media" style="background-image:url('assets/img/service-marketing.webp')" aria-label="Angel East — Digital experience">
+          <span class="w-card__tag">Web</span>
+          <span class="w-card__go"><svg width="22" height="14" viewBox="0 0 22 14" fill="none" aria-hidden="true"><path d="M1 7h19m0 0L14.5 1.5M20 7l-5.5 5.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+        </a>
+        <div class="w-card__body">
+          <span class="w-card__num">06</span>
+          <div>
+            <span class="portfolio-card__logo" role="img" aria-label="Angel East"><img src="assets/logos/angel-east-a.svg" alt="" draggable="false"><img src="assets/logos/angel-east-b.svg" alt="" draggable="false"></span>
+            <p class="w-card__scope">Digital experience</p>
+            <p class="w-card__desc">Landing pages and campaign hubs for partner launches, shipped fast and kept current.</p>
+          </div>
         </div>
       </article>
   </div>
-  <a href="index.html" class="btn btn--lime work-back">&larr; Back to home</a>
 </section>
 
 <!-- ========================== CTA + FOOTER ========================== -->
 <section class="section cta-section" id="contact" data-section="cta">
   <div class="cta__inner">
-    <div class="cta__mark"><img src="assets/icons/cta-mark.svg" alt="" width="379" height="420" loading="lazy"></div>
+    <div class="cta__mark"><svg class="cta-mark" width="379" height="420" viewBox="0 0 379 420" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+        <defs>
+          <path id="ctaMarkPath" pathLength="1" d="M150.395 0.5H244.963C257.384 0.5 267.584 10.6174 266.597 22.9238C265.216 40.1243 262.313 67.6814 258.035 94.9336C253.755 122.202 248.106 149.108 241.249 165.042C240.034 167.862 240.865 170.538 242.698 172.091C244.473 173.594 247.149 174.014 249.691 172.576L249.937 172.432C281.394 153.101 316.713 140.351 354.274 136.422C367.156 135.074 378.5 144.959 378.5 157.871V251.421C378.5 261.9 370.016 272.02 359.698 273.991C302.932 284.846 258.065 342.094 249.959 401.12C248.507 411.686 239.496 419.5 228.82 419.5H134.042C121.184 419.5 111.42 408.319 112.564 395.499C115.653 360.916 125.196 327.315 139.94 296.366H139.941C141.21 293.699 140.453 290.938 138.74 289.215C137.023 287.487 134.318 286.782 131.729 288.25C99.5424 306.498 63.2213 318.293 24.4883 321.806C11.6803 322.968 0.5 313.147 0.5 300.327V206.524C0.500083 201.633 2.41029 196.501 5.5459 192.382C8.68198 188.262 13.0097 185.198 17.8066 184.375C46.5412 179.454 72.2308 153.025 91.7568 120.525C111.299 87.9993 124.755 49.2492 128.958 19.4414C130.43 8.99447 139.851 0.5 150.395 0.5Z"/>
+          <linearGradient id="ctaMarkFill" x1="337.106" y1="-177.842" x2="153.981" y2="246.499" gradientUnits="userSpaceOnUse"><stop offset="0.0721154" stop-color="#FBFEE0" stop-opacity="0.39"/><stop offset="1" stop-color="white" stop-opacity="0"/></linearGradient>
+          <linearGradient id="ctaMarkLine" x1="163" y1="310.5" x2="199.498" y2="108" gradientUnits="userSpaceOnUse"><stop stop-color="#EFEFEB" stop-opacity="0"/><stop offset="1" stop-color="#EFEFEB" stop-opacity="0.6"/></linearGradient>
+        <linearGradient id="ctaFadeGrad" gradientUnits="userSpaceOnUse" x1="207.5" y1="129.8" x2="189.5" y2="332"><stop stop-color="#fff"/><stop offset=".35" stop-color="#eaeaea"/><stop offset=".6" stop-color="#9a9a9a"/><stop offset=".82" stop-color="#3a3a3a"/><stop offset="1" stop-color="#000"/></linearGradient>
+          <mask id="ctaFade" maskUnits="userSpaceOnUse" x="-20" y="-20" width="420" height="460"><rect x="-20" y="-20" width="420" height="460" fill="url(#ctaFadeGrad)"/><rect x="-20" y="345" width="420" height="200" fill="#000"/></mask>
+        </defs>
+        <g class="cta-mark__formed"><use href="#ctaMarkPath" fill="url(#ctaMarkFill)" stroke="url(#ctaMarkLine)"/></g>
+        <g mask="url(#ctaFade)"><use class="cta-mark__head" href="#ctaMarkPath"/></g>
+      </svg></div>
     <h4 class="cta__title">The creative team <br>for channel partners.</h4>
     <p class="cta__text">Book a 30-minute call — walk us through what you need, and we'll <br>show you how we'd approach it. No pitch, just a conversation.</p>
     <a href="contact.html" class="btn btn--lime">Book a call</a>
@@ -447,7 +530,6 @@
           <a href="https://www.linkedin.com/company/positiv-agency/" aria-label="LinkedIn"><img src="assets/icons/social-linkedin.svg" alt="" width="24" height="24"></a>
           <a href="https://www.instagram.com/positivagency/" aria-label="Instagram"><img src="assets/icons/social-instagram.svg" alt="" width="24" height="24"></a>
           <a href="https://www.facebook.com/Positivagency" aria-label="Facebook"><img src="assets/icons/social-facebook.svg" alt="" width="24" height="24"></a>
-          <a href="https://x.com/" aria-label="X"><img src="assets/icons/social-x.svg" alt="" width="24" height="24"></a>
         </div>
       </div>
       <div class="footer__rule"></div>
@@ -474,8 +556,9 @@
 <script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1/dist/lenis.min.js"></script>
 -->
 <script src="js/vendor/gsap.min.js" defer></script>
-<script src="js/main.js?v=20261006a" defer></script>
+<script src="js/main.js?v=20261007f" defer></script>
 <script src="js/intro.js?v=1" defer></script>
-<script src="js/work.js?v=20261006a" defer></script>
+<script src="js/transition.js?v=2" defer></script>
+<script src="js/work.js?v=20261007a" defer></script>
 </body>
 </html>

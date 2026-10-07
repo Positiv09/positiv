@@ -1,0 +1,8 @@
+/* Page transition (see js/transition.js): a dark curtain with a curved top edge rises from the bottom, the Positiv bolt pops in,
+   the next page loads, then the curtain keeps rising away. On arrival the cover is painted by CSS from the first frame (html.pt-cover). */
+html.pt-cover { overflow: hidden; }
+html.pt-cover body::before { content: ""; position: fixed; inset: 0; z-index: 100000; background: #211d1d; }
+.pt { position: fixed; inset: 0; z-index: 100001; display: grid; place-items: center; background: #211d1d; pointer-events: none; visibility: hidden; transform: translateY(120%); will-change: transform; }
+.pt__curve { position: absolute; left: -10%; right: -10%; bottom: 100%; height: 14vh; background: #211d1d; border-radius: 50% 50% 0 0 / 100% 100% 0 0; }
+.pt__bolt { display: block; width: 150px; height: auto; opacity: 0; }
+@media (prefers-reduced-motion: reduce) { html.pt-cover body::before, .pt { display: none; } html.pt-cover { overflow: auto; } }

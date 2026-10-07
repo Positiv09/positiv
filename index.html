@@ -6,7 +6,9 @@
   <title>Positiv</title>
   <script>document.documentElement.classList.add('js')</script>
   <script>try{if(!sessionStorage.getItem('positivIntro')&&!matchMedia('(prefers-reduced-motion: reduce)').matches){document.documentElement.classList.add('intro-on');setTimeout(function(){document.documentElement.classList.remove('intro-on')},9000)}}catch(e){}</script>
+  <script>try{var d=document.documentElement;if(!d.classList.contains('intro-on')&&!matchMedia('(prefers-reduced-motion: reduce)').matches&&sessionStorage.getItem('positivIntro')){d.classList.add('pt-cover');setTimeout(function(){d.classList.remove('pt-cover')},6000)}}catch(e){}</script>
   <link rel="stylesheet" href="css/intro.css?v=1">
+  <link rel="stylesheet" href="css/transition.css?v=2">
   <meta name="description" content="Brand systems, sales assets and digital experiences for channel partners — unmistakably different.">
   <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon/favicon-32.png">
   <link rel="icon" type="image/png" sizes="48x48" href="assets/favicon/favicon-48.png">
@@ -19,7 +21,7 @@
   <link rel="stylesheet" href="css/tokens.css?v=20261006a">
   <link rel="stylesheet" href="css/base.css?v=20261006a">
   <link rel="stylesheet" href="css/menu.css?v=20261006a">
-  <link rel="stylesheet" href="css/sections.css?v=20261006a">
+  <link rel="stylesheet" href="css/sections.css?v=20261007n">
 </head>
 <body>
 
@@ -663,7 +665,7 @@
           <h5 class="svc-panel__title">Brand</h5>
           <div class="svc-panel__work"><h6 class="svc-label">The work</h6><p class="svc-panel__text">The identity and system everything is built on — so your positioning is visible, and holds up under co-branding compression.</p></div>
           <h6 class="svc-label svc-label--deliv">Deliverables</h6>
-          <div class="svc-panel__pills"><a href="#" class="svc-pill">Brand Strategy</a><a href="#" class="svc-pill">Visual Identity</a><a href="#" class="svc-pill">Asset Template Library</a><a href="#" class="svc-pill">Brand Guidelines</a></div>
+          <div class="svc-panel__pills"><span class="svc-pill">Brand Strategy</span><span class="svc-pill">Visual Identity</span><span class="svc-pill">Asset Template Library</span><span class="svc-pill">Brand Guidelines</span></div>
           <span class="svc-panel__num">01</span>
         </article>
         <article class="svc-panel" data-svc-panel data-service="sales">
@@ -671,7 +673,7 @@
           <h5 class="svc-panel__title">Sales Assets</h5>
           <div class="svc-panel__work"><h6 class="svc-label">The work</h6><p class="svc-panel__text">The assets that win deals — built around how reps actually sell, and designed to get adopted.</p></div>
           <h6 class="svc-label svc-label--deliv">Deliverables</h6>
-          <div class="svc-panel__pills"><a href="#" class="svc-pill">Master Sales Narrative</a><a href="#" class="svc-pill">Master Deck System</a><a href="#" class="svc-pill">Battle Cards</a><a href="#" class="svc-pill">Case Studies</a><a href="#" class="svc-pill">Datasheets</a></div>
+          <div class="svc-panel__pills"><span class="svc-pill">Master Sales Narrative</span><span class="svc-pill">Master Deck System</span><span class="svc-pill">Battle Cards</span><span class="svc-pill">Case Studies</span><span class="svc-pill">Datasheets</span></div>
           <span class="svc-panel__num">02</span>
         </article>
         <article class="svc-panel" data-svc-panel data-service="web">
@@ -679,7 +681,7 @@
           <h5 class="svc-panel__title">Web</h5>
           <div class="svc-panel__work"><h6 class="svc-label">The work</h6><p class="svc-panel__text">The most-trafficked surface in any partner-firm sales motion — rebuilt to carry the brand and convert.</p></div>
           <h6 class="svc-label svc-label--deliv">Deliverables</h6>
-          <div class="svc-panel__pills"><a href="#" class="svc-pill">Website Strategy</a><a href="#" class="svc-pill">Website Design</a><a href="#" class="svc-pill">Website Content</a><a href="#" class="svc-pill">Landing Pages</a><a href="#" class="svc-pill">Webflow Development</a></div>
+          <div class="svc-panel__pills"><span class="svc-pill">Website Strategy</span><span class="svc-pill">Website Design</span><span class="svc-pill">Website Content</span><span class="svc-pill">Landing Pages</span><span class="svc-pill">Webflow Development</span></div>
           <span class="svc-panel__num">03</span>
         </article>
         <article class="svc-panel" data-svc-panel data-service="marketing">
@@ -687,7 +689,7 @@
           <h5 class="svc-panel__title">Marketing &amp; Campaign</h5>
           <div class="svc-panel__work"><h6 class="svc-label">The work</h6><p class="svc-panel__text">The creative that keeps the pipeline fed — ads, social assets, and event presence, produced at deal speed.</p></div>
           <h6 class="svc-label svc-label--deliv">Deliverables</h6>
-          <div class="svc-panel__pills"><a href="#" class="svc-pill">Event Assets</a><a href="#" class="svc-pill">Social Creative</a><a href="#" class="svc-pill">Ads Creative</a><a href="#" class="svc-pill">Motion &amp; Video</a></div>
+          <div class="svc-panel__pills"><span class="svc-pill">Event Assets</span><span class="svc-pill">Social Creative</span><span class="svc-pill">Ads Creative</span><span class="svc-pill">Motion &amp; Video</span></div>
           <span class="svc-panel__num">04</span>
         </article>
         </div>
@@ -712,8 +714,8 @@
     <div class="testimonials__tabs" role="tablist" aria-label="Customer stories" data-testi-tabs>
       <button class="testi-tab is-active" role="tab" aria-selected="true" aria-label="Light Node Ventures" data-testi-tab="0"><span class="testi-tab__bar"></span><img src="assets/logos/clients/light-node.svg" alt="" width="182" height="16" loading="lazy" draggable="false"></button>
       <button class="testi-tab" role="tab" aria-selected="false" aria-label="Angel East" data-testi-tab="1"><span class="testi-tab__bar"></span><span class="portfolio-card__logo" aria-hidden="true"><img src="assets/logos/angel-east-a.svg" alt="" draggable="false"><img src="assets/logos/angel-east-b.svg" alt="" draggable="false"></span></button>
-      <button class="testi-tab" role="tab" aria-selected="false" aria-label="StrangeBee" data-testi-tab="2"><span class="testi-tab__bar"></span><img src="assets/logos/clients/strangebee.svg" alt="" width="124" height="18" loading="lazy" draggable="false"></button>
-      <button class="testi-tab" role="tab" aria-selected="false" aria-label="Perfect Stay" data-testi-tab="3"><span class="testi-tab__bar"></span><img src="assets/logos/clients/perfect-stay.svg" alt="" width="187" height="14" loading="lazy" draggable="false"></button>
+      <button class="testi-tab" role="tab" aria-selected="false" aria-label="StrangeBee" data-testi-tab="2"><span class="testi-tab__bar"></span><img src="assets/logos/clients/strangebee.svg?v=2" alt="" width="124" height="18" loading="lazy" draggable="false"></button>
+      <button class="testi-tab" role="tab" aria-selected="false" aria-label="Perfect Stay" data-testi-tab="3"><span class="testi-tab__bar"></span><img src="assets/logos/clients/perfect-stay.svg?v=2" alt="" width="187" height="14" loading="lazy" draggable="false"></button>
     </div>
   </div>
 
@@ -741,17 +743,6 @@
       </div>
       <div class="testimonial-card__visual"><div class="testimonial-card__shape testimonial-card__shape--b"></div><div class="testimonial-card__person testimonial-card__person--2"></div></div>
     </article>
-    <article class="testimonial-card testimonial-card--peach" data-card="3">
-      <div class="testimonial-card__copy">
-        <div class="testimonial-card__logo"><img src="assets/img/logo-quote-3.png" alt="" width="500" height="100" loading="lazy"></div>
-        <h5 class="testimonial-card__title">Positive became more</h5>
-        <p class="testimonial-card__quote">than a design partner—they became an extension of our team. Their deep understanding of our business, combined with outstanding creative execution, resulted in solutions that exceeded expectations and delivered real value</p>
-        <div class="testimonial-card__rule"></div>
-        <h5 class="testimonial-card__name">Mansour Al Derei</h5>
-        <p class="testimonial-card__role">Trendz Podcast Host | Investor</p>
-      </div>
-      <div class="testimonial-card__visual"><div class="testimonial-card__shape testimonial-card__shape--c"></div><div class="testimonial-card__person testimonial-card__person--4"></div></div>
-    </article>
     <article class="testimonial-card testimonial-card--white" data-card="4">
       <div class="testimonial-card__copy">
         <div class="testimonial-card__logo"><img src="assets/img/logo-quote-1.png" alt="" width="500" height="100" loading="lazy"></div>
@@ -762,6 +753,17 @@
         <p class="testimonial-card__role">Trendz Podcast Host | Investor</p>
       </div>
       <div class="testimonial-card__visual"><div class="testimonial-card__shape testimonial-card__shape--a"></div><div class="testimonial-card__person testimonial-card__person--3"></div></div>
+    </article>
+    <article class="testimonial-card testimonial-card--peach" data-card="3">
+      <div class="testimonial-card__copy">
+        <div class="testimonial-card__logo"><img src="assets/img/logo-quote-3.png" alt="" width="500" height="100" loading="lazy"></div>
+        <h5 class="testimonial-card__title">Positive became more</h5>
+        <p class="testimonial-card__quote">than a design partner—they became an extension of our team. Their deep understanding of our business, combined with outstanding creative execution, resulted in solutions that exceeded expectations and delivered real value</p>
+        <div class="testimonial-card__rule"></div>
+        <h5 class="testimonial-card__name">Mansour Al Derei</h5>
+        <p class="testimonial-card__role">Trendz Podcast Host | Investor</p>
+      </div>
+      <div class="testimonial-card__visual"><div class="testimonial-card__shape testimonial-card__shape--c"></div><div class="testimonial-card__person testimonial-card__person--4"></div></div>
     </article>
   </div>
   </div>
@@ -778,55 +780,55 @@
     <div class="compare-table" role="table" aria-label="Positiv compared with alternatives">
       <div class="cell--spacer" role="presentation"></div>
       <div class="cell--brand" role="columnheader"><img src="assets/logo.svg" alt="Positiv" width="99" height="25"></div>
-      <div class="cell--col-head" role="columnheader">Traditional agency</div>
-      <div class="cell--col-head" role="columnheader">Freelancer</div>
-      <div class="cell--col-head" role="columnheader">In-house hire</div>
-      <div class="cell--col-head" role="columnheader">AI tools</div>
+      <div class="cell--col-head" role="columnheader"><span class="cell__txt">Traditional agency</span></div>
+      <div class="cell--col-head" role="columnheader"><span class="cell__txt">Freelancer</span></div>
+      <div class="cell--col-head" role="columnheader"><span class="cell__txt">In-house hire</span></div>
+      <div class="cell--col-head" role="columnheader"><span class="cell__txt">AI tools</span></div>
 
       <!-- Row: legend  ✓ = check · ✗ = x · – = partial -->
-      <div class="cell--label is-first" role="rowheader">Brand strategy + system</div>
+      <div class="cell--label is-first" role="rowheader"><span class="cell__txt">Brand strategy + system</span></div>
       <div class="cell--us"><svg color="#211d1d"><use href="#i-check"/></svg></div>
       <div style="color:#b2b2b2;opacity:.5"><svg><use href="#i-x"/></svg></div>
       <div style="color:#fff;opacity:.8"><svg><use href="#i-check"/></svg></div>
       <div style="color:#b2b2b2;opacity:.5"><svg><use href="#i-x"/></svg></div>
       <div style="color:#b2b2b2;opacity:.5"><svg><use href="#i-x"/></svg></div>
 
-      <div class="cell--label" role="rowheader">Channel/ecosystem fluency</div>
+      <div class="cell--label" role="rowheader"><span class="cell__txt">Channel/ecosystem fluency</span></div>
       <div class="cell--us"><svg color="#211d1d"><use href="#i-check"/></svg></div>
       <div style="color:#fff;opacity:.8"><svg><use href="#i-check"/></svg></div>
       <div style="color:#b2b2b2;opacity:.5"><svg><use href="#i-x"/></svg></div>
       <div style="color:#fff;opacity:.8"><svg><use href="#i-check"/></svg></div>
       <div style="color:#b2b2b2;opacity:.5"><svg><use href="#i-x"/></svg></div>
 
-      <div class="cell--label" role="rowheader">Sales-floor experience</div>
+      <div class="cell--label" role="rowheader"><span class="cell__txt">Sales-floor experience</span></div>
       <div class="cell--us"><svg color="#211d1d"><use href="#i-check"/></svg></div>
       <div style="color:#b2b2b2;opacity:.5"><svg><use href="#i-dash"/></svg></div>
       <div style="color:#b2b2b2;opacity:.5"><svg><use href="#i-x"/></svg></div>
-      <div style="color:#b2b2b2;opacity:.5"><svg><use href="#i-x"/></svg></div>
-      <div style="color:#b2b2b2;opacity:.5"><svg><use href="#i-dash"/></svg></div>
-
-      <div class="cell--label" role="rowheader">Ongoing capacity</div>
-      <div class="cell--us"><svg color="#211d1d"><use href="#i-check"/></svg></div>
-      <div style="color:#b2b2b2;opacity:.5"><svg><use href="#i-x"/></svg></div>
-      <div style="color:#b2b2b2;opacity:.5"><svg><use href="#i-x"/></svg></div>
-      <div style="color:#b2b2b2;opacity:.5"><svg><use href="#i-x"/></svg></div>
-      <div style="color:#b2b2b2;opacity:.5"><svg><use href="#i-x"/></svg></div>
-
-      <div class="cell--label" role="rowheader">Senior creative direction</div>
-      <div class="cell--us"><svg color="#211d1d"><use href="#i-check"/></svg></div>
-      <div style="color:#b2b2b2;opacity:.5"><svg><use href="#i-dash"/></svg></div>
-      <div style="color:#fff;opacity:.8"><svg><use href="#i-check"/></svg></div>
       <div style="color:#b2b2b2;opacity:.5"><svg><use href="#i-x"/></svg></div>
       <div style="color:#b2b2b2;opacity:.5"><svg><use href="#i-dash"/></svg></div>
 
-      <div class="cell--label" role="rowheader">Cost predictability</div>
+      <div class="cell--label" role="rowheader"><span class="cell__txt">Ongoing capacity</span></div>
+      <div class="cell--us"><svg color="#211d1d"><use href="#i-check"/></svg></div>
+      <div style="color:#b2b2b2;opacity:.5"><svg><use href="#i-x"/></svg></div>
+      <div style="color:#b2b2b2;opacity:.5"><svg><use href="#i-x"/></svg></div>
+      <div style="color:#b2b2b2;opacity:.5"><svg><use href="#i-x"/></svg></div>
+      <div style="color:#b2b2b2;opacity:.5"><svg><use href="#i-x"/></svg></div>
+
+      <div class="cell--label" role="rowheader"><span class="cell__txt">Senior creative direction</span></div>
+      <div class="cell--us"><svg color="#211d1d"><use href="#i-check"/></svg></div>
+      <div style="color:#b2b2b2;opacity:.5"><svg><use href="#i-dash"/></svg></div>
+      <div style="color:#fff;opacity:.8"><svg><use href="#i-check"/></svg></div>
+      <div style="color:#b2b2b2;opacity:.5"><svg><use href="#i-x"/></svg></div>
+      <div style="color:#b2b2b2;opacity:.5"><svg><use href="#i-dash"/></svg></div>
+
+      <div class="cell--label" role="rowheader"><span class="cell__txt">Cost predictability</span></div>
       <div class="cell--us"><svg color="#211d1d"><use href="#i-check"/></svg></div>
       <div style="color:#fff;opacity:.8"><svg><use href="#i-check"/></svg></div>
       <div style="color:#b2b2b2;opacity:.5"><svg><use href="#i-x"/></svg></div>
       <div style="color:#b2b2b2;opacity:.5"><svg><use href="#i-x"/></svg></div>
       <div style="color:#fff;opacity:.8"><svg><use href="#i-check"/></svg></div>
 
-      <div class="cell--label is-last" role="rowheader">Managed for you</div>
+      <div class="cell--label is-last" role="rowheader"><span class="cell__txt">Managed for you</span></div>
       <div class="cell--us"><svg color="#211d1d"><use href="#i-check"/></svg></div>
       <div class="is-last-row" style="color:#b2b2b2;opacity:.5"><svg><use href="#i-x"/></svg></div>
       <div class="is-last-row" style="color:#fff;opacity:.8"><svg><use href="#i-check"/></svg></div>
@@ -839,7 +841,17 @@
 <!-- ========================== CTA + FOOTER ========================== -->
 <section class="section cta-section" id="contact" data-section="cta">
   <div class="cta__inner">
-    <div class="cta__mark"><img src="assets/icons/cta-mark.svg" alt="" width="379" height="420" loading="lazy"></div>
+    <div class="cta__mark"><svg class="cta-mark" width="379" height="420" viewBox="0 0 379 420" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+        <defs>
+          <path id="ctaMarkPath" pathLength="1" d="M150.395 0.5H244.963C257.384 0.5 267.584 10.6174 266.597 22.9238C265.216 40.1243 262.313 67.6814 258.035 94.9336C253.755 122.202 248.106 149.108 241.249 165.042C240.034 167.862 240.865 170.538 242.698 172.091C244.473 173.594 247.149 174.014 249.691 172.576L249.937 172.432C281.394 153.101 316.713 140.351 354.274 136.422C367.156 135.074 378.5 144.959 378.5 157.871V251.421C378.5 261.9 370.016 272.02 359.698 273.991C302.932 284.846 258.065 342.094 249.959 401.12C248.507 411.686 239.496 419.5 228.82 419.5H134.042C121.184 419.5 111.42 408.319 112.564 395.499C115.653 360.916 125.196 327.315 139.94 296.366H139.941C141.21 293.699 140.453 290.938 138.74 289.215C137.023 287.487 134.318 286.782 131.729 288.25C99.5424 306.498 63.2213 318.293 24.4883 321.806C11.6803 322.968 0.5 313.147 0.5 300.327V206.524C0.500083 201.633 2.41029 196.501 5.5459 192.382C8.68198 188.262 13.0097 185.198 17.8066 184.375C46.5412 179.454 72.2308 153.025 91.7568 120.525C111.299 87.9993 124.755 49.2492 128.958 19.4414C130.43 8.99447 139.851 0.5 150.395 0.5Z"/>
+          <linearGradient id="ctaMarkFill" x1="337.106" y1="-177.842" x2="153.981" y2="246.499" gradientUnits="userSpaceOnUse"><stop offset="0.0721154" stop-color="#FBFEE0" stop-opacity="0.39"/><stop offset="1" stop-color="white" stop-opacity="0"/></linearGradient>
+          <linearGradient id="ctaMarkLine" x1="163" y1="310.5" x2="199.498" y2="108" gradientUnits="userSpaceOnUse"><stop stop-color="#EFEFEB" stop-opacity="0"/><stop offset="1" stop-color="#EFEFEB" stop-opacity="0.6"/></linearGradient>
+        <linearGradient id="ctaFadeGrad" gradientUnits="userSpaceOnUse" x1="207.5" y1="129.8" x2="189.5" y2="332"><stop stop-color="#fff"/><stop offset=".35" stop-color="#eaeaea"/><stop offset=".6" stop-color="#9a9a9a"/><stop offset=".82" stop-color="#3a3a3a"/><stop offset="1" stop-color="#000"/></linearGradient>
+          <mask id="ctaFade" maskUnits="userSpaceOnUse" x="-20" y="-20" width="420" height="460"><rect x="-20" y="-20" width="420" height="460" fill="url(#ctaFadeGrad)"/><rect x="-20" y="345" width="420" height="200" fill="#000"/></mask>
+        </defs>
+        <g class="cta-mark__formed"><use href="#ctaMarkPath" fill="url(#ctaMarkFill)" stroke="url(#ctaMarkLine)"/></g>
+        <g mask="url(#ctaFade)"><use class="cta-mark__head" href="#ctaMarkPath"/></g>
+      </svg></div>
     <h4 class="cta__title">The creative team <br>for channel partners.</h4>
     <p class="cta__text">Book a 30-minute call — walk us through what you need, and we'll <br>show you how we'd approach it. No pitch, just a conversation.</p>
     <a href="contact.html" class="btn btn--lime">Book a call</a>
@@ -865,7 +877,6 @@
           <a href="https://www.linkedin.com/company/positiv-agency/" aria-label="LinkedIn"><img src="assets/icons/social-linkedin.svg" alt="" width="24" height="24"></a>
           <a href="https://www.instagram.com/positivagency/" aria-label="Instagram"><img src="assets/icons/social-instagram.svg" alt="" width="24" height="24"></a>
           <a href="https://www.facebook.com/Positivagency" aria-label="Facebook"><img src="assets/icons/social-facebook.svg" alt="" width="24" height="24"></a>
-          <a href="https://x.com/" aria-label="X"><img src="assets/icons/social-x.svg" alt="" width="24" height="24"></a>
         </div>
       </div>
       <div class="footer__rule"></div>
@@ -892,7 +903,8 @@
 <script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1/dist/lenis.min.js"></script>
 -->
 <script src="js/vendor/gsap.min.js" defer></script>
-<script src="js/main.js?v=20261006a" defer></script>
+<script src="js/main.js?v=20261007f" defer></script>
 <script src="js/intro.js?v=1" defer></script>
+<script src="js/transition.js?v=2" defer></script>
 </body>
 </html>

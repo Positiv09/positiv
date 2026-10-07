@@ -114,3 +114,10 @@
 }
 
 @media (min-width: 992px) { .m-mosaic { width: 80%; margin: 0 auto; padding: 0 0 10px; } }  /* same width as the navbar */
+
+.m-outro { padding: 130px 0 150px; text-align: center; background: var(--c-ink); }
+.m-outro__eyebrow { font-size: 16px; text-transform: uppercase; letter-spacing: .12em; color: #b2b2b2; }
+.m-outro__title { width: min(900px, 92%); margin: 16px auto 0; font-family: var(--f-body); font-weight: 400; font-size: 64px; line-height: 72px; color: #fff; }
+.m-outro__title em { font-style: normal; font-family: var(--f-display); font-weight: 600; color: var(--c-lime); }
+.m-outro__lead { width: min(640px, 90%); margin: 22px auto 0; font-size: 18px; line-height: 28px; color: var(--c-paper-2); opacity: .9; }
+@media (max-width: 640px) { .m-outro { padding: 90px 0 100px; } .m-outro__title { font-size: 38px; line-height: 46px; } }

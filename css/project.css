@@ -64,3 +64,11 @@
   .p-more-work__title { font-size: 40px; line-height: 48px; } .p-card { flex-basis: 72vw; }
 }
 @media (prefers-reduced-motion: reduce) { .p-hero, .p-more p { animation: none; } }
+
+/* same width as the navbar (80%) on desktop */
+@media (min-width: 992px) {
+  .p-top { padding-left: 10%; padding-right: 10%; } .p-back { margin-left: 0; }
+  .p-intro, .p-more-work__head { width: 80%; }
+  .p-gallery { width: 80%; margin: 0 auto; padding: 0; grid-auto-rows: calc((80vw - 110px) / 12 * .86); }
+  .p-rail { padding: 0 10px 0 10%; }
+}

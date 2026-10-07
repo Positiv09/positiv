@@ -234,6 +234,17 @@
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeLb(); });
   }
 
+  /* ---------- CTA background mark: the light starts when the mark scrolls into view ----------
+     The strip animation (css .cta-mark__head) only runs while .cta-mark has .is-live; every time the mark comes into view it restarts
+     from the beginning at the left edge, and keeps looping while it stays visible. */
+  const ctaMark = $('.cta-mark');
+  if (ctaMark) {
+    const live = (on) => { ctaMark.classList.remove('is-live'); if (on) { void ctaMark.getBoundingClientRect(); ctaMark.classList.add('is-live'); } };   // remove + reflow + add = restart
+    if ('IntersectionObserver' in window && !reduceMotion) {
+      new IntersectionObserver((ens) => { const e = ens[ens.length - 1]; if (e.isIntersecting && !ctaMark.classList.contains('is-live')) live(true); else if (!e.isIntersecting) live(false); }, { threshold: 0.35 }).observe(ctaMark);
+    }
+  }
+
   /* ---------- CTA heading ----------
      Masked letters that rise each time the heading scrolls into view; without GSAP / with reduced motion it is simply static. */
   const ctaTitle = $('.cta__title');
@@ -366,7 +377,7 @@
       let cur = 0;
       words.forEach((w, i) => { w.classList.toggle('is-active', i === 0); });
       gsap.set(words.slice(1), { opacity: 0 });
-      const introOn = document.documentElement.classList.contains('intro-on') || document.documentElement.classList.contains('pt-cover');   // also waits for the page-transition curtain
+      const introOn = document.documentElement.classList.contains('intro-on');
       const intro = gsap.from(words[0], { y: 40, opacity: 0, filter: 'blur(8px)', duration: 1, ease: 'power3.out', delay: introOn ? 0.15 : 0.5, paused: introOn });
       if (introOn) document.addEventListener('positiv:intro-done', () => intro.play(), { once: true });   // start when the intro curtain has lifted
       const change = () => {

@@ -62,3 +62,9 @@
   .m-title em { animation: none; }
   .m-tile { opacity: 1; transform: none; transition: none; }
 }
+
+/* round "View" cursor (js/cursor.js): a lime circle replaces the pointer over [data-cursor] elements */
+.view-cursor { position: fixed; left: 0; top: 0; z-index: 2000; width: 112px; height: 112px; margin: -56px 0 0 -56px; display: grid; place-items: center; border-radius: 50%; background: var(--c-lime); color: var(--c-ink); font-size: 16px; font-weight: 500; pointer-events: none; transform: scale(0); will-change: transform; transition: opacity .25s ease; opacity: 0; }
+.view-cursor.is-on { opacity: 1; }
+.view-cursor span { display: block; }
+@media (hover: hover) and (pointer: fine) { .cursor-view, .cursor-view * { cursor: none !important; } }

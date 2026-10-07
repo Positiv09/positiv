@@ -234,11 +234,9 @@
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeLb(); });
   }
 
-  /* ---------- CTA heading: the Positiv-mark "t" ----------
-     Masked letters, each "t" drawn as the logo mark (white stem + lime mark). The letters rise and the marks pop in each time the
-     heading scrolls into view, then idle with the same squash-and-hop; without GSAP / with reduced motion it is simply static. */
+  /* ---------- CTA heading ----------
+     Masked letters that rise each time the heading scrolls into view; without GSAP / with reduced motion it is simply static. */
   const ctaTitle = $('.cta__title');
-  const tMark = (ch) => `<span class="t-base">${ch}</span><svg class="t-stem" viewBox="61.79 1.9 11.08 22.07" aria-hidden="true"><path fill="#fff" d="M70.7672 20.5501C69.5899 20.3215 68.83 19.4028 68.8304 18.1959L68.8317 13.5938H64.9297L65.0085 18.9944C65.0369 20.9064 66.1129 22.662 67.8574 23.3833C69.4681 24.0496 71.1897 23.9665 72.8638 23.9665C72.8754 22.8889 72.8575 21.6911 72.8613 20.5797C72.0209 20.5839 71.4495 20.6828 70.7672 20.5501Z"/></svg><svg class="t-mark" viewBox="61.79 1.9 11.08 22.07" aria-hidden="true"><path fill="#f0f879" d="M71.8464 5.7464C70.7662 5.85237 69.7507 6.21659 68.8477 6.77229C68.7105 6.85699 68.5587 6.72891 68.6225 6.5808C69.0121 5.67506 69.2623 3.52733 69.3403 2.55276C69.3691 2.19522 69.0734 1.90234 68.7147 1.90234H66.0409C65.7415 1.90234 65.4658 2.11178 65.4266 2.4084C65.2056 4.09013 63.914 6.83362 62.2866 7.10939C61.9892 7.15945 61.7891 7.44649 61.7891 7.74854V10.4053C61.7891 10.7649 62.0848 11.0615 62.443 11.031C63.5549 10.9359 64.5975 10.5997 65.5205 10.0757C65.661 9.99598 65.807 10.1312 65.7373 10.2772C65.2189 11.3636 64.9262 12.5655 64.9266 13.7933H68.8327C68.8327 11.9372 70.2169 9.97888 72.0065 9.66514C72.3051 9.61299 72.5041 9.32346 72.5041 9.02057V6.3722C72.5041 6.01049 72.2063 5.71094 71.8464 5.7464Z"/></svg>`;   // the Positiv-mark "t" (white stem + lime mark)
   if (ctaTitle && !ctaTitle.dataset.split) {
     const nodes = [...ctaTitle.childNodes];
     ctaTitle.setAttribute('aria-label', ctaTitle.textContent.replace(/\s+/g, ' ').trim());
@@ -255,10 +253,7 @@
           [...w].forEach((ch) => {
             const c = document.createElement('span');
             c.className = 'hero__char'; c.style.setProperty('--i', idx++);
-            if (ch === 't' && w.toLowerCase() === 'creative') {                 // only the "t" of "creative" carries the Positiv mark
-              c.classList.add('hero__char--t');
-              c.innerHTML = tMark(ch);
-            } else c.textContent = ch;
+            c.textContent = ch;
             word.appendChild(c);
           });
           ctaTitle.appendChild(word);

@@ -26,13 +26,6 @@
 .hero__eyebrow.is-ready .hero__char { transition-delay: 0s; }
 .hero__eyebrow.is-gsap .hero__char { opacity: 1; transform: none; transition: none; }   /* GSAP owns the motion */
 
-.hero__char--t .t-base { visibility: hidden; }                                  /* keeps the letter's advance width */
-/* The t is drawn from the Positiv logo's own paths (white stem + lime mark): 22.07 × 11.08 units → .625em × .314em,
-   standing on the baseline (.944em below the top of the 1.2em char box). */
-.hero__char--t .t-stem, .hero__char--t .t-mark {
-  position: absolute; left: 0; right: 0; margin: 0 auto; top: .319em; width: .314em; height: .625em;
-  overflow: visible; pointer-events: none; user-select: none;
-}
 @media (prefers-reduced-motion: reduce) { .hero__char { opacity: 1; transform: none; transition: none; } }
 
 .hero__word {
@@ -548,10 +541,10 @@
 /* the mark keeps its glass look; one soft strip of white light starts on the left edge, climbs, runs over the top and down the right
    side. An SVG mask fades it out as it nears the line below the logo, so the lower part is never lit; then it starts again. */
 .cta-mark__head { fill: none; stroke: #fff; stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; stroke-dasharray: .14 .86; stroke-dashoffset: -.624;
-  filter: drop-shadow(0 0 4px #fff) drop-shadow(0 0 12px rgb(255 255 255 / .75)); opacity: 0; animation: cta-move 7.5s cubic-bezier(.37, 0, .63, 1) infinite, cta-vis 7.5s linear infinite; }
+  filter: drop-shadow(0 0 4px rgb(255 255 255 / .8)) drop-shadow(0 0 12px rgb(255 255 255 / .5)); opacity: 0; animation: cta-move 7.5s cubic-bezier(.37, 0, .63, 1) infinite, cta-vis 7.5s linear infinite; }
 @keyframes cta-move { 0% { stroke-dashoffset: -.624; } 82%, 100% { stroke-dashoffset: -1.43; } }
 /* fade in while it is still dim at the left, fade out before the loop restarts, so the restart is never seen */
-@keyframes cta-vis { 0% { opacity: 0; } 14% { opacity: 1; } 62% { opacity: 1; } 80%, 100% { opacity: 0; } }
+@keyframes cta-vis { 0% { opacity: 0; } 14% { opacity: .55; } 62% { opacity: .55; } 80%, 100% { opacity: 0; } }
 @media (prefers-reduced-motion: reduce) { .cta-mark__head { animation: none; opacity: 0; } }
 .cta__title { width: 70%; margin: -80px 0 24px; text-align: center; font-family: var(--f-body); font-weight: 400; font-size: 64px; line-height: 64px; color: #fff; }
 .cta__title .hero__char { opacity: 1; transform: none; transition: none; }   /* same letters as the hero heading; GSAP drives the entrance */

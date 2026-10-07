@@ -129,3 +129,5 @@
 @media (max-width: 1100px) { .w-hero__grid { align-items: start; } }
 .w-hero__grid > div:first-child { padding-top: 70px; }
 @media (max-width: 1100px) { .w-hero__grid > div:first-child { padding-top: 20px; } }
+
+.w-hero .back-projects { position: static; margin-top: 40px; }   /* the back button sits under the heading block */

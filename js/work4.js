@@ -6,7 +6,7 @@
   const CAT = ['Brand · Sales', 'Web', 'Brand', 'Web · Campaign', 'Brand system', 'Sales assets', 'Brand', 'Campaign', 'Sales', 'Web', 'Marketing', 'Brand', 'Sales assets', 'Web'];
   const CATS = ['brand sales', 'web', 'brand', 'web campaign', 'brand', 'sales', 'brand', 'campaign', 'sales', 'web', 'campaign', 'brand', 'sales', 'web'];
   const MARK = 'M150.395 0.5H244.963C257.384 0.5 267.584 10.6174 266.597 22.9238C265.216 40.1243 262.313 67.6814 258.035 94.9336C253.755 122.202 248.106 149.108 241.249 165.042C240.034 167.862 240.865 170.538 242.698 172.091C244.473 173.594 247.149 174.014 249.691 172.576L249.937 172.432C281.394 153.101 316.713 140.351 354.274 136.422C367.156 135.074 378.5 144.959 378.5 157.871V251.421C378.5 261.9 370.016 272.02 359.698 273.991C302.932 284.846 258.065 342.094 249.959 401.12C248.507 411.686 239.496 419.5 228.82 419.5H134.042C121.184 419.5 111.42 408.319 112.564 395.499C115.653 360.916 125.196 327.315 139.94 296.366H139.941C141.21 293.699 140.453 290.938 138.74 289.215C137.023 287.487 134.318 286.782 131.729 288.25C99.5424 306.498 63.2213 318.293 24.4883 321.806C11.6803 322.968 0.5 313.147 0.5 300.327V206.524C0.500083 201.633 2.41029 196.501 5.5459 192.382C8.68198 188.262 13.0097 185.198 17.8066 184.375C46.5412 179.454 72.2308 153.025 91.7568 120.525C111.299 87.9993 124.755 49.2492 128.958 19.4414C130.43 8.99447 139.851 0.5 150.395 0.5Z';
-  const N = IMG.length, GAP = 900, START = 1150;
+  const N = IMG.length, GAP = 780, START = 800;
   const $ = (id) => document.getElementById(id);
   const sec = $('wv'), world = $('wv-world');
   if (!sec || !world) return;
@@ -17,9 +17,9 @@
   /* ---- build the world ---- */
   /* the four corners of the screen (where a frame sits once it has flown close): pictures never cover the big logo in the middle */
   const corner = (slot, i) => {
-    const sx = slot % 2 ? 1 : -1, sy = slot % 4 < 2 ? -1 : 1, sc = 0.6;
+    const sx = slot % 2 ? 1 : -1, sy = slot % 4 < 2 ? -1 : 1, sc = 0.7;
     const hw = small ? 110 : 260, hh = small ? 72 : 170;
-    const x = sx * (small ? Math.max((innerWidth / 2 - hw * sc - 12) / sc, hw + 20) : (innerWidth * 0.235) / sc), y = sy * (small ? Math.max((innerHeight / 2 - hh * sc - 130) / sc, hh + 20) : (innerHeight * 0.2) / sc);   // close to the logo: easy to reach and browse
+    const x = sx * (small ? Math.max((innerWidth / 2 - hw * sc - 12) / sc, hw + 20) : (innerWidth * 0.21) / sc), y = sy * (small ? Math.max((innerHeight / 2 - hh * sc - 130) / sc, hh + 20) : (innerHeight * 0.2) / sc);   // close to the logo: easy to reach and browse
     return { x: x + ((i * 37) % 40) - 20, y: y + ((i * 53) % 30) - 15, sx, sy };
   };
   const frames = IMG.map((img, i) => {
@@ -60,11 +60,11 @@
     mx += (tx - mx) * 0.06; my += (ty - my) * 0.06;
     world.style.transform = `translate3d(${(-mx * 60).toFixed(1)}px, ${(-my * 36).toFixed(1)}px, ${cam.toFixed(1)}px) rotateX(${(my * -6).toFixed(2)}deg) rotateY(${(mx * 9).toFixed(2)}deg)`;
     let best = -1, bestD = 1e9;
-    const fade = (eff) => eff < -3800 ? 0 : eff < -2300 ? (eff + 3800) / 1500 : eff < 150 ? 1 : eff < 640 ? 1 - (eff - 150) / 490 : 0;
+    const fade = (eff) => eff < -3200 ? 0 : eff < -1800 ? (eff + 3200) / 1400 : eff < 60 ? 1 : eff < 340 ? 1 - (eff - 60) / 280 : 0;
     frames.forEach((f, i) => {
       const eff = f.z + cam; f.el.style.opacity = f.on ? fade(eff).toFixed(3) : 0;
-      f.el.style.pointerEvents = f.on && eff > -2300 && eff < 150 ? 'auto' : 'none';
-      const d = f.on ? Math.abs(eff + 760) : 1e9; if (d < bestD) { bestD = d; best = i; }
+      f.el.style.pointerEvents = f.on && eff > -1700 && eff < 90 ? 'auto' : 'none';
+      const d = f.on ? Math.abs(eff + 420) : 1e9; if (d < bestD) { bestD = d; best = i; }
     });
     rings.forEach((r) => { const e = r.z + cam; r.el.style.opacity = (fade(e) * 0.8).toFixed(3); });
     dots.forEach((d) => { const e = d.z + cam; d.el.style.opacity = (fade(e) * d.op).toFixed(3); });

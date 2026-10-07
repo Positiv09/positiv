@@ -76,3 +76,7 @@
 .wv__intro h1 { font-size: 54px; line-height: 62px; }
 @media (max-width: 991px) { .wv__logo { top: 44%; width: 62vmin; } .wv__intro { bottom: 130px; } .wv__intro h1 { font-size: 34px; line-height: 40px; } }
 @media (prefers-reduced-motion: reduce) { .wv__logo-run { animation: none; opacity: 0; } }
+
+/* bigger frames: they stop closer to you, so they are easy to read and to click */
+.work4-page:not(.project4-page) .wv-frame { left: -300px; top: -195px; width: 600px; height: 390px; }
+@media (max-width: 991px) { .work4-page:not(.project4-page) .wv-frame { left: -150px; top: -100px; width: 300px; height: 200px; } }

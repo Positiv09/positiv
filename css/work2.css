@@ -136,3 +136,5 @@
 .m-outro__btn:hover, .m-outro__btn:focus-visible { color: var(--c-lime); }
 .m-outro__btn:hover::before, .m-outro__btn:focus-visible::before { transform: translate(-50%, -50%) scale(1.15); }
 .m-outro__btn:active { transform: scale(.98); }
+
+@media (min-width: 992px) { .back-projects { left: 10%; } }   /* lines up with the logo / navbar edge */

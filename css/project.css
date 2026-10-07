@@ -72,3 +72,6 @@
   .p-gallery { width: 80%; margin: 0 auto; padding: 0; grid-auto-rows: calc((80vw - 110px) / 12 * .86); }
   .p-rail { padding: 0 10px 0 10%; }
 }
+
+.p-quote__mark { display: block; margin: 0 auto; }
+@media (min-width: 992px) { .p-rail { scroll-padding-left: 10%; } }

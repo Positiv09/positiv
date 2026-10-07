@@ -114,3 +114,11 @@
 .w-card__scope { grid-column: 1 / -1; grid-row: 2; margin-top: 22px; font-size: 26px; line-height: 32px; }
 .w-card__desc { grid-column: 1 / -1; grid-row: 3; margin-top: 10px; min-height: 66px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; font-size: 15px; line-height: 22px; }
 @media (max-width: 640px) { .w-card__desc { min-height: 0; -webkit-line-clamp: unset; display: block; } }
+
+/* v3: the logo sits inside the picture, bottom-left, in lime; the hairline closes the card under the text */
+.w-card__logo { position: absolute !important; z-index: 2; left: 22px; bottom: 20px; width: 124px; height: 22px; margin: 0 !important; pointer-events: none; filter: brightness(0) saturate(100%) invert(96%) sepia(55%) saturate(780%) hue-rotate(6deg) brightness(1.03) drop-shadow(0 2px 8px rgb(0 0 0 / .45)); }
+.w-card__media::after { content: ""; position: absolute; inset: auto 0 0 0; height: 38%; background: linear-gradient(to top, rgb(20 17 17 / .55), transparent); pointer-events: none; }
+.w-card__body { grid-template-columns: 1fr; grid-template-rows: auto auto 1fr; border-top: 0 !important; margin-top: 18px; padding-top: 0; padding-bottom: 24px; border-bottom: .5px solid rgb(33 29 29 / .3); transition: border-color .4s ease; }
+.w-card:hover .w-card__body { border-top-color: transparent !important; border-bottom-color: var(--c-ink); }
+.w-card__num { grid-column: 1; grid-row: 1; }
+.w-card__scope { margin-top: 10px; }

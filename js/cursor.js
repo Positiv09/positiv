@@ -21,7 +21,7 @@
     if (e.pointerType !== 'mouse') return;
     x = e.clientX; y = e.clientY;
     const t = e.target.closest && e.target.closest('[data-cursor]');
-    if (t) { if (t.dataset.cursor !== shown) { shown = t.dataset.cursor; label.textContent = (shown.toUpperCase() + ' • ').repeat(3); } if (!on) { cx = x; cy = y; } }
+    if (t) { if (t.dataset.cursor !== shown) { shown = t.dataset.cursor; label.textContent = 'EXPLORE MORE • '.repeat(2); } if (!on) { cx = x; cy = y; } }
     if (!!t !== on) { on = !!t; ball.classList.toggle('is-on', on); document.documentElement.classList.toggle('cursor-view', on); }
     kick();
   }, { passive: true });

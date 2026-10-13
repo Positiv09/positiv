@@ -64,9 +64,14 @@
 }
 
 /* round "View" cursor (js/cursor.js): a lime circle replaces the pointer over [data-cursor] elements */
-.view-cursor { position: fixed; left: 0; top: 0; z-index: 2000; width: 112px; height: 112px; margin: -56px 0 0 -56px; display: grid; place-items: center; border-radius: 50%; background: var(--c-lime); color: var(--c-ink); font-size: 16px; font-weight: 500; pointer-events: none; transform: scale(0); will-change: transform; transition: opacity .25s ease; opacity: 0; }
+.view-cursor { position: fixed; left: 0; top: 0; z-index: 2000; width: 160px; height: 160px; margin: -80px 0 0 -80px; pointer-events: none; transform: scale(0); will-change: transform; transition: opacity .25s ease; opacity: 0; color: var(--c-lime); }
 .view-cursor.is-on { opacity: 1; }
-.view-cursor span { display: block; }
+.view-cursor__ring { position: absolute; inset: 0; width: 100%; height: 100%; animation: vc-spin 12s linear infinite; }
+.view-cursor__ring text { fill: var(--c-lime); font: 600 13px/1 var(--font-body, inherit); letter-spacing: .08em; }
+.view-cursor__dot { position: absolute; left: 50%; top: 50%; width: 78px; height: 78px; margin: -39px 0 0 -39px; display: grid; place-items: center; border-radius: 50%; background: var(--c-lime); color: var(--c-ink); }
+.view-cursor__dot svg { width: 30px; height: 30px; }
+@keyframes vc-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .view-cursor__ring { animation: none; } }
 @media (hover: hover) and (pointer: fine) { .cursor-view, .cursor-view * { cursor: none !important; } }
 
 /* "Back to projects": returns to the "View all projects" button on the home page */

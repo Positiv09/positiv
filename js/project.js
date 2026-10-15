@@ -64,7 +64,13 @@
 
   // "View more work": every other project, numbered
   const rail = $('#p-rail');
-  rail.innerHTML = P.map((q, k) => k === i ? '' : VIDEO[k] ? `<a class="p-card p-card--video" href="project.html?p=${k + 1}" data-cursor="View"><video src="${VIDEO[k]}" poster="${url(k)}" autoplay loop muted playsinline preload="metadata" aria-hidden="true"></video><span class="p-card__meta"><strong>${q[0]}</strong><em>${String(k + 1).padStart(2, '0')}/${total}</em></span></a>` : `<a class="p-card" href="project.html?p=${k + 1}" data-cursor="View" style="background-image:url('${url(k)}')"><span class="p-card__meta"><strong>${q[0]}</strong><em>${String(k + 1).padStart(2, '0')}/${total}</em></span></a>`).join('');
+  const card = (q, k) => {
+    const meta = `<span class="p-card__meta"><span class="p-card__row"><strong>${q[0]}</strong><em>${String(k + 1).padStart(2, '0')}/${total}</em></span><span class="p-card__extra"><span class="p-card__teaser">${q[1]}</span><span class="p-card__tags">${q[2].map((t) => `<span>${t}</span>`).join('')}</span></span></span>`;
+    return VIDEO[k]
+      ? `<a class="p-card p-card--video" href="project.html?p=${k + 1}" data-cursor="View"><video src="${VIDEO[k]}" poster="${url(k)}" autoplay loop muted playsinline preload="metadata" aria-hidden="true"></video>${meta}</a>`
+      : `<a class="p-card" href="project.html?p=${k + 1}" data-cursor="View" style="background-image:url('${url(k)}')">${meta}</a>`;
+  };
+  rail.innerHTML = P.map((q, k) => k === i ? '' : card(q, k)).join('');
   const step = () => Math.max(rail.clientWidth * 0.8, 300);
   $('#p-prev').addEventListener('click', () => rail.scrollBy({ left: -step(), behavior: 'smooth' }));
   $('#p-next').addEventListener('click', () => rail.scrollBy({ left: step(), behavior: 'smooth' }));

@@ -21,11 +21,7 @@
       requestAnimationFrame(() => tiles.forEach((t, i) => { t.style.transitionDelay = `${(i % 4) * 60}ms`; t.classList.remove('is-out'); }));
     }, 280);
   };
-  filters.forEach((b) => b.addEventListener('click', () => {
-    apply(b.dataset.filter);
-    // the floating bar sits far down the page: bring the (re-flowed) mosaic back to the top
-    if (bar && bar.classList.contains('is-floating')) window.scrollTo({ top: mosaic.getBoundingClientRect().top + scrollY - 100, behavior: 'smooth' });
-  }));
+  filters.forEach((b) => b.addEventListener('click', () => apply(b.dataset.filter)));
 
   // floating filter bar: docks at the bottom of the screen once its place in the hero has scrolled away, until the mosaic ends
   const bar = document.querySelector('.m-filters');

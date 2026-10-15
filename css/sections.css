@@ -885,3 +885,10 @@
 @media (min-width: 600px) and (max-width: 991px) { .compare-table { min-width: 100%; } }
 
 #view-all { scroll-margin-top: 45vh; }   /* target of the "Back to projects" links: the button lands mid-screen */
+
+/* portfolio cards with a clip: the video fills the media box and zooms on hover like the picture cards */
+.portfolio-card__media--video::before { display: none; }
+.portfolio-card__video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; border-radius: inherit; pointer-events: none; transition: transform .9s var(--ease-out); }
+.portfolio-card__media--video:hover .portfolio-card__video { transform: scale(1.09); }
+.portfolio-card__wordmark { display: block; height: 22px; margin-bottom: 40px; font-family: var(--f-display); font-weight: 600; font-size: 22px; line-height: 22px; letter-spacing: -.01em; color: var(--c-ink); }
+@media (prefers-reduced-motion: reduce) { .portfolio-card__video { transition: none; } }

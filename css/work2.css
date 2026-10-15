@@ -152,3 +152,16 @@
 .m-tile::after { height: 75%; }
 .m-tile__info { gap: 12px; }
 @media (max-width: 991px) { .m-tile__teaser { display: none; } .m-tile__go { display: none; } }
+
+/* video tiles: the clip fills the tile exactly like the old background image */
+.m-tile--video::before { display: none; }          /* no background image to zoom */
+.m-tile__video {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover; object-position: center;
+  border-radius: inherit;                          /* keeps the 6px corners */
+  pointer-events: none;                            /* clicks still go to the link */
+  transition: transform 1s var(--ease-out);
+}
+.m-tile--video:hover .m-tile__video { transform: scale(1.06); }   /* same zoom as the image tiles */
+@media (prefers-reduced-motion: reduce) { .m-tile--video .m-tile__video { transition: none; } }

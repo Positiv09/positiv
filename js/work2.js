@@ -27,21 +27,11 @@
     if (window.scrollY > 0) window.scrollTo({ top: 0, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
   }));
 
-  // floating filter bar: docks at the bottom of the screen once its place in the hero has scrolled away, until the mosaic ends
+  // the filter bar is docked at the bottom of the screen; it hides once the mosaic is (almost) scrolled past
   const bar = document.querySelector('.m-filters');
-  const slot = document.querySelector('[data-filters-slot]');
-  if (bar && slot && mosaic) {
+  if (bar && mosaic) {
     let ticking = false;
-    const update = () => {
-      ticking = false;
-      const floating = bar.classList.contains('is-floating');
-      const slotBottom = (floating ? slot.getBoundingClientRect().top + slot.offsetHeight : bar.getBoundingClientRect().bottom);
-      const want = slotBottom < 0 && mosaic.getBoundingClientRect().bottom > innerHeight * 0.6;
-      if (want === floating) return;
-      if (want) slot.style.height = bar.offsetHeight + 'px';   // keep the hero from collapsing when the bar leaves it
-      else slot.style.height = '';
-      bar.classList.toggle('is-floating', want);
-    };
+    const update = () => { ticking = false; bar.classList.toggle('is-hidden', mosaic.getBoundingClientRect().bottom < innerHeight * 0.6); };
     const onScroll = () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } };
     addEventListener('scroll', onScroll, { passive: true });
     addEventListener('resize', onScroll);

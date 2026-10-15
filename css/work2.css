@@ -77,13 +77,6 @@
 @media (prefers-reduced-motion: reduce) { .view-cursor__ring { animation: none; } }
 @media (hover: hover) and (pointer: fine) { .cursor-view, .cursor-view * { cursor: none !important; } }
 
-/* "Back to projects": returns to the "View all projects" button on the home page */
-.back-projects { position: absolute; z-index: 3; left: 10px; top: 118px; display: inline-flex; align-items: center; gap: 10px; padding: 8px 16px 8px 12px; border: .5px solid rgb(239 239 235 / .35); border-radius: 22px; font-size: 14px; color: var(--c-paper-2); transition: color .3s ease, border-color .3s ease, background-color .3s ease; }
-.back-projects__arrow { display: inline-flex; transform: scaleX(-1); transition: transform .5s var(--ease-out); }
-.back-projects:hover, .back-projects:focus-visible { color: var(--c-ink); background: var(--c-lime); border-color: var(--c-lime); outline: 0; }
-.back-projects:hover .back-projects__arrow { transform: scaleX(-1) translateX(4px); }
-@media (max-width: 640px) { .back-projects { top: 96px; left: 12px; } }
-
 /* filters: pills under the hero text; a filtered mosaic re-flows into an even grid of larger tiles */
 .m-filters-slot { position: relative; margin: 48px auto 0; }
 .m-filters { position: relative; display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; width: min(760px, 92%); margin: 0 auto; }
@@ -142,7 +135,6 @@
 .m-outro__btn:hover::before, .m-outro__btn:focus-visible::before { transform: translate(-50%, -50%) scale(1.15); }
 .m-outro__btn:active { transform: scale(.98); }
 
-@media (min-width: 992px) { .back-projects { left: 10%; } }   /* lines up with the logo / navbar edge */
 
 /* hover teaser: one line of story + a call to open the case study */
 .m-tile__teaser { max-width: 520px; font-size: 16px; line-height: 26px; color: var(--c-paper-2); }

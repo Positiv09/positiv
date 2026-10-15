@@ -3,7 +3,9 @@
 .work2-page { background: var(--c-ink); color: #fff; }
 
 .m-hero { position: relative; padding: 180px 0 32px; text-align: center; background: var(--c-ink); overflow: hidden; }
-.m-hero::before { content: ""; position: absolute; left: 50%; top: -136px; width: 70vw; height: 60vw; transform: translateX(-50%); border-radius: 50%; background: radial-gradient(circle, rgb(240 248 121 / .09), transparent 65%); pointer-events: none; }
+.m-hero::before { content: ""; position: absolute; left: 50%; top: -136px; width: 70vw; height: 60vw; transform: translateX(-50%); border-radius: 50%; background: radial-gradient(circle, rgb(240 248 121 / .09), transparent 65%); pointer-events: none;
+  /* the glow is taller than the hero: fade it out before the hero's bottom edge so it never shows a hard cut above the tiles */
+  -webkit-mask-image: linear-gradient(to bottom, #000 38%, transparent 68%); mask-image: linear-gradient(to bottom, #000 38%, transparent 68%); }
 .m-eyebrow { position: relative; font-size: 16px; line-height: 24px; text-transform: uppercase; letter-spacing: .12em; color: #b2b2b2; }
 .m-title { position: relative; width: min(1034px, 92%); margin: -5px auto 0; font-family: var(--f-body); font-weight: 400; font-size: 56px; line-height: 92px; color: #fff; }
 .m-title em { font-style: normal; font-family: var(--f-display); font-weight: 600; font-size: 64px; line-height: 1; color: var(--c-lime); display: inline-block; animation: m-focus 1.7s .25s var(--ease-out) both; }

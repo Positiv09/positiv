@@ -159,7 +159,7 @@
 @media (prefers-reduced-motion: reduce) { .m-tile--video .m-tile__video { transition: none; } }
 
 /* filter bar: a dark pill docked at the bottom of the screen the whole time; it slips away when the mosaic ends (js/work2.js toggles .is-hidden) */
-.m-filters.is-floating { position: fixed; z-index: 60; left: 50%; bottom: 28px; width: auto; max-width: calc(100vw - 24px); margin: 0; padding: 6px; flex-wrap: nowrap; gap: 4px; overflow-x: auto; scrollbar-width: none; border: .5px solid rgb(239 239 235 / .18); border-radius: 999px; background: rgb(33 29 29 / .82); -webkit-backdrop-filter: blur(14px) saturate(1.2); backdrop-filter: blur(14px) saturate(1.2); box-shadow: 0 18px 48px rgb(0 0 0 / .45); transform: translateX(-50%); transition: opacity .35s ease, transform .5s var(--ease-out); animation: m-dock .5s var(--ease-out); }
+.m-filters.is-floating { position: fixed; z-index: 60; left: 50%; bottom: 38px; width: auto; max-width: calc(100vw - 24px); margin: 0; padding: 6px; flex-wrap: nowrap; gap: 4px; overflow-x: auto; scrollbar-width: none; border: .5px solid rgb(239 239 235 / .18); border-radius: 999px; background: rgb(33 29 29 / .82); -webkit-backdrop-filter: blur(14px) saturate(1.2); backdrop-filter: blur(14px) saturate(1.2); box-shadow: 0 18px 48px rgb(0 0 0 / .45); transform: translateX(-50%); transition: opacity .35s ease, transform .5s var(--ease-out); animation: m-dock .5s var(--ease-out); }
 .m-filters.is-floating.is-hidden { opacity: 0; pointer-events: none; transform: translateX(-50%) translateY(24px); }
 .m-filters.is-floating::-webkit-scrollbar { display: none; }
 .m-filters.is-floating .m-filter { flex: none; height: 40px; padding: 10px 18px; border-color: transparent; }

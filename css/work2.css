@@ -86,11 +86,14 @@
 
 /* filters: pills under the hero text; a filtered mosaic re-flows into an even grid of larger tiles */
 .m-filters { position: relative; display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; width: min(760px, 92%); margin: 48px auto 0; }
-.m-filter { display: inline-flex; align-items: center; height: 37px; padding: 10px 12px; border: .5px solid rgb(239 239 235 / .5); border-radius: 33px; font-size: 14px; line-height: 16px; text-transform: uppercase; color: var(--c-paper-2); transition: color .3s ease, border-color .3s ease, background-color .3s ease, transform .4s var(--ease-out); }
-.m-filter:hover, .m-filter.is-active { border-color: var(--c-lime); color: var(--c-lime); }
-.m-filter:hover { background: rgb(240 248 121 / .1); }
-.m-filter.is-active:hover { background: transparent; }
+.m-filter { position: relative; overflow: hidden; isolation: isolate; display: inline-flex; align-items: center; height: 37px; padding: 10px 12px; border: .5px solid rgb(239 239 235 / .5); border-radius: 33px; font-size: 14px; line-height: 16px; text-transform: uppercase; color: var(--c-paper-2); transition: color .45s var(--ease-out) .05s, border-color .3s ease, transform .4s var(--ease-out); }
+.m-filter.is-active { border-color: var(--c-lime); color: var(--c-lime); }
+/* same circular-fill hover as the site's outline buttons: a lime circle rises from below, the label turns dark */
+.m-filter::before { content: ""; position: absolute; z-index: -1; left: 50%; top: 100%; width: 150%; aspect-ratio: 1; border-radius: 50%; background: var(--c-lime); transform: translate(-50%, -50%) scale(0); transition: transform .7s var(--ease-out); }
+.m-filter:hover, .m-filter:focus-visible { border-color: var(--c-lime); color: var(--c-ink); }
+.m-filter:hover::before, .m-filter:focus-visible::before { transform: translate(-50%, -50%) scale(1.15); }
 .m-filter:active { transform: scale(.97); }
+@media (prefers-reduced-motion: reduce) { .m-filter, .m-filter::before { transition-duration: .01ms; } }
 .m-filter:focus-visible { outline: 2px solid var(--c-lime); outline-offset: 3px; }
 .m-tile[hidden] { display: none; }
 .m-tile.is-out { opacity: 0 !important; transform: scale(.97) !important; }

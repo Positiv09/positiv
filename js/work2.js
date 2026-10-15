@@ -21,7 +21,11 @@
       requestAnimationFrame(() => tiles.forEach((t, i) => { t.style.transitionDelay = `${(i % 4) * 60}ms`; t.classList.remove('is-out'); }));
     }, 280);
   };
-  filters.forEach((b) => b.addEventListener('click', () => apply(b.dataset.filter)));
+  filters.forEach((b) => b.addEventListener('click', () => {
+    apply(b.dataset.filter);
+    // a filtered mosaic is a new list: start it from the top of the page (the hero), so the page is never left stranded mid-scroll
+    if (window.scrollY > 0) window.scrollTo({ top: 0, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
+  }));
 
   // floating filter bar: docks at the bottom of the screen once its place in the hero has scrolled away, until the mosaic ends
   const bar = document.querySelector('.m-filters');

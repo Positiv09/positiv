@@ -5,7 +5,7 @@
     'hero-d.jpg', 'portfolio-3.webp', 'hero-h.png', 'service-marketing.webp', 'hero-e.jpg', 'service-sales.jpg', 'hero-c.jpg'];
   const P = [
     ['Angel East', 'Connecting founders with capital', ['Brand', 'Sales']],
-    ['Angel East', 'A product people want to open', ['Web']],
+    ['QuickPick', 'A logo built shape by shape', ['Brand']],
     ['Angel East', 'One identity, every partner', ['Brand']],
     ['Angel East', 'Built to be found', ['Web', 'Campaign']],
     ['Angel East', 'A system that scales', ['Brand system']],
@@ -25,6 +25,10 @@
   ];
   const QUOTE = ['Working with Positiv was a seamless experience from start to finish. Their team transformed complex ideas into visually compelling designs that elevated our brand presence.',
     'Positiv became more than a design partner - they became an extension of our team. Their deep understanding of our business, combined with outstanding creative execution, resulted in solutions that exceeded expectations.'];
+  // per-project overrides: a clip for the hero, and its own intro copy
+  const VIDEO = { 1: 'assets/video/tile-2.mp4' };
+  const OWN_BODY = { 1: ['QuickPick needed a mark that works at any size and moves well on screen. We built the logo from a small set of shapes and animated how it comes together.',
+    'The same construction drives the static logo, the motion version and the rules for using them.'] };
   const WHO = [['Alexis Johnson', 'CEO of Light Node Ventures'], ['Mansour Al Derei', 'Trendz Podcast Host | Investor']];
 
   const $ = (s) => document.querySelector(s);
@@ -36,10 +40,16 @@
 
   document.title = `${p[0]} — ${p[1]} — Positiv`;
   $('#p-hero').style.backgroundImage = `url('${url(i)}')`;
+  if (VIDEO[i]) {
+    const v = document.createElement('video');
+    v.src = VIDEO[i]; v.autoplay = v.loop = v.muted = v.playsInline = true; v.setAttribute('aria-hidden', 'true');
+    v.style.cssText = 'width:100%;height:100%;object-fit:cover;border-radius:inherit;display:block';
+    $('#p-hero').appendChild(v);
+  }
   $('#p-name').textContent = p[0] + '™';
   $('#p-title').textContent = p[1];
   $('#p-tags').innerHTML = p[2].map((t) => `<li>${t}</li>`).join('');
-  $('#p-more').innerHTML = BODY.map((t) => `<p>${t}</p>`).join('');
+  $('#p-more').innerHTML = (OWN_BODY[i] || BODY).map((t) => `<p>${t}</p>`).join('');
   const rm = $('#p-readmore'), more = $('#p-more');
   rm.addEventListener('click', () => {
     const open = more.hidden;

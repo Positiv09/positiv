@@ -26,8 +26,10 @@
   const QUOTE = ['Working with Positiv was a seamless experience from start to finish. Their team transformed complex ideas into visually compelling designs that elevated our brand presence.',
     'Positiv became more than a design partner - they became an extension of our team. Their deep understanding of our business, combined with outstanding creative execution, resulted in solutions that exceeded expectations.'];
   // per-project overrides: a clip for the hero, and its own intro copy
-  const VIDEO = { 1: 'assets/video/tile-2.mp4' };
-  const OWN_BODY = { 1: ['QuickPick needed a mark that works at any size and moves well on screen. We built the logo from a small set of shapes and animated how it comes together.',
+  const VIDEO = { 0: 'assets/video/tile-1.mp4', 1: 'assets/video/tile-2.mp4' };
+  const OWN_BODY = { 0: ['Angel East is an investment firm focused on supporting innovative and high-potential companies. It connects entrepreneurs with investors and provides capital to help businesses grow and scale.',
+    'We built the brand and the sales assets so every conversation, from the first call to the pitch deck, starts from the same confident story.'],
+    1: ['QuickPick needed a mark that works at any size and moves well on screen. We built the logo from a small set of shapes and animated how it comes together.',
     'The same construction drives the static logo, the motion version and the rules for using them.'] };
   const WHO = [['Alexis Johnson', 'CEO of Light Node Ventures'], ['Mansour Al Derei', 'Trendz Podcast Host | Investor']];
 

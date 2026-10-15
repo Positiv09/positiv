@@ -26,7 +26,7 @@
   const QUOTE = ['Working with Positiv was a seamless experience from start to finish. Their team transformed complex ideas into visually compelling designs that elevated our brand presence.',
     'Positiv became more than a design partner - they became an extension of our team. Their deep understanding of our business, combined with outstanding creative execution, resulted in solutions that exceeded expectations.'];
   // per-project overrides: a clip for the hero, and its own intro copy
-  const VIDEO = { 2: 'assets/video/caravel.mp4', 0: 'assets/video/tile-1.mp4', 1: 'assets/video/tile-2.mp4' };
+  const VIDEO = { 2: 'assets/video/caravel.mp4', 0: 'assets/video/tile-1.mp4', 1: 'assets/video/tile-2-wide.mp4' };
   const OWN_BODY = { 2: ['Caravel has spent 25 years helping mid-market and enterprise organizations make better decisions about the technology solutions that run their business.',
     'We brought its logo to life: the mark builds itself piece by piece, then the name follows. Simple, clear and easy to reuse across every channel.'],
     0: ['Angel East is an investment firm focused on supporting innovative and high-potential companies. It connects entrepreneurs with investors and provides capital to help businesses grow and scale.',

@@ -900,6 +900,3 @@
 .portfolio-card__caravel span { display: flex; flex-direction: column; gap: 3px; }
 .portfolio-card__caravel b { font-size: 17px; font-weight: 600; line-height: 18px; letter-spacing: .26em; }
 .portfolio-card__caravel small { font-size: 8px; line-height: 10px; letter-spacing: 0; }
-
-/* picture logo in the same slot as the Angel East logo (22px + 40px gap) */
-.portfolio-card__logo-img { display: block; height: 34px; width: auto; margin: -6px 0 34px; pointer-events: none; }

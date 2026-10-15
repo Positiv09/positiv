@@ -420,7 +420,13 @@
   let leaveTimer = 0;
   dropdowns.forEach((dd) => {
     const toggle = $('.w-dropdown-toggle', dd);
-    if (!$('.w-dropdown-list', dd)) return;                       // "Results" is a plain link
+    if (!$('.w-dropdown-list', dd)) {                             // "Results" is a plain link: it opens the Work page
+      toggle.setAttribute('role', 'link'); toggle.setAttribute('tabindex', '0'); toggle.style.cursor = 'pointer';
+      const go = () => { location.href = 'work2.html'; };
+      toggle.addEventListener('click', go);
+      toggle.addEventListener('keydown', (e) => { if (e.key === 'Enter') go(); });
+      return;
+    }
     toggle.setAttribute('role', 'button'); toggle.setAttribute('tabindex', '0'); toggle.setAttribute('aria-haspopup', 'true');
     dd.addEventListener('mouseenter', () => { if (!isDesktop()) return; clearTimeout(leaveTimer); closeAll(dd); setOpen(dd, true); });
     dd.addEventListener('mouseleave', () => { if (!isDesktop()) return; leaveTimer = setTimeout(() => setOpen(dd, false), 150); });

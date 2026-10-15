@@ -892,3 +892,11 @@
 .portfolio-card__media--video:hover .portfolio-card__video { transform: scale(1.09); }
 .portfolio-card__wordmark { display: block; height: 22px; margin-bottom: 40px; font-family: var(--f-display); font-weight: 600; font-size: 22px; line-height: 22px; letter-spacing: -.01em; color: var(--c-ink); }
 @media (prefers-reduced-motion: reduce) { .portfolio-card__video { transition: none; } }
+
+/* Caravel logo lockup (mark | wordmark + descriptor), built in CSS so it stays sharp */
+.portfolio-card__caravel { display: flex; align-items: center; gap: 14px; height: 36px; margin-bottom: 40px; color: var(--c-ink); pointer-events: none; }
+.portfolio-card__caravel svg { width: 30px; height: 28px; flex: none; }
+.portfolio-card__caravel i { width: 1px; height: 34px; background: #cfd1b4; flex: none; }
+.portfolio-card__caravel span { display: flex; flex-direction: column; gap: 3px; }
+.portfolio-card__caravel b { font-size: 17px; font-weight: 600; line-height: 18px; letter-spacing: .26em; }
+.portfolio-card__caravel small { font-size: 8px; line-height: 10px; letter-spacing: 0; }

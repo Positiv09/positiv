@@ -174,11 +174,9 @@
 @keyframes m-dock { from { opacity: 0; transform: translateX(-50%) translateY(24px); } to { opacity: 1; transform: translateX(-50%); } }
 @media (prefers-reduced-motion: reduce) { .m-filters.is-floating { animation: none; } }
 
-/* desktop hover: the name, teaser and tags sit in the middle of the tile (scrim covers the whole tile so the text stays readable) */
+/* desktop hover: the name, teaser and tags sit vertically in the middle of the tile, on the left (scrim covers the whole tile so the text stays readable) */
 @media (min-width: 992px) {
   .m-tile::after { inset: 0; height: auto; background: linear-gradient(to bottom, rgb(33 29 29 / .5), rgb(33 29 29 / .72)); }
-  .m-tile__info { left: 48px; right: 48px; top: 50%; bottom: auto; align-items: center; text-align: center; transform: translateY(calc(-50% + 16px)); }
+  .m-tile__info { left: 32px; right: 32px; top: 50%; bottom: auto; align-items: flex-start; text-align: left; transform: translateY(calc(-50% + 16px)); }
   .m-tile:hover .m-tile__info, .m-tile:focus-visible .m-tile__info { transform: translateY(-50%); }
-  .m-tile__teaser { margin: 0 auto; }
-  .m-tile__tags { justify-content: center; }
 }

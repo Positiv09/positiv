@@ -66,7 +66,7 @@
 
 .hero__media {
   position: relative; display: grid; grid-template-columns: repeat(3, 1fr);
-  gap: 16px 10px; height: var(--hero-h); margin-right: 16px; overflow: hidden;   /* 10px between the columns, like the Work page tiles */
+  gap: 16px; height: var(--hero-h); margin-right: 16px; overflow: hidden;
 }
 .hero__col { overflow: hidden; }
 .hero__track { display: flex; flex-direction: column; gap: 16px; animation: marquee-y 60s linear infinite; }

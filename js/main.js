@@ -430,7 +430,8 @@
     toggle.setAttribute('role', 'button'); toggle.setAttribute('tabindex', '0'); toggle.setAttribute('aria-haspopup', 'true');
     dd.addEventListener('mouseenter', () => { if (!isDesktop()) return; clearTimeout(leaveTimer); closeAll(dd); setOpen(dd, true); });
     dd.addEventListener('mouseleave', () => { if (!isDesktop()) return; leaveTimer = setTimeout(() => setOpen(dd, false), 150); });
-    toggle.addEventListener('click', (e) => { e.preventDefault(); const open = !toggle.classList.contains('w--open'); closeAll(dd); setOpen(dd, open); });
+    const goPricing = dd.classList.contains('pricingtest');         // desktop: clicking "Pricing" opens the Pricing page (hover still shows the menu); touch: tap toggles the menu
+    toggle.addEventListener('click', (e) => { e.preventDefault(); if (goPricing && isDesktop()) { location.href = 'pricing.html'; return; } const open = !toggle.classList.contains('w--open'); closeAll(dd); setOpen(dd, open); });
     toggle.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle.click(); } });
   });
   if (navMenu && !$('.mobile-menu-cta', navMenu)) {                // the bar's "Get in touch" is hidden on small screens, so a copy sits at the end of the sheet

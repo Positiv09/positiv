@@ -130,13 +130,13 @@
 .pr-bound { padding: 120px 0; background: var(--c-ink); color: var(--c-paper); }
 .pr-bound .pr-head { margin-bottom: 56px; }
 .pr-bound .pr-sub { color: var(--c-muted-2); }
-.pr-bound__grid { display: grid; grid-template-columns: repeat(3, 1fr); }
-.pr-no { padding: 40px 40px 44px; border-top: .5px solid rgb(178 178 178 / .3); border-left: .5px solid rgb(178 178 178 / .3); }
-.pr-no:first-child { border-left: 0; padding-left: 0; }
-.pr-no__icon { display: grid; place-items: center; width: 48px; height: 48px; margin-bottom: 32px; border-radius: 50%; border: .5px solid var(--c-orange); color: var(--c-orange); transition: background-color .3s, color .3s; }
-.pr-no:hover .pr-no__icon { background: var(--c-orange); color: #fff; }
-.pr-no h3 { margin-bottom: 14px; font-family: var(--f-display); font-weight: 400; font-size: 28px; line-height: 1.15; color: var(--c-lime); }
-.pr-no p { font-size: 15px; line-height: 26px; color: var(--c-muted-2); }
+.pr-bound__grid { border-bottom: .5px solid rgb(178 178 178 / .3); }
+.pr-no { display: grid; grid-template-columns: 40px 1.1fr 1fr; gap: 0 56px; align-items: center; padding: 44px 0; border-top: .5px solid rgb(178 178 178 / .3); transition: padding .5s var(--ease-out); }
+.pr-no__n { font-size: 14px; line-height: 20px; letter-spacing: .12em; color: var(--c-muted); transition: color .3s; }
+.pr-no h3 { font-family: var(--f-display); font-weight: 400; font-size: clamp(26px, 2.6vw, 38px); line-height: 1.12; color: var(--c-paper); transition: color .3s; }
+.pr-no p { max-width: 520px; font-size: 16px; line-height: 26px; color: var(--c-muted-2); }
+.pr-no:hover { padding-left: 16px; }
+.pr-no:hover h3, .pr-no:hover .pr-no__n { color: var(--c-lime); }
 
 /* ---------- FAQ ---------- */
 .pr-faq { padding: 130px 0; }
@@ -166,7 +166,8 @@
   .pr-found, .pr-emb, .pr-faq { padding: 90px 0; }
   .pr-bound { padding: 80px 0; }
   .pr-card__text { min-height: 0; }
-  .pr-no, .pr-no:first-child { padding: 32px 0; border-left: 0; }
+  .pr-no { grid-template-columns: 56px 1fr; gap: 12px 20px; padding: 32px 0; }
+  .pr-no p { grid-column: 2; }
   .pr-faq__wrap { grid-template-columns: 1fr; gap: 48px; }
   .pr-faq .pr-head { position: static; }
   .pr-head { margin-bottom: 44px; }

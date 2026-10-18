@@ -223,7 +223,7 @@
 }
 .feature-card--yellow .feature-card__media { background-image: url("../assets/img/feature-card-1.webp"); }
 .feature-card--purple .feature-card__media { background-image: url("../assets/img/feature-card-2.webp"); }
-.feature-card--white  .feature-card__media { background-image: url("../assets/img/feature-card-3.webp"); }
+.feature-card--white  .feature-card__media { background-image: url("../assets/img/feature-card-3-team.webp"); }
 .feature-card--orange .feature-card__media { background-image: url("../assets/img/feature-card-4.webp"); }
 
 /* hover: the picture zooms in a little and the yellow Positiv mark fades in at the bottom-right corner */

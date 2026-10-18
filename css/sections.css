@@ -204,8 +204,8 @@
 .features__wrap { width: 80%; position: relative; display: flex; flex-direction: column; gap: 76.8px; padding-bottom: 56px; margin-bottom: 76.8px; }   /* gaps measured on staging: 77 between cards, 133 after the last */
 
 .feature-card {
-  position: sticky; top: var(--sticky-top, 120px);
-  transform-origin: 50% 0; will-change: transform;
+  position: sticky; top: var(--sticky-top, 120px);   /* main.js sets top + height from the window size on desktop */
+  transform-origin: 50% 0; backface-visibility: hidden;
   display: grid; grid-template-columns: 1.25fr 1.25fr; place-items: center; row-gap: 20px;
   height: 750px; padding-right: 20px;
   border-radius: var(--r-card); background: var(--c-lime-soft);
@@ -262,6 +262,44 @@
 .feature-card__text { font-size: 16px; line-height: 25px; }
 
 .feature-card--purple .feature-card__heading { font-size: 38px; margin-bottom: 15px; }
+
+/* Desktop stack motion (driven by main.js): the cards behind darken a touch, the picture settles as its card
+   arrives, hover effects pause while the page moves, and the copy staggers in once a card lands. */
+@media (min-width: 992px) {
+  .feature-card::after {
+    content: ""; position: absolute; inset: 0; z-index: 3; border-radius: inherit; pointer-events: none;
+    background: #141413; opacity: var(--dim, 0);
+  }
+  .features-section.is-scrolling .feature-card { will-change: transform; }
+  .features-section.is-scrolling .feature-card__media { pointer-events: none; }
+  .feature-card__media::before { scale: var(--settle, 1); }      /* separate from the hover zoom (transform), so the two combine */
+
+  /* flexible sizes: the card height follows the window, so the spacing and type follow too */
+  .feature-card__label { margin-bottom: clamp(18px, 3.6vh, 40px); }
+  .feature-card__copy { margin-top: clamp(18px, 3.6vh, 40px); }
+  .feature-card__heading { font-size: clamp(30px, 2.6vw, 40px); line-height: 1.05; }
+  .feature-card--purple .feature-card__heading { font-size: clamp(29px, 2.5vw, 38px); }
+  .features-section.is-compact .feature-card__text { display: none; }      /* short windows: keep the lead, drop the long paragraph */
+  .features-section.is-compact .feature-card__label { gap: 10px; }
+  .features-section.is-compact .feature-card__icon { width: 52px; height: 52px; padding: 8px; }
+
+  /* copy reveal */
+  .fx-on .feature-card__label, .fx-on .feature-card__heading, .fx-on .feature-card__lead, .fx-on .feature-card__text {
+    transition: opacity .6s var(--ease-out), translate .9s cubic-bezier(.16, 1, .3, 1);
+  }
+  .fx-on .feature-card__rule { transform-origin: 0 50%; transition: scale .9s cubic-bezier(.16, 1, .3, 1) .06s; }
+  .fx-on .feature-card__heading { transition-delay: .12s; }
+  .fx-on .feature-card__lead { transition-delay: .18s; }
+  .fx-on .feature-card__text { transition-delay: .24s; }
+  .fx-on .feature-card__copy .btn {
+    transition: transform .35s var(--ease-out), background-color .25s, color .25s,
+                opacity .6s var(--ease-out) .3s, translate .9s cubic-bezier(.16, 1, .3, 1) .3s;
+  }
+  .fx-on .feature-card:not(.is-in) :is(.feature-card__label, .feature-card__heading, .feature-card__lead, .feature-card__text, .feature-card__copy .btn) {
+    opacity: 0; translate: 0 14px; transition-duration: .2s; transition-delay: 0s;
+  }
+  .fx-on .feature-card:not(.is-in) .feature-card__rule { scale: 0 1; transition-duration: .2s; transition-delay: 0s; }
+}
 
 /* ---------- 4. IMPACT / STATS + PORTFOLIO RAIL ------------------------ */
 .impact-section { display: flow-root; background: var(--c-ink); color: #fff; padding-bottom: 120px; overflow: clip; }  /* clip (not hidden) so the sticky rail still pins */

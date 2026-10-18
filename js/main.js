@@ -569,31 +569,83 @@
     measure();
   }
 
-  /* ---------- Feature cards: stacked sticky cards that shrink as the next one lands ---------- */
+  /* ---------- Feature cards: stacked sticky cards, driven by normal scrolling ----------
+     Sized from the window: each card sticks a little lower than the one before (PEEK) under the fixed header and fills
+     the space left below it (capped at MAX_H), so the whole card — button included — is always on screen.
+     As the next card slides up, the cards behind shrink and darken slightly (eased, not linear), each picture settles
+     from a small zoom as its card arrives, and the copy staggers in once the card lands. Desktop only; below 992px the
+     cards are a plain stacked list. */
   const cards = $$('.feature-card');
+  const fWrap = $('.features__wrap');
+  const fSection = $('#features');
   const desktop = matchMedia('(min-width: 992px)');
-  const SHRINK = 0.05;                       // scale lost per card stacked on top
-  if (cards.length && !reduceMotion) {
-    let ticking = false;
+  if (cards.length && fWrap && fSection) {
+    const SHRINK = 0.05, DIM = 0.14, SETTLE = 0.08, PEEK = 14, MAX_H = 750, MIN_H = 420;
+    const fx = !reduceMotion;
+    const header = $('#site-header');
+    const medias = cards.map((c) => $('.feature-card__media', c));
+    const inn = cards.map(() => false);
+    const geo = { tops: [], H: MAX_H, G: 77 };
+    const clamp = (v, a, b) => Math.min(Math.max(v, a), b);
+    const smooth = (t) => t * t * (3 - 2 * t);
+    let ticking = false, scT = 0;
+
+    const layout = () => {
+      if (!desktop.matches) {
+        cards.forEach((c, i) => {
+          c.style.top = c.style.height = c.style.transform = '';
+          c.style.removeProperty('--dim'); medias[i]?.style.removeProperty('--settle');
+        });
+        fWrap.style.gap = '';
+        fSection.classList.remove('fx-on', 'is-compact');
+        return;
+      }
+      const vh = window.innerHeight, navH = header ? header.offsetHeight : 85;
+      const top0 = Math.round(navH + clamp(vh * 0.03, 16, 33));
+      geo.tops = cards.map((_, i) => top0 + i * PEEK);
+      geo.H = Math.round(clamp(vh - geo.tops[geo.tops.length - 1] - 20, MIN_H, MAX_H));
+      geo.G = Math.round(clamp(vh * 0.08, 32, 77));
+      fWrap.style.gap = `${geo.G}px`;
+      cards.forEach((c, i) => { c.style.top = `${geo.tops[i]}px`; c.style.height = `${geo.H}px`; });
+      fSection.classList.toggle('is-compact', geo.H < 640);
+      fSection.classList.toggle('fx-on', fx);
+    };
+
     const update = () => {
       ticking = false;
-      if (!desktop.matches) { cards.forEach((c) => { c.style.transform = ''; }); return; }
-      const vh = window.innerHeight;
-      // progress 0→1 of each card travelling from below into its sticky position
-      const progress = cards.map((c) => {
-        const stick = parseFloat(getComputedStyle(c).top) || 0;
-        return Math.min(Math.max(1 - (c.getBoundingClientRect().top - stick) / (vh * 0.7), 0), 1);
+      if (!desktop.matches || !fx) return;
+      const y = window.scrollY, vh = window.innerHeight;
+      const wrapTop = fWrap.getBoundingClientRect().top + y;      // the wrap itself is not sticky: this is the cards' natural start
+      // 0→1 as each card travels into its sticky line (card 1 over 60% of the screen, the others over one card + gap)
+      const raw = cards.map((_, i) => {
+        const d = wrapTop + i * (geo.H + geo.G) - y - geo.tops[i];
+        return clamp(1 - d / (i === 0 ? vh * 0.6 : geo.H + geo.G), 0, 1);
       });
+      const eased = raw.map(smooth);
       cards.forEach((c, i) => {
         let covered = 0;
-        for (let j = i + 1; j < cards.length; j++) covered += progress[j];
-        c.style.transform = covered ? `scale(${1 - SHRINK * covered})` : '';
+        for (let j = i + 1; j < cards.length; j++) covered += eased[j];
+        c.style.transform = covered > 0.0005 ? `scale(${(1 - SHRINK * covered).toFixed(4)})` : '';
+        c.style.setProperty('--dim', Math.min(DIM * covered, 0.5).toFixed(3));
+        medias[i]?.style.setProperty('--settle', (1 + SETTLE * (1 - eased[i])).toFixed(4));
+        const now = inn[i] ? raw[i] > 0.15 : raw[i] > 0.55;         // a little hysteresis so the copy doesn't flicker at the edge
+        if (now !== inn[i]) { inn[i] = now; c.classList.toggle('is-in', now); }
       });
     };
-    const onScroll = () => { if (!ticking) { ticking = true; requestAnimationFrame(update); } };
+
+    const onScroll = () => {
+      if (!ticking) { ticking = true; requestAnimationFrame(update); }
+      // while the page moves: hover effects pause and the cards get their own layer; both drop once it settles (crisp text)
+      fSection.classList.add('is-scrolling');
+      clearTimeout(scT);
+      scT = setTimeout(() => fSection.classList.remove('is-scrolling'), 160);
+    };
+    const relayout = () => { layout(); update(); };
     window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onScroll);
-    update();
+    window.addEventListener('resize', relayout);
+    window.addEventListener('load', relayout);
+    desktop.addEventListener?.('change', relayout);
+    relayout();
   }
 
   /* ---------- Services video ----------
@@ -839,51 +891,50 @@
     }
   }
 
-  /* ---------- Feature cards: one wheel gesture = one card ----------
-     While the stacked cards are on screen, a wheel gesture glides to the next (or previous) card instead of
-     scrolling freely. Snap positions = where card i sits at its sticky line. Outside the first/last card the page
-     scrolls normally, so the section never traps the user. Desktop wheel/trackpad only. */
-  const snapCards = $$('.feature-card');
-  if (snapCards.length && !reduceMotion) {
-    const wrapEl = $('.features__wrap');
-    const mqSnap = matchMedia('(min-width: 992px)');
-    let animating = false, lastWheel = 0, rafSnap = 0;
-    const snapPoints = () => {
-      const h = snapCards[0].offsetHeight + (parseFloat(getComputedStyle(wrapEl).rowGap) || 0);   // card + gap
-      const top = wrapEl.getBoundingClientRect().top + window.scrollY;
-      return snapCards.map((c, i) => Math.round(top + i * h - (parseFloat(getComputedStyle(c).top) || 0)));
+  /* ---------- Smooth wheel scrolling (site-wide) ----------
+     Each wheel / trackpad step sets a target and the page glides toward it (frame-rate independent ease), so steps never
+     jump and nothing is ever locked: the next input simply moves the target. Registered after every other wheel handler,
+     so anything that owns its own gesture (the services video, the portfolio rail, the 3D pages) calls preventDefault
+     first and is left alone; so are scroll boxes (menus, modals) and pages with scrolling locked. Scrollbar drags,
+     touch, keys and anchor jumps take over at once. */
+  if (!reduceMotion) {
+    const LERP = 0.1;
+    let cur = window.scrollY, target = cur, running = false, raf = 0, lastT = 0, lastSet = -1;
+    const maxY = () => document.documentElement.scrollHeight - window.innerHeight;
+    const stopGlide = () => { cancelAnimationFrame(raf); running = false; cur = target = window.scrollY; };
+    const step = (now) => {
+      const dt = Math.min(48, now - lastT); lastT = now;
+      cur += (target - cur) * (1 - Math.pow(1 - LERP, dt / 16.667));
+      if (Math.abs(target - cur) < 0.3) { cur = target; running = false; }
+      window.scrollTo({ top: cur, behavior: 'instant' });
+      lastSet = window.scrollY;
+      if (running) raf = requestAnimationFrame(step);
     };
-    const glideTo = (target) => {
-      const from = window.scrollY, dist = target - from, dur = Math.min(1100, 600 + Math.abs(dist) * 0.35), t0 = performance.now();
-      animating = true;
-      const ease = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
-      const step = (now) => {
-        const p = Math.min((now - t0) / dur, 1);
-        window.scrollTo({ top: from + dist * ease(p), behavior: 'instant' });
-        if (p < 1) rafSnap = requestAnimationFrame(step);
-        else { animating = false; lastWheel = performance.now(); }
-      };
-      cancelAnimationFrame(rafSnap); rafSnap = requestAnimationFrame(step);
-    };
-    window.addEventListener('wheel', (e) => {
-      if (!mqSnap.matches || e.ctrlKey || Math.abs(e.deltaY) < Math.abs(e.deltaX) || Math.abs(e.deltaY) < 4) return;
-      const now = performance.now(), newGesture = now - lastWheel > 150;
-      lastWheel = now;
-      const pts = snapPoints(), y = window.scrollY, vh = window.innerHeight, down = e.deltaY > 0;
-      const first = pts[0], last = pts[pts.length - 1];
-      let target = null;
-      if (down) {
-        if (y >= first - 0.6 * vh && y < last - 4) target = pts.find((p) => p > y + 4);          // next card down
-      } else if (y <= last + 0.5 * vh && y > first + 4) {
-        target = [...pts].reverse().find((p) => p < y - 4);                                      // previous card up
-        if (target === undefined && y > last) target = last;
+    const canScrollInside = (el, dy) => {
+      for (; el && el !== document.body && el !== document.documentElement; el = el.parentElement) {
+        if (el.nodeType !== 1) continue;
+        const oy = getComputedStyle(el).overflowY;
+        if ((oy === 'auto' || oy === 'scroll') && el.scrollHeight > el.clientHeight + 1) {
+          if (dy > 0 ? el.scrollTop + el.clientHeight < el.scrollHeight - 1 : el.scrollTop > 0) return true;
+        }
       }
-      if (!down && y > last + 4 && y <= last + 0.5 * vh) target = last;                          // coming back from below
-      if (target == null) return;                                                                // outside the stack: normal scroll
-      e.preventDefault();                                                                        // inside: we own this gesture
-      if (animating || !newGesture) return;                                                      // ignore the tail of the same gesture
-      glideTo(target);
+      return false;
+    };
+    const pageLocked = () => getComputedStyle(document.documentElement).overflowY === 'hidden' || getComputedStyle(document.body).overflowY === 'hidden';
+    window.addEventListener('wheel', (e) => {
+      if (e.defaultPrevented) { if (running) stopGlide(); return; }                   // another part of the page owns this gesture
+      if (e.ctrlKey || Math.abs(e.deltaX) > Math.abs(e.deltaY) || pageLocked() || canScrollInside(e.target, e.deltaY)) return;
+      e.preventDefault();
+      if (!running) cur = target = window.scrollY;
+      const d = e.deltaY * (e.deltaMode === 1 ? 40 : e.deltaMode === 2 ? window.innerHeight : 1);
+      target = Math.min(Math.max(target + d, 0), maxY());
+      if (!running) { running = true; lastT = performance.now(); raf = requestAnimationFrame(step); }
     }, { passive: false });
+    window.addEventListener('scroll', () => {
+      if (running && Math.abs(window.scrollY - lastSet) > 2) stopGlide();             // scrollbar, keys or an anchor jump took over
+      else if (!running) cur = target = window.scrollY;
+    }, { passive: true });
+    ['pointerdown', 'touchstart', 'keydown'].forEach((t) => window.addEventListener(t, () => { if (running) stopGlide(); }, { passive: true }));
   }
 
   /* ---------- Video cursor + modal ---------- */

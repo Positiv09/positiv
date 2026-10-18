@@ -133,16 +133,20 @@
 .pr-bound__grid { border-bottom: .5px solid rgb(178 178 178 / .3); }
 .pr-no { display: grid; grid-template-columns: 40px 1.1fr 1fr; gap: 0 48px; align-items: center; padding: 44px 0; border-top: .5px solid rgb(178 178 178 / .3); transition: padding .5s var(--ease-out); }
 .pr-bound .pr-h2 em { color: var(--c-orange); }
-.pr-no__x { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; background: rgb(254 87 42 / .14); color: var(--c-orange); transition: background-color .3s, color .3s; }
-/* the title is struck through: the line draws itself across when the row comes into view */
-.pr-no h3 { font-family: var(--f-display); font-weight: 400; font-size: clamp(26px, 2.6vw, 38px); line-height: 1.2; color: var(--c-muted-2); transition: color .3s; }
-.pr-no h3 span { background: linear-gradient(var(--c-orange), var(--c-orange)) no-repeat 0 53% / 100% 3px; -webkit-box-decoration-break: clone; box-decoration-break: clone; transition: background-size 1.1s var(--ease-out) .25s; }
+.pr-no__x { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; background: rgb(254 87 42 / .14); color: var(--c-orange);
+  transition: transform .7s var(--ease-out) calc(var(--d, 0s) + .45s), opacity .5s ease calc(var(--d, 0s) + .45s), background-color .3s, color .3s; }
+/* the title gets crossed out: it starts bright, a line is drawn through it left to right (after the row has faded in), the text dims as the line passes */
+.pr-no h3 { font-family: var(--f-display); font-weight: 400; font-size: clamp(26px, 2.6vw, 38px); line-height: 1.2; color: var(--c-muted-2); transition: color 1s ease calc(var(--d, 0s) + .75s); }
+.pr-no h3 span { background: linear-gradient(var(--c-orange), var(--c-orange)) no-repeat 0 53% / 100% 3px; -webkit-box-decoration-break: clone; box-decoration-break: clone;
+  transition: background-size 1s cubic-bezier(.65, 0, .35, 1) calc(var(--d, 0s) + .75s); }
+.js .pr-no:not(.is-in) h3 { color: var(--c-paper); }
 .js .pr-no:not(.is-in) h3 span { background-size: 0 3px; }
-@media (prefers-reduced-motion: reduce) { .pr-no h3 span { transition: none; } }
+.js .pr-no:not(.is-in) .pr-no__x { opacity: 0; transform: scale(.4) rotate(-90deg); }
 .pr-no p { max-width: 520px; font-size: 16px; line-height: 26px; color: var(--c-muted-2); }
 .pr-no:hover { padding-left: 16px; }
-.pr-no:hover h3 { color: #fff; }
+.pr-no:hover h3 { color: #fff; transition-delay: 0s; }
 .pr-no:hover .pr-no__x { background: var(--c-orange); color: #fff; }
+@media (prefers-reduced-motion: reduce) { .pr-no h3, .pr-no h3 span, .pr-no__x { transition: none; } }
 
 /* ---------- FAQ ---------- */
 .pr-faq { padding: 130px 0; }

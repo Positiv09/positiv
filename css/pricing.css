@@ -131,12 +131,18 @@
 .pr-bound .pr-head { margin-bottom: 56px; }
 .pr-bound .pr-sub { color: var(--c-muted-2); }
 .pr-bound__grid { border-bottom: .5px solid rgb(178 178 178 / .3); }
-.pr-no { display: grid; grid-template-columns: 40px 1.1fr 1fr; gap: 0 56px; align-items: center; padding: 44px 0; border-top: .5px solid rgb(178 178 178 / .3); transition: padding .5s var(--ease-out); }
-.pr-no__n { font-size: 14px; line-height: 20px; letter-spacing: .12em; color: var(--c-muted); transition: color .3s; }
-.pr-no h3 { font-family: var(--f-display); font-weight: 400; font-size: clamp(26px, 2.6vw, 38px); line-height: 1.12; color: var(--c-paper); transition: color .3s; }
+.pr-no { display: grid; grid-template-columns: 40px 1.1fr 1fr; gap: 0 48px; align-items: center; padding: 44px 0; border-top: .5px solid rgb(178 178 178 / .3); transition: padding .5s var(--ease-out); }
+.pr-bound .pr-h2 em { color: var(--c-orange); }
+.pr-no__x { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 50%; background: rgb(254 87 42 / .14); color: var(--c-orange); transition: background-color .3s, color .3s; }
+/* the title is struck through: the line draws itself across when the row comes into view */
+.pr-no h3 { font-family: var(--f-display); font-weight: 400; font-size: clamp(26px, 2.6vw, 38px); line-height: 1.2; color: var(--c-muted-2); transition: color .3s; }
+.pr-no h3 span { background: linear-gradient(var(--c-orange), var(--c-orange)) no-repeat 0 53% / 100% 3px; -webkit-box-decoration-break: clone; box-decoration-break: clone; transition: background-size 1.1s var(--ease-out) .25s; }
+.js .pr-no:not(.is-in) h3 span { background-size: 0 3px; }
+@media (prefers-reduced-motion: reduce) { .pr-no h3 span { transition: none; } }
 .pr-no p { max-width: 520px; font-size: 16px; line-height: 26px; color: var(--c-muted-2); }
 .pr-no:hover { padding-left: 16px; }
-.pr-no:hover h3, .pr-no:hover .pr-no__n { color: var(--c-lime); }
+.pr-no:hover h3 { color: #fff; }
+.pr-no:hover .pr-no__x { background: var(--c-orange); color: #fff; }
 
 /* ---------- FAQ ---------- */
 .pr-faq { padding: 130px 0; }
@@ -166,7 +172,7 @@
   .pr-found, .pr-emb, .pr-faq { padding: 90px 0; }
   .pr-bound { padding: 80px 0; }
   .pr-card__text { min-height: 0; }
-  .pr-no { grid-template-columns: 56px 1fr; gap: 12px 20px; padding: 32px 0; }
+  .pr-no { grid-template-columns: 40px 1fr; gap: 12px 20px; padding: 32px 0; }
   .pr-no p { grid-column: 2; }
   .pr-faq__wrap { grid-template-columns: 1fr; gap: 48px; }
   .pr-faq .pr-head { position: static; }

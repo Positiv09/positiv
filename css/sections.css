@@ -895,3 +895,5 @@
 
 /* picture logo in the logo slot (Figma: Caravel logo is 153 x 37) */
 .portfolio-card__logo-img { display: block; width: 153px; height: 37px; margin: -7px 0 25px; pointer-events: none; }
+/* other logos keep the size set on the <img> (Figma sizes), with the Figma 32px gap above the text */
+.portfolio-card__logo-img--auto { width: auto; height: var(--logo-h, 22px); max-width: 100%; margin: 0 0 32px; }

@@ -388,23 +388,23 @@
 .svc-text { position: relative; margin-right: 15%; perspective: 1300px; perspective-origin: 50% 50%; }   /* same drum as the pictures */
 .svc-panel {
   position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: center;
-  padding: 14.6vh 64px 56px; opacity: 0; transform: translateY(34px); pointer-events: none;
+  padding: 0 64px; opacity: 0; transform: translateY(34px); pointer-events: none;
   will-change: opacity, transform; backface-visibility: hidden;
 }
 .svc-panel.is-active { opacity: 1; transform: none; pointer-events: auto; }
 .svc-mask { display: inline-block; overflow: hidden; vertical-align: top; padding: .06em .12em .14em; margin: -.06em -.12em -.14em; }
 .svc-word { display: inline-block; will-change: transform; }
-.svc-panel__icon { display: flex; align-items: center; justify-content: center; width: 64px; height: 64px; margin-bottom: 34px; border-radius: 12px; background: var(--c-lime); }
+.svc-panel__icon { position: absolute; top: max(40px, 7.4vh); left: 64px; display: flex; align-items: center; justify-content: center; width: 64px; height: 64px; border-radius: 12px; background: var(--c-lime); }
 .svc-panel__title { margin-bottom: 26px; color: var(--c-lime); font-family: var(--f-display); font-weight: 700; font-size: 56px; line-height: 60px; }
 .svc-panel__work { margin-bottom: 30px; }
 .svc-label { margin: 10px 0; color: var(--c-muted-2); font-size: 14px; line-height: 18px; font-weight: 400; text-transform: uppercase; }
 .svc-label--deliv { margin: 0 0 10px; }
 .svc-panel__text { color: var(--c-paper); font-size: 16px; line-height: 20px; }
-.svc-panel__pills { display: flex; flex-wrap: wrap; gap: 16px; width: 80%; margin-bottom: 20px; }
+.svc-panel__pills { display: flex; flex-wrap: wrap; gap: 16px; width: 80%; }
 /* deliverable tags: same pill look and hover as before, but not clickable (spans) */
 .svc-pill { display: flex; align-items: center; height: 40px; padding: 0 10px; border: .5px solid var(--c-paper); border-radius: 20px; color: var(--c-paper); font-size: 12px; line-height: 20px; cursor: default; transition: background-color .25s, color .25s; }
 .svc-pill:hover { background: var(--c-paper); color: var(--c-ink); }
-.svc-panel__num { align-self: flex-start; margin-top: 64px; padding: 10px 20px; border: .5px solid var(--c-paper); border-radius: 30px; color: var(--c-lime); font-size: 14px; font-weight: 700; letter-spacing: 1.12px; line-height: 20px; }
+.svc-panel__num { position: absolute; bottom: max(40px, 7.4vh); left: 64px; padding: 10px 20px; border: .5px solid var(--c-paper); border-radius: 30px; color: var(--c-lime); font-size: 14px; font-weight: 700; letter-spacing: 1.12px; line-height: 20px; }
 
 .svc-media { position: relative; overflow: hidden; }
 .svc-tile {

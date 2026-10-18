@@ -157,18 +157,8 @@
 @keyframes pr-open { from { opacity: 0; transform: translateY(-8px); } }
 .pr-q summary:focus-visible { outline: 2px solid var(--c-ink); outline-offset: 4px; }
 
-/* ---------- Closing CTA + footer (dark) ---------- */
-.pr-end { display: flex; flex-direction: column; background: var(--c-ink); color: #fff; overflow: clip;
-  background-image: radial-gradient(60% 55% at 50% 0%, rgb(240 248 121 / .16), transparent 70%); background-repeat: no-repeat; }
-.pr-end__inner { display: flex; flex-direction: column; align-items: center; padding: 150px 10% 130px; text-align: center; }
-.pr-end__title { font-family: var(--f-body); font-weight: 400; font-size: clamp(44px, 6vw, 88px); line-height: 1.05; }
-.pr-end__title em { font-family: var(--f-display); font-style: normal; font-weight: 400; font-size: 1.12em; color: var(--c-lime); }
-.pr-end__text { max-width: 560px; margin: 28px 0 44px; font-size: 20px; line-height: 28px; color: var(--c-muted-2); }
-.pr-end__actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 16px; }
-.pr-end .footer { padding-top: 0; }
-.pr-foot-links { display: flex; gap: 28px; }
-.pr-foot-links a { transition: color .25s; }
-.pr-foot-links a:hover { color: var(--c-lime); }
+/* ---------- Footer (dark; the footer markup/styles are the home page's, see css/sections.css) ---------- */
+.pr-foot { padding-top: 40px; background: var(--c-ink); color: #fff; }
 
 /* ---------- Responsive (Webflow breakpoints 991 / 767 / 479) ---------- */
 @media (max-width: 991px) {
@@ -184,25 +174,18 @@
   .pr-faq__wrap { grid-template-columns: 1fr; gap: 48px; }
   .pr-faq .pr-head { position: static; }
   .pr-head { margin-bottom: 44px; }
-  .pr-end__inner { padding: 110px 6% 90px; }
 }
 @media (max-width: 767px) {
-  .pr-hero__lead, .pr-end__text, .pr-sub { font-size: 16px; line-height: 26px; }
+  .pr-hero__lead, .pr-sub { font-size: 16px; line-height: 26px; }
   .pr-card, .pr-tier { padding: 32px 24px; }
   .pr-team__col { padding: 28px 24px; }
   .pr-q summary { font-size: 17px; line-height: 26px; padding: 22px 0; }
   .pr-q p { padding-right: 0; font-size: 15px; line-height: 26px; }
   .pr-mode__foot { align-items: flex-start; flex-direction: column; }
   .pr-btn { height: 48px; padding: 0 22px; }
-  .pr-end .footer__main { flex-direction: column; gap: 40px; }
-  .pr-end .footer__links { flex-wrap: wrap; row-gap: 28px; }
-  .pr-end .footer__col { padding: 0 32px 0 0; }
-  .pr-end .footer__bottom { flex-direction: column; align-items: flex-start; gap: 8px; }
-  .pr-foot-links { gap: 18px; flex-wrap: wrap; }
 }
 @media (max-width: 479px) {
   .pr-hero__chips { flex-direction: column; align-items: stretch; }
   .pr-chip { justify-content: space-between; }
   .pr-tier__price strong { font-size: 52px; }
-  .pr-end__actions { flex-direction: column; align-self: stretch; }
 }

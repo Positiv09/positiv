@@ -156,9 +156,6 @@
 @keyframes pr-open { from { opacity: 0; transform: translateY(-8px); } }
 .pr-q summary:focus-visible { outline: 2px solid var(--c-ink); outline-offset: 4px; }
 
-/* ---------- Footer (dark; the footer markup/styles are the home page's, see css/sections.css) ---------- */
-.pr-foot { padding-top: 40px; background: var(--c-ink); color: #fff; }
-
 /* ---------- Responsive (Webflow breakpoints 991 / 767 / 479) ---------- */
 @media (max-width: 991px) {
   .pr-wrap { width: 88%; }

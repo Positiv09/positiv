@@ -687,7 +687,7 @@
     const lerp = (a, b, t) => a + (b - a) * t;
     const E1 = 1.15, STEP = 0.805, PANEL_W = 0.10, TILE_END = 0.08, TILE_W = 0.17;   // in vh
     // slots as fractions of the card height (measured at 800px): [top, height]
-    const SLOT = { main: [168, 480], bottom: [678, 200], hidden: [678, 0], top: [-62, 200], gone: [-85, 0] };
+    const SLOT = { main: [128, 560], bottom: [678, 200], hidden: [678, 0], top: [-62, 200], gone: [-85, 0] };
     let pinStart = 0;
     const measureS = () => { pinStart = svc.getBoundingClientRect().top + window.scrollY - parseFloat(getComputedStyle(card).top); updateS(true); };
     // The target progress follows the scroll position; the value actually drawn eases toward it every frame, so wheel
@@ -742,7 +742,7 @@
         const a = x * SPREAD, r = (a * Math.PI) / 180;
         tile.style.top = `${cy - tileH / 2}px`; tile.style.height = `${tileH}px`;
         tile.style.opacity = clamp01(2 - Math.abs(x)).toFixed(3);       // neighbours are fully there, the face behind the drum fades out
-        tile.style.transform = `translateY(${(x * (tileH + 30 * scale)).toFixed(1)}px)`;                 // pictures slide flat (no tilt); only the copy rolls on the drum
+        tile.style.transform = `translateY(${(x * (tileH + 16)).toFixed(1)}px)`;                 // pictures slide flat (no tilt); only the copy rolls on the drum
         tile.style.pointerEvents = Math.abs(x) < 1.4 ? '' : 'none';
       });
     };

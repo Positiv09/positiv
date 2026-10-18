@@ -687,7 +687,7 @@
     const lerp = (a, b, t) => a + (b - a) * t;
     const E1 = 1.15, STEP = 0.805, PANEL_W = 0.10, TILE_END = 0.08, TILE_W = 0.17;   // in vh
     // slots as fractions of the card height (measured at 800px): [top, height]
-    const SLOT = { main: [128, 560], bottom: [678, 200], hidden: [678, 0], top: [-62, 200], gone: [-85, 0] };
+    const SLOT = { main: [88, 640], bottom: [678, 200], hidden: [678, 0], top: [-62, 200], gone: [-85, 0] };
     let pinStart = 0;
     const measureS = () => { pinStart = svc.getBoundingClientRect().top + window.scrollY - parseFloat(getComputedStyle(card).top); updateS(true); };
     // The target progress follows the scroll position; the value actually drawn eases toward it every frame, so wheel

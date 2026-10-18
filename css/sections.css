@@ -408,7 +408,7 @@
 
 .svc-media { position: relative; overflow: hidden; }
 .svc-tile {
-  position: absolute; left: 40px; width: calc(100% - 80px); top: 0; height: 0;
+  position: absolute; left: 40px; width: calc(100% - 56px); top: 0; height: 0;
   border-radius: 20px; background-size: cover; background-position: 50%; will-change: top, height, transform;
   overflow: hidden; cursor: pointer;
 }

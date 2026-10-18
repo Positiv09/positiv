@@ -15,10 +15,10 @@
 @media (prefers-reduced-motion: reduce) { .js .pr-reveal { opacity: 1; transform: none; transition: none; } }
 
 /* ---------- shared bits ---------- */
-.pr-eyebrow { display: inline-flex; align-items: center; gap: 10px; height: 34px; padding: 0 16px; border: .5px solid currentColor; border-radius: 30px; font-size: 12px; line-height: 1; letter-spacing: .12em; text-transform: uppercase; }
-.pr-eyebrow::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+/* section eyebrow: plain text like the site's "What we build" / "Testimonials" labels (no pill) */
+.pr-eyebrow { display: block; font-size: 18px; line-height: 26px; font-weight: 400; color: var(--c-title); }
 
-.pr-head { display: flex; flex-direction: column; align-items: flex-start; gap: 24px; max-width: 1000px; margin-bottom: 64px; }
+.pr-head { display: flex; flex-direction: column; align-items: flex-start; gap: 16px; max-width: 1000px; margin-bottom: 64px; }
 .pr-head--center { align-items: center; margin-left: auto; margin-right: auto; text-align: center; }
 .pr-h2 { font-family: var(--f-body); font-weight: 400; font-size: clamp(36px, 4.2vw, 60px); line-height: 1.12; text-wrap: balance; }
 .pr-h2 em { font-family: var(--f-display); font-style: normal; font-weight: 400; font-size: 1.14em; }
@@ -52,7 +52,7 @@
 /* ---------- Hero ---------- */
 .pr-hero { padding: 190px 0 110px; text-align: center; overflow: clip; }
 .pr-hero .pr-wrap { display: flex; flex-direction: column; align-items: center; }
-.pr-hero__title { margin: 36px 0 32px; }
+.pr-hero__title { margin: 14px 0 32px; }
 .pr-hero__muted { display: block; font-family: var(--f-body); font-weight: 400; font-size: clamp(32px, 4vw, 56px); line-height: 1.28; color: var(--c-muted-2); }
 .pr-hero__strong { display: block; margin-top: 6px; font-family: var(--f-display); font-weight: 400; font-size: clamp(54px, 7.6vw, 112px); line-height: 1.02; color: var(--c-ink); }
 .pr-hero__lead { max-width: 740px; font-size: 20px; line-height: 30px; color: #393939; }
@@ -88,7 +88,7 @@
 
 /* ---------- Foundations (dark) ---------- */
 .pr-found { padding: 130px 0; background: var(--c-ink); color: var(--c-paper); --chk-bg: var(--c-lime); --chk-fg: var(--c-ink); }
-.pr-found .pr-head .pr-eyebrow { color: var(--c-lime); }
+.pr-found .pr-eyebrow, .pr-bound .pr-eyebrow { color: #fff; }
 .pr-found .pr-sub { color: var(--c-muted-2); }
 .pr-cards { display: grid; gap: 16px; align-items: stretch; }
 .pr-cards--3 { grid-template-columns: repeat(3, 1fr); }
@@ -129,7 +129,6 @@
 /* ---------- Boundaries (dark) ---------- */
 .pr-bound { padding: 120px 0; background: var(--c-ink); color: var(--c-paper); }
 .pr-bound .pr-head { margin-bottom: 56px; }
-.pr-bound .pr-head .pr-eyebrow { color: var(--c-lime); }
 .pr-bound .pr-sub { color: var(--c-muted-2); }
 .pr-bound__grid { display: grid; grid-template-columns: repeat(3, 1fr); }
 .pr-no { padding: 40px 40px 44px; border-top: .5px solid rgb(178 178 178 / .3); border-left: .5px solid rgb(178 178 178 / .3); }

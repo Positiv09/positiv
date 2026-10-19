@@ -1060,3 +1060,19 @@
   .feature-card__text { display: none; }
 }
 
+/* Phones: the "Output your reps love" block (title + four numbers) fits one screen: each stat becomes a compact row,
+   the number on the left and its line on the right, with the spacing following the screen height. */
+@media (max-width: 767px) {
+  .impact__head { margin-top: clamp(28px, 6svh, 64px); }
+  .impact__sub { min-height: 0; }
+  .stats { width: calc(100% - 40px); margin: clamp(24px, 4.5svh, 44px) auto clamp(40px, 8svh, 80px); gap: clamp(10px, 2.2svh, 22px); }
+  .stat__row, .stat__row:has(> div) { flex-direction: row-reverse; justify-content: flex-end; align-items: center; gap: 16px; }
+  .stat__value { flex: 0 0 104px; justify-content: flex-start; }
+  .stat__num, .stat__unit { font-size: clamp(40px, 12.5vw, 52px); line-height: 1; }
+  .stat__text { flex: 1 1 auto; font-size: 13px; line-height: 19px; }
+  .stat__link { margin-top: 6px; font-size: 13px; line-height: 20px; gap: 10px; }
+  .stat__link svg { width: 18px; height: 18px; }
+  .stat__rule { margin-top: clamp(10px, 2svh, 18px); }
+  .impact-section { padding-bottom: 72px; }
+}
+

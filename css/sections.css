@@ -461,6 +461,10 @@
 }
 .svc-tile:hover::before { transform: scale(1.07); }
 .svc-tile__dim { position: absolute; inset: 0; border-radius: inherit; background: #141413; opacity: 0; pointer-events: none; }   /* neighbours sit a touch darker (main.js) */
+/* desktop: each tile box is the open size and is clipped to its current height (main.js sets --clip), so the front picture can
+   grow on hover by revealing more of the image; the shade and the expand button follow the visible edge */
+.svc-tile { clip-path: inset(var(--clip, 0px) 0 var(--clip, 0px) 0 round 20px); }
+.svc-tile::after { inset: var(--clip, 0px) 0; }
 .svc.is-scrolling .svc-tile { pointer-events: none; }                                  /* hover effects pause while the page moves */
 .svc.is-scrolling .svc-tile, .svc.is-scrolling .svc-panel { will-change: transform, opacity; }
 @media (min-width: 992px) {
@@ -472,7 +476,7 @@
 }
 .svc-tile:hover::after { opacity: 1; }
 .svc-tile__expand {
-  position: absolute; right: 16px; bottom: 16px; z-index: 2; width: 44px; height: 44px; border-radius: 50%;
+  position: absolute; right: 16px; bottom: calc(var(--clip, 0px) + 16px); z-index: 2; width: 44px; height: 44px; border-radius: 50%;
   display: grid; place-items: center; background: var(--c-lime); color: var(--c-ink); cursor: pointer;
   opacity: 0; transform: scale(.7); transition: opacity .25s ease, transform .35s var(--ease-out), background-color .2s;
 }

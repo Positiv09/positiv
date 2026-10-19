@@ -743,7 +743,8 @@
     const clamp01 = (v) => Math.min(Math.max(v, 0), 1);
     const ss = (t) => t * t * (3 - 2 * t);
     const wrap4 = (v) => ((((v + 2) % 4) + 4) % 4) - 2;                  // signed distance from the front, looped (the last picture peeks above the first)
-    const HOLD = 0.3, TRAVEL = 90;                                         // pause per service (× one picture of travel), copy travel in px; pictures sit 16px apart
+    const HOLD = 0.3, TRAVEL = 90, GAP = 16;                               // pause per service (× one picture of travel), copy travel in px, gap between pictures
+    const REST = 0.6, OPEN = 0.8;                                          // picture height as a share of the column: at rest, and the front one on hover
     // title words sit in masks so they can rise into place
     panels.forEach((p) => {
       const t = $('.svc-panel__title', p); if (!t || t.dataset.split) return;
@@ -759,13 +760,15 @@
     tiles.forEach((tile) => tile.insertAdjacentHTML('beforeend', '<span class="svc-tile__dim" aria-hidden="true"></span>'));
     const dims = tiles.map((t) => $('.svc-tile__dim', t));
 
-    const g = { pinStart: 0, pitch: 1, hold: 0, L: 1 };
+    const g = { pinStart: 0, pitch: 1, hold: 0, L: 1, H0: 1, Hx: 1 };
     let mainTile = 0, ticking = false, scT = 0;
+    // hover: the front picture grows from REST to OPEN; the pictures around it slide away so the gap stays GAP
+    let open = 0, openTarget = 0, openRaf = 0, openT = 0;
     const clearS = () => {
       [card, svc].forEach((el) => { el.style.top = el.style.height = ''; });
       svc.classList.remove('is-compact');
       panels.forEach((p) => { p.style.opacity = p.style.transform = p.style.pointerEvents = ''; });
-      tiles.forEach((t) => { t.style.top = t.style.height = t.style.opacity = t.style.transform = t.style.pointerEvents = ''; });
+      tiles.forEach((t) => { t.style.top = t.style.height = t.style.opacity = t.style.transform = t.style.pointerEvents = ''; t.style.removeProperty('--clip'); });
       words.flat().forEach((w) => { w.style.transform = ''; });
       pills.flat().forEach((q) => { q.style.opacity = q.style.transform = ''; });
     };
@@ -776,9 +779,12 @@
       const cardTop = Math.round(navH + Math.max(12, (vh - navH - cardH) / 2));
       card.style.top = `${cardTop}px`; card.style.height = `${cardH}px`;
       const mh = media.clientHeight;
-      const tileH = Math.round(mh * 0.8), tileTop = Math.round(mh * 0.11);   // the design's slot: picture at 80% of the column, peeks above and below
-      tiles.forEach((t) => { t.style.top = `${tileTop}px`; t.style.height = `${tileH}px`; });
-      g.pitch = tileH + 16;
+      // every tile box is the open size, centred in the column; the visible part is clipped to its current height (--clip),
+      // so growing reveals more of the picture instead of rescaling it
+      g.Hx = Math.round(mh * OPEN); g.H0 = Math.round(mh * REST);
+      const boxTop = Math.round((mh - g.Hx) / 2);
+      tiles.forEach((t) => { t.style.top = `${boxTop}px`; t.style.height = `${g.Hx}px`; });
+      g.pitch = g.H0 + GAP;                                               // at rest the strip moves one picture + gap per service, 1:1 with the scroll
       g.hold = Math.round(g.pitch * HOLD);
       g.L = g.pitch + g.hold;
       svc.style.height = `${Math.round(cardH + 3 * g.L + g.hold + 0.2 * g.pitch)}px`;
@@ -796,9 +802,22 @@
       ticking = false;
       if (!mqS.matches) return;
       const u = uAt(window.scrollY);
+      // heights: every picture at rest size; the front one (and, mid-move, the one arriving) grows by `open` when hovered
+      const xs = tiles.map((_, i) => wrap4(i - u));
+      const hs = xs.map((x) => g.H0 + (g.Hx - g.H0) * open * Math.max(0, 1 - Math.abs(x)));
+      // stack them with exactly GAP between edges, then slide the stack so the scroll position sits in the middle
+      const n = Math.min(Math.floor(u), 3), f = u - n, at = (k) => (((n + k) % 4) + 4) % 4;
+      const c = { 0: 0 };
+      c[1] = hs[at(0)] / 2 + GAP + hs[at(1)] / 2;
+      c[2] = c[1] + hs[at(1)] / 2 + GAP + hs[at(2)] / 2;
+      c[-1] = -(hs[at(0)] / 2 + GAP + hs[at(-1)] / 2);
+      c[-2] = c[-1] - (hs[at(-1)] / 2 + GAP + hs[at(-2)] / 2);
+      const shift = f * c[1], centre = [];
+      [-1, 0, 1, f > 0 ? 2 : -2].forEach((k) => { centre[at(k)] = c[k] - shift; });
       tiles.forEach((t, i) => {
-        const x = wrap4(i - u), ax = Math.min(Math.abs(x), 1);
-        t.style.transform = `translate3d(0,${(x * g.pitch).toFixed(2)}px,0)`;      // full size, so the gap between pictures is always exactly 16px
+        const x = xs[i], ax = Math.min(Math.abs(x), 1);
+        t.style.transform = `translate3d(0,${centre[i].toFixed(2)}px,0)`;
+        t.style.setProperty('--clip', `${((g.Hx - hs[i]) / 2).toFixed(2)}px`);
         t.style.opacity = clamp01(2 - Math.abs(x)).toFixed(3);
         t.style.pointerEvents = Math.abs(x) < 1.4 ? '' : 'none';
         if (dims[i]) dims[i].style.opacity = reduceMotion ? '0' : (0.4 * ax).toFixed(3);
@@ -822,6 +841,17 @@
       mainTile = Math.min(Math.max(Math.round(u), 0), 3);
     };
     const requestS = () => { if (!ticking) { ticking = true; requestAnimationFrame(drawS); } };
+    const stepOpen = (now) => {
+      const dt = Math.min((now - openT) / 1000, 0.05); openT = now;
+      open += (openTarget - open) * (1 - Math.exp(-dt / 0.11));             // ≈ 0.45s ease-out
+      if (Math.abs(openTarget - open) < 0.002) open = openTarget;
+      drawS();
+      openRaf = open !== openTarget ? requestAnimationFrame(stepOpen) : 0;
+    };
+    const setOpen = (v) => {
+      openTarget = reduceMotion ? 0 : v;
+      if (!openRaf && open !== openTarget) { openT = performance.now(); openRaf = requestAnimationFrame(stepOpen); }
+    };
     // hover: every tile gets an expand button that opens the image in the lightbox
     tiles.forEach((tile) => {
       tile.insertAdjacentHTML('beforeend', '<button class="svc-tile__expand" type="button" aria-label="Expand image"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M10 20H4v-6M20 4l-7 7M4 20l7-7"/></svg></button>');
@@ -829,6 +859,8 @@
         const m = /url\(["']?([^"')]+)["']?\)/.exec(getComputedStyle(tile).backgroundImage);
         if (m && openLightbox) openLightbox(m[1], tile.querySelector('.svc-tile__expand'), panels[tiles.indexOf(tile)], (tile.dataset.extra || '').split(',').filter(Boolean));
       };
+      tile.addEventListener('pointerenter', () => { if (mqS.matches && tiles.indexOf(tile) === mainTile) setOpen(1); });
+      tile.addEventListener('pointerleave', () => setOpen(0));
       // the picture in front opens the lightbox; a peeking picture (above / below) glides to its own service
       tile.addEventListener('click', () => {
         const i = tiles.indexOf(tile);
@@ -840,8 +872,12 @@
       requestS();
       // while the page moves: hover effects pause and the moving parts get their own layer; both drop once it settles
       svc.classList.add('is-scrolling');
+      if (openTarget) setOpen(0);                                         // scrolling folds the open picture back to rest
       clearTimeout(scT);
-      scT = setTimeout(() => svc.classList.remove('is-scrolling'), 160);
+      scT = setTimeout(() => {
+        svc.classList.remove('is-scrolling');
+        if (tiles[mainTile]?.matches(':hover')) setOpen(1);               // still pointing at the front picture once the page stops
+      }, 160);
     }, { passive: true });
     const relayoutS = () => { layoutS(); drawS(); };
     window.addEventListener('resize', relayoutS);

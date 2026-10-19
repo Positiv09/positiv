@@ -763,6 +763,16 @@
   .features__wrap, .svc-card, .stats, .compare__scroll { max-width: 1700px; }
 }
 
+/* Typical full-HD desktops (1800-1919px wide: a 1920 screen with the scrollbar, 1904 windows...) get the large hero type of the 1920 design, so the heading is not a size smaller there */
+@media (min-width: 1800px) and (max-width: 1919px) {
+  .hero__content { width: 84%; margin-top: 80px; }
+  .hero__eyebrow { font-size: 4.583vw; line-height: 1.143; }
+  .hero__word { font-size: 4.5vw; line-height: 1.143; }
+  .hero__lead { width: 70%; padding: 20px 0 40px; font-size: .938vw; font-weight: 300; }
+  .hero__actions { padding-top: 20px; }
+  :root { --hero-h: 910px; }
+}
+
 @media (max-width: 991px) {
   :root { --hero-h: auto; }
   .hero-section { display: flex; flex-direction: column; height: auto; padding-top: 110px; padding-bottom: 0; }

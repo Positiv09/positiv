@@ -1,0 +1,20 @@
+<svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Icons 3">
+<g clip-path="url(#clip0_0_8)">
+<rect width="28" height="28" rx="14" fill="url(#paint0_linear_0_8)"/>
+<mask id="stroke0_0_8" fill="white">
+<path d="M86 -0.431524V-29.5H24.4495C21.6548 -14.5219 16.8513 -0.00658798 10.3476 13.6379C8.95877 16.555 11.9944 19.6606 14.8046 18.067C33.9434 7.22608 55.5405 0.218376 78.5704 -1.87049C81.2405 -2.11167 83.7962 -1.56716 86 -0.431524Z"/>
+</mask>
+<path id="Vector" d="M86 -0.431524V-29.5H24.4495C21.6548 -14.5219 16.8513 -0.00658876 10.3476 13.6379C8.95877 16.555 11.9944 19.6606 14.8046 18.067C33.9434 7.22607 55.5405 0.218376 78.5704 -1.87049C81.2405 -2.11167 83.7962 -1.56716 86 -0.431524Z" stroke-width="2" stroke-linejoin="bevel" stroke="#5915FF" mask="url(#stroke0_0_8)"/>
+</g>
+</g>
+<defs>
+<linearGradient id="paint0_linear_0_8" x1="-55" y1="-35.5" x2="33.5" y2="44.5" gradientUnits="userSpaceOnUse">
+<stop stop-color="#5915FF"/>
+<stop offset="1" stop-color="#DCD5FB"/>
+</linearGradient>
+<clipPath id="clip0_0_8">
+<rect width="28" height="28" rx="14" fill="white"/>
+</clipPath>
+</defs>
+</svg>

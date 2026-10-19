@@ -137,14 +137,20 @@
   let heroPaused = false;
   if (heroMedia) {
     heroMedia.classList.add('is-js');
+    // phones: the three columns become three horizontal rows that drift sideways (cols 1 & 3 right→left, col 2 left→right); the same loop drives both layouts
+    const phoneMq = matchMedia('(max-width: 767px)');
+    const horiz = () => phoneMq.matches;
     const BASE = [34, 22, 26];                       // px/s — matches the old 60s / 90s / 75s CSS loops
     $$('.hero__col', heroMedia).forEach((col, i) => {
       const track = $('.hero__track', col);
       const sets = [...track.children];
       const st = { col, track, dir: col.classList.contains('hero__col--reverse') ? -1 : 1, base: BASE[i] || 28,
                    L: 0, pos: 0, vel: 0, factor: 1, target: 1, dragging: false, lastY: 0, lastT: 0 };
-      const measure = () => { st.L = sets[1] ? sets[1].offsetTop - sets[0].offsetTop : sets[0].offsetHeight; };
+      const measure = () => { st.L = horiz() ? (sets[1] ? sets[1].offsetLeft - sets[0].offsetLeft : sets[0].offsetWidth)
+                                             : (sets[1] ? sets[1].offsetTop - sets[0].offsetTop : sets[0].offsetHeight); };
+      const axis = (e) => (horiz() ? e.clientX : e.clientY);
       measure(); window.addEventListener('resize', measure); window.addEventListener('load', measure);
+      if (phoneMq.addEventListener) phoneMq.addEventListener('change', measure);
       if (st.dir < 0) st.pos = st.L * 0.5;
       col.addEventListener('mouseenter', () => { st.target = 0.25; });
       col.addEventListener('mouseleave', () => { st.target = 1; });
@@ -156,19 +162,19 @@
       }, { passive: false });
       // A press only becomes a drag after 5px of movement; before that it is still a click (opens the image).
       col.addEventListener('pointerdown', (e) => {
-        if (e.pointerType !== 'mouse' || e.button !== 0 || e.target.closest('.hero__expand')) return;
-        st.pressed = true; st.moved = false; st.vel = 0; st.startY = st.lastY = e.clientY; st.lastT = performance.now();
+        if ((e.pointerType !== 'mouse' && !horiz()) || (e.pointerType === 'mouse' && e.button !== 0) || e.target.closest('.hero__expand')) return;   // touch may drag the phone rows sideways
+        st.pressed = true; st.moved = false; st.vel = 0; st.startY = st.lastY = axis(e); st.lastT = performance.now();
       });
       col.addEventListener('pointermove', (e) => {
         if (!st.pressed) return;
         if (!st.dragging) {
-          if (Math.abs(e.clientY - st.startY) < 5) return;
-          st.dragging = true; st.moved = true; st.lastY = e.clientY; st.lastT = performance.now();
+          if (Math.abs(axis(e) - st.startY) < 5) return;
+          st.dragging = true; st.moved = true; st.lastY = axis(e); st.lastT = performance.now();
           col.classList.add('is-dragging'); col.setPointerCapture(e.pointerId);
         }
-        const now = performance.now(), dy = e.clientY - st.lastY, dt = Math.max((now - st.lastT) / 1000, 0.001);
+        const now = performance.now(), dy = axis(e) - st.lastY, dt = Math.max((now - st.lastT) / 1000, 0.001);
         st.pos -= dy; st.vel = st.vel * 0.6 + (-dy / dt) * 0.4;                    // content follows the pointer, keep a fling velocity
-        st.lastY = e.clientY; st.lastT = now;
+        st.lastY = axis(e); st.lastT = now;
       });
       const endDrag = () => { st.pressed = false; if (st.dragging) { st.dragging = false; col.classList.remove('is-dragging'); } };
       col.addEventListener('pointerup', endDrag); col.addEventListener('pointercancel', endDrag);
@@ -188,7 +194,7 @@
           if (Math.abs(st.vel) < 0.5) st.vel = 0;
         }
         if (st.L) st.pos = ((st.pos % st.L) + st.L) % st.L;
-        st.track.style.transform = `translate3d(0,${-st.pos}px,0)`;
+        st.track.style.transform = horiz() ? `translate3d(${-st.pos}px,0,0)` : `translate3d(0,${-st.pos}px,0)`;
       });
       if (visible) raf = requestAnimationFrame(tick);
     };

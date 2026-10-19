@@ -985,3 +985,16 @@
   .feature-card__text { font-size: 13.5px; line-height: 22px; } /* 12px was below comfortable reading size */
   .testimonial-card__quote { line-height: 24px; }
 }
+
+/* ==========================================================================
+   Phones: the hero picture columns become three horizontal rows that drift sideways (JS: "Hero image columns")
+   ========================================================================== */
+@media (max-width: 767px) {
+  .hero__media { display: flex; flex-direction: column; grid-template-columns: none; gap: 10px; width: 100%; height: auto; margin: 28px 0 0; }
+  .hero__col { touch-action: pan-y; }                               /* vertical swipes still scroll the page; sideways swipes drag the row */
+  .hero__track { flex-direction: row; width: max-content; gap: 10px; }
+  .hero__set { flex-direction: row; gap: 10px; }
+  .hero__tile { flex: none; width: 132px; height: 150px; }
+  .hero__tile--l { width: 196px; }
+  .hero__fade { inset: 0; height: 100%; background: linear-gradient(90deg, #211d1d, #8f8f8f00 14%, #80808000 86%, #211d1d); }
+}

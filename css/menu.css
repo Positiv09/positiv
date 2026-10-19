@@ -850,12 +850,13 @@
   #site-header :is(a.why2:hover .div-block-234, a.r1:hover .div-block-254) > div:last-child svg [stroke]:not([stroke="none"]) { stroke: #211d1d; }
 }
 
-/* ---- Why Positiv + Resources lined up with Pricing / Expertise: no rule under the labels; label 40px from the top, the first
-   row / picture / featured card 16px under it (74px); dividers run the full height from the top; equal thirds like Pricing ---- */
+/* ---- Why Positiv + Resources lined up with Pricing / Expertise: labels 40px from the top with their short rule 12px under them;
+   the first row / picture / featured card 16px under the rule in both menus; dividers run the full height from the top; equal
+   thirds like Pricing ---- */
 @media (min-width: 992px) {
   #site-header .wbs-dropdown-mega-grid-2.why { grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: 48px; align-items: stretch; }
   #site-header .wbs-dropdown-mega-grid-2.resources { align-items: stretch; }
-  #site-header :is(.div-block-233, .div-block-253) { display: none; }
+  #site-header :is(.div-block-233, .div-block-253) { display: block; height: 2px; margin: 12px 0 0; background-color: #393939; }
   #site-header :is(.wbs-dropdown-title-2.why, .wbs-dropdown-title-2.titel) { margin: 0; line-height: normal; }
   #site-header :is(.div-block-236, .div-block-294 > a.title > .title, .wbs-dropdown-item-2.r1 > a.title > .title) { display: block; margin: 0; padding: 0; }
   #site-header .div-block-299 .wbs-dropdown-item-2 > a.wbs-dropdown-icon-link-2:first-child,

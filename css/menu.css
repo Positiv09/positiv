@@ -914,3 +914,10 @@
 @media (prefers-reduced-motion: reduce) {
   #site-header .div-block-297 :is(.div-block-211.new, .div-block-212)::before { transition-duration: .01ms; }
 }
+
+/* ---- Why Positiv featured column: no "Featured directive" label; the photo starts level with "The firm" / "Join us"
+   and grows so the text + "Contact us" under it finish level with the bottom of those two columns ---- */
+@media (min-width: 992px) {
+  #site-header .wbs-dropdown-item-2.n4 > .div-block-293 > a.wbs-dropdown-icon-link-2:first-child { display: none; }
+  #site-header .div-block-293 .div-block-239 { flex: 1 1 auto; height: auto; min-height: 220px; margin-top: 0 !important; }
+}

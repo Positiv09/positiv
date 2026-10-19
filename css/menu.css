@@ -884,3 +884,5 @@
   #site-header .pricing2 .text-block-52.pricingtest { font-size: 14px; line-height: 1.5; }
 }
 @media (min-width: 992px) { #site-header .m1 .div-block-166 { gap: 4px; } }
+/* same 4px between a 16px item title and its 14px description in every menu (Services already has it) */
+@media (min-width: 992px) { #site-header :is(.div-block-234, .div-block-254) .wbs-dropdown-content-2 { margin-top: 4px; } }

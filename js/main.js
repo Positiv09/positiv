@@ -404,10 +404,11 @@
   /* ---------- Header: Webflow-style dropdowns (hover on desktop, click on touch) + mobile menu ----------
      The markup/classes are the staging build's; this reproduces what Webflow's runtime does: add w--open to the
      dropdown toggle and its list, rotate the chevron (CSS), and open the collapsed menu at ≤991px. */
-  const inWebflow = !!window.Webflow;                               // on the Webflow site the platform's own runtime already drives the nav + dropdowns
-  const dropdowns = inWebflow ? [] : $$('.w-dropdown');
-  const navButton = inWebflow ? null : $('.w-nav-button');
-  const navMenu = inWebflow ? null : $('.w-nav-menu');
+  const inWebflow = !!window.Webflow;                               // true when this page is published from Webflow (its own nav/dropdown runtime is on the page too)
+  const initHeader = () => {
+  const dropdowns = $$('.w-dropdown');
+  const navButton = $('.w-nav-button');
+  const navMenu = $('.w-nav-menu');
   const isDesktop = () => matchMedia('(min-width: 992px)').matches;
   const setOpen = (dd, open) => {
     const toggle = $('.w-dropdown-toggle', dd), list = $('.w-dropdown-list', dd);
@@ -423,7 +424,7 @@
     const toggle = $('.w-dropdown-toggle', dd);
     if (!$('.w-dropdown-list', dd)) {                             // "Results" is a plain link: it opens the Work page
       toggle.setAttribute('role', 'link'); toggle.setAttribute('tabindex', '0'); toggle.style.cursor = 'pointer';
-      const go = () => { location.href = 'work2.html'; };
+      const go = () => { if (!inWebflow) location.href = 'work2.html'; };
       toggle.addEventListener('click', go);
       toggle.addEventListener('keydown', (e) => { if (e.key === 'Enter') go(); });
       return;
@@ -432,7 +433,7 @@
     dd.addEventListener('mouseenter', () => { if (!isDesktop()) return; clearTimeout(leaveTimer); closeAll(dd); setOpen(dd, true); });
     dd.addEventListener('mouseleave', () => { if (!isDesktop()) return; leaveTimer = setTimeout(() => setOpen(dd, false), 150); });
     const goPricing = dd.classList.contains('pricingtest');         // desktop: clicking "Pricing" opens the Pricing page (hover still shows the menu); touch: tap toggles the menu
-    toggle.addEventListener('click', (e) => { e.preventDefault(); if (goPricing && isDesktop()) { location.href = 'pricing.html'; return; } const open = !toggle.classList.contains('w--open'); closeAll(dd); setOpen(dd, open); });
+    toggle.addEventListener('click', (e) => { e.preventDefault(); if (goPricing && isDesktop() && !inWebflow) { location.href = 'pricing.html'; return; } const open = !toggle.classList.contains('w--open'); closeAll(dd); setOpen(dd, open); });
     toggle.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle.click(); } });
   });
   if (navMenu && !$('.mobile-menu-cta', navMenu)) {                // the bar's "Get in touch" is hidden on small screens, so a copy sits at the end of the sheet
@@ -461,6 +462,15 @@
     window.addEventListener('scroll', onHeaderScroll, { passive: true });
     onHeaderScroll();
   }
+  };
+  if (!inWebflow) initHeader();
+  else window.addEventListener('load', () => {
+    // Webflow has bound its own handlers to this navbar by now (and moves the collapsed menu into an overlay). Swap in a fresh copy of the
+    // navbar (no listeners) and drive it with the same code as the local build, so the menu behaves exactly like the repo's.
+    const nb = $('#site-header .w-nav');
+    if (nb) nb.replaceWith(nb.cloneNode(true));
+    initHeader();
+  });
 
   /* ---------- Stats: light count-up (GSAP) ----------
      Short and quiet: each stat fades up, its number counts from 0 with a soft ease-out (~1.1s, tabular digits so the

@@ -1103,28 +1103,11 @@
 @keyframes pc-swipe-cue { 0%, 100% { transform: translateX(-6px); opacity: .55; } 50% { transform: translateX(6px); opacity: 1; } }
 @media (max-width: 767px) and (prefers-reduced-motion: reduce) { .portfolio__progress::after { animation: none; } }
 
-/* Phones: the four service cards become a sideways rail, one card per screen (snapping), with a progress bar that follows
-   the swipe (where scroll-driven animation is supported) and a small "swipe" cue under it. */
+/* Phones: the four service cards stay stacked one under the other, and each one is as tall as the screen (below the fixed header),
+   its content centred, so every card is seen whole while scrolling. */
 @media (max-width: 767px) {
-  .svc { timeline-scope: --svcx; }
-  .svc-card { gap: 18px; }
-  .svc-text {
-    flex-direction: row; gap: 12px; overflow-x: auto; overflow-y: hidden; scrollbar-width: none;
-    scroll-snap-type: x mandatory; overscroll-behavior-x: contain; -webkit-overflow-scrolling: touch;
-    scroll-timeline: --svcx x; order: 1;
-  }
-  .svc-text::-webkit-scrollbar { display: none; }
-  .svc-text .svc-panel { flex: 0 0 100%; box-sizing: border-box; scroll-snap-align: center; scroll-snap-stop: always; }
-  .svc-card::before {
-    content: ""; order: 2; align-self: center; width: 56%; max-width: 220px; height: 6px; border-radius: 20px;
-    background: linear-gradient(var(--c-ink), var(--c-ink)) no-repeat left / 25% 100% rgb(20 20 19 / .16);
-    animation: svc-rail-fill linear both; animation-timeline: --svcx;
-  }
-  .svc-card::after {
-    content: "Swipe to see more"; order: 3; align-self: center; font-size: 13px; line-height: 18px; letter-spacing: .02em; color: #393939;
-    animation: pc-swipe-cue 1.8s ease-in-out infinite;
-  }
+  .svc-card { gap: 16px; }
+  .svc-text { gap: 16px; }
+  .svc-text .svc-panel { min-height: calc(100svh - 100px); box-sizing: border-box; display: flex; flex-direction: column; justify-content: center; }
 }
-@keyframes svc-rail-fill { from { background-size: 25% 100%; } to { background-size: 100% 100%; } }
-@media (max-width: 767px) and (prefers-reduced-motion: reduce) { .svc-card::after { animation: none; } }
 

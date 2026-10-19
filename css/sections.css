@@ -976,11 +976,11 @@
   .portfolio-card { scroll-snap-align: start; }
 
   /* footer: a clean two-column grid instead of centred, ragged columns */
-  .footer__links { display: grid; grid-template-columns: repeat(4, 1fr); gap: 28px 20px; width: 100%; padding-top: 8px; }
+  .footer__links { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 28px 20px; width: 100%; padding-top: 8px; }
   .footer__col { padding: 0; text-align: left; }
 }
 @media (max-width: 767px) {
-  .footer__links { grid-template-columns: repeat(2, 1fr); max-width: 420px; margin-inline: auto; }
+  .footer__links { grid-template-columns: repeat(2, minmax(0, 1fr)); max-width: 420px; margin-inline: auto; }
   .cell--brand img { width: 74px; height: auto; }              /* the logo no longer touches the edges of its yellow header cell */
   .feature-card__text { font-size: 13.5px; line-height: 22px; } /* 12px was below comfortable reading size */
   .testimonial-card__quote { line-height: 24px; }

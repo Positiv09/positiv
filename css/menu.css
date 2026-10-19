@@ -921,3 +921,11 @@
   #site-header .wbs-dropdown-item-2.n4 > .div-block-293 > a.wbs-dropdown-icon-link-2:first-child { display: none; }
   #site-header .div-block-293 .div-block-239 { flex: 1 1 auto; height: auto; min-height: 220px; margin-top: 0 !important; }
 }
+
+/* ---- Why Positiv: SOON tag sits 10px under its description (was 20px); the featured column keeps the same 20px the
+   list rows leave under their last tag, so "Contact us" ends level with the last SOON tag and the photo shrinks to fit ---- */
+@media (min-width: 992px) {
+  #site-header .div-block-234:has(+ .div-block-237) { padding-bottom: 10px; }
+  #site-header .wbs-dropdown-item-2.n4 > .div-block-293 { padding-bottom: 20px; box-sizing: border-box; }
+  #site-header .div-block-299 > .wbs-dropdown-mega-grid-2 { height: auto; align-content: start; }
+}

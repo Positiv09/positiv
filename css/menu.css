@@ -2,7 +2,7 @@
    Header + mega-menus — ported 1:1 from the staging stylesheet (positiv-002d0a.webflow.io)
    Class names are kept as-is so the markup in index.html can be diffed against Webflow.
    ========================================================================== */
-@font-face { font-family: "Optimanovaltprodemi"; src: url("../assets/fonts/OptimaNovaLTProDemi.woff2") format("woff2"), url("../assets/fonts/OptimaNovaLTProDemi.woff") format("woff"), url("../assets/fonts/OptimaNovaLTProDemi.otf") format("opentype"); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: "Optimanovaltprodemi"; src: url("../assets/fonts/OptimaNovaLTProDemi.woff2?v=2") format("woff2"), url("../assets/fonts/OptimaNovaLTProDemi.woff?v=2") format("woff"), url("../assets/fonts/OptimaNovaLTProDemi.otf") format("opentype"); font-weight: 400; font-style: normal; font-display: swap; }
 :root {
   --flowstica-webflow-library--light-slate-grey: #fff;
   --flowstica-webflow-library--white: #211d1d;
@@ -841,33 +841,14 @@
 #site-header .w-dropdown-list, #site-header .w-dropdown-list * { font-synthesis: none; }
 #site-header .w-dropdown-list :is(h4, h5, h6, .heading-57, .heading-53, .heading-50, .text-block-56, .text-block-68) { font-weight: 400; }
 
-/* ---- Why Positiv + Resources: the Services hover (title to black, text nudges 4px, icon turns solid) on their original layout ---- */
+/* ---- Why Positiv + Resources: the "Marketing & Campaign" hover from Services — title to black, text nudges 4px, the outline
+   icon turns black (same light-weight icon, recoloured; not the solid version) ---- */
 @media (min-width: 992px) {
   #site-header :is(.div-block-234, .div-block-254) > div:first-child { transition: transform .3s cubic-bezier(.22, 1, .36, 1); }
   #site-header :is(.div-block-234, .div-block-254) .wbs-dropdown-title-2 { transition: color .3s cubic-bezier(.22, 1, .36, 1); }
-  #site-header :is(.div-block-234, .div-block-254) > div:last-child { position: relative; }
-  #site-header :is(.div-block-234, .div-block-254) > div:last-child svg { transition: opacity .3s ease; }
-  #site-header :is(.div-block-234, .div-block-254) > div:last-child::after {
-    content: ""; position: absolute; left: 50%; top: 50%; width: 24px; height: 24px; transform: translate(-50%, -50%);
-    background: var(--icon-on) center / 24px 24px no-repeat; opacity: 0; transition: opacity .3s ease; pointer-events: none;
-  }
-  #site-header a.why2:hover .div-block-234 > div:first-child, #site-header a.r1:hover .div-block-254 > div:first-child { transform: translateX(4px); }
-  #site-header a.why2:hover .div-block-234 .wbs-dropdown-title-2, #site-header a.r1:hover .div-block-254 .wbs-dropdown-title-2 { color: #000; }
-  #site-header a.why2:hover .div-block-234 > div:last-child svg, #site-header a.r1:hover .div-block-254 > div:last-child svg { opacity: 0; }
-  #site-header a.why2:hover .div-block-234 > div:last-child::after, #site-header a.r1:hover .div-block-254 > div:last-child::after { opacity: 1; }
-  #site-header .wbs-dropdown-mega-grid-2.why > .wbs-dropdown-item-2:nth-child(1) > a:nth-of-type(2) { --icon-on: url("../assets/img/menu/hover/why-1.svg"); }
-  #site-header .wbs-dropdown-mega-grid-2.why > .wbs-dropdown-item-2:nth-child(1) > a:nth-of-type(3) { --icon-on: url("../assets/img/menu/hover/why-2.svg"); }
-  #site-header .wbs-dropdown-mega-grid-2.why > .wbs-dropdown-item-2:nth-child(1) > a:nth-of-type(4) { --icon-on: url("../assets/img/menu/hover/why-3.svg"); }
-  #site-header .wbs-dropdown-mega-grid-2.why > .wbs-dropdown-item-2:nth-child(2) > a:nth-of-type(2) { --icon-on: url("../assets/img/menu/hover/why-4.svg"); }
-  #site-header .wbs-dropdown-mega-grid-2.why > .wbs-dropdown-item-2:nth-child(2) > a:nth-of-type(3) { --icon-on: url("../assets/img/menu/hover/why-5.svg"); }
-  #site-header .wbs-dropdown-mega-grid-2.resources > .wbs-dropdown-item-2:nth-child(1) > a:nth-of-type(2) { --icon-on: url("../assets/img/menu/hover/res-1.svg"); }
-  #site-header .wbs-dropdown-mega-grid-2.resources > .wbs-dropdown-item-2:nth-child(1) > a:nth-of-type(3) { --icon-on: url("../assets/img/menu/hover/res-2.svg"); }
-  #site-header .wbs-dropdown-mega-grid-2.resources > .wbs-dropdown-item-2:nth-child(1) > a:nth-of-type(4) { --icon-on: url("../assets/img/menu/hover/res-3.svg"); }
-  #site-header .wbs-dropdown-mega-grid-2.resources > .wbs-dropdown-item-2:nth-child(1) > a:nth-of-type(5) { --icon-on: url("../assets/img/menu/hover/res-4.svg"); }
-  #site-header .wbs-dropdown-mega-grid-2.resources > .wbs-dropdown-item-2:nth-child(1) > a:nth-of-type(6) { --icon-on: url("../assets/img/menu/hover/res-5.svg"); }
-  #site-header .wbs-dropdown-mega-grid-2.resources > .wbs-dropdown-item-2:nth-child(2) > a:nth-of-type(2) { --icon-on: url("../assets/img/menu/hover/res-6.svg"); }
-  #site-header .wbs-dropdown-mega-grid-2.resources > .wbs-dropdown-item-2:nth-child(2) > a:nth-of-type(3) { --icon-on: url("../assets/img/menu/hover/res-7.svg"); }
-  #site-header .wbs-dropdown-mega-grid-2.resources > .wbs-dropdown-item-2:nth-child(2) > a:nth-of-type(4) { --icon-on: url("../assets/img/menu/hover/res-8.svg"); }
-  #site-header .wbs-dropdown-mega-grid-2.resources > .wbs-dropdown-item-2:nth-child(2) > a:nth-of-type(5) { --icon-on: url("../assets/img/menu/hover/res-9.svg"); }
-  #site-header .wbs-dropdown-mega-grid-2.resources > .wbs-dropdown-item-2:nth-child(2) > a:nth-of-type(6) { --icon-on: url("../assets/img/menu/hover/res-10.svg"); }
+  #site-header :is(.div-block-234, .div-block-254) > div:last-child svg :is(path, circle, rect, line, polyline) { transition: fill .3s ease, stroke .3s ease; }
+  #site-header :is(a.why2:hover .div-block-234, a.r1:hover .div-block-254) > div:first-child { transform: translateX(4px); }
+  #site-header :is(a.why2:hover .div-block-234, a.r1:hover .div-block-254) .wbs-dropdown-title-2 { color: #000; }
+  #site-header :is(a.why2:hover .div-block-234, a.r1:hover .div-block-254) > div:last-child svg [fill]:not([fill="none"]) { fill: #211d1d; }
+  #site-header :is(a.why2:hover .div-block-234, a.r1:hover .div-block-254) > div:last-child svg [stroke]:not([stroke="none"]) { stroke: #211d1d; }
 }

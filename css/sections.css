@@ -1007,3 +1007,16 @@
   .hero__tile--l { aspect-ratio: 196 / 150; }
   .hero__fade { inset: 0; height: 100%; background: linear-gradient(90deg, #211d1d, #8f8f8f00 14%, #80808000 86%, #211d1d); }
 }
+
+/* Phones: client logos a touch smaller (zoom on the <img> only, so the marquee still measures its real widths) and tighter vertical rhythm
+   between the clients title, the two logo rows and the "Why Positiv" heading */
+@media (max-width: 767px) {
+  .clients-section { padding: 44px 0 16px; }
+  .clients__title { font-size: 18px; line-height: 28px; margin-bottom: 10px; }
+  .clients__title em { font-size: 21px; }
+  .logo-marquee { height: 58px; }
+  .logo-marquee__set { gap: 32px; padding-right: 32px; }
+  .client-logo img, .client-logo__angel { zoom: .74; }
+  .features-section { padding-top: 32px; }
+  .features__title { margin-bottom: 28px; }
+}

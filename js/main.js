@@ -404,9 +404,10 @@
   /* ---------- Header: Webflow-style dropdowns (hover on desktop, click on touch) + mobile menu ----------
      The markup/classes are the staging build's; this reproduces what Webflow's runtime does: add w--open to the
      dropdown toggle and its list, rotate the chevron (CSS), and open the collapsed menu at ≤991px. */
-  const dropdowns = $$('.w-dropdown');
-  const navButton = $('.w-nav-button');
-  const navMenu = $('.w-nav-menu');
+  const inWebflow = !!window.Webflow;                               // on the Webflow site the platform's own runtime already drives the nav + dropdowns
+  const dropdowns = inWebflow ? [] : $$('.w-dropdown');
+  const navButton = inWebflow ? null : $('.w-nav-button');
+  const navMenu = inWebflow ? null : $('.w-nav-menu');
   const isDesktop = () => matchMedia('(min-width: 992px)').matches;
   const setOpen = (dd, open) => {
     const toggle = $('.w-dropdown-toggle', dd), list = $('.w-dropdown-list', dd);

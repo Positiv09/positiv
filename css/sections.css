@@ -960,6 +960,9 @@
   #site-header .wbs-menu-button-2 { margin-right: -10px; }
 
   .hero__content { width: calc(100% - 40px); }
+  /* stacked feature cards: ~190px of empty space after the last card (wrap padding + margin + stack padding) is trimmed */
+  .features__wrap { padding-bottom: 0; margin-bottom: 0; }
+  .features__stack { padding-bottom: 24px; }
 
   /* service cards: the desktop icon chip / counter are absolutely placed on the pinned card; in the stacked list they sit inside every card */
   .svc-text .svc-panel { position: relative; }

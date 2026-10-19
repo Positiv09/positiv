@@ -813,7 +813,7 @@
   #site-header .pricing2 .div-block-295.ps { display: flex; flex-direction: column; gap: 16px; flex: 1 1 auto; width: auto; height: auto; }
   #site-header .pricing2 .div-block-206.new.pricingtest.ps {
     display: flex; flex-direction: column; justify-content: flex-start; align-items: stretch; gap: 24px;
-    height: auto; min-height: 340px; margin: 0; padding: 16px; box-sizing: border-box; background-color: #fbfee0; border-radius: 18px; overflow: visible;
+    height: 340px; margin: 0; padding: 16px; box-sizing: border-box; background-color: #fbfee0; border-radius: 18px; overflow: visible;
   }
   #site-header .pricing2 .div-block-291 {
     width: 100%; height: 168px; flex: none; border-radius: 12px; background-size: cover; background-position: 50%;
@@ -826,91 +826,12 @@
   #site-header .pricing2 .text-block-68 { color: #211d1d; font-size: 18px; }
   #site-header .pricing2 .link-block-23:hover .div-block-292 { gap: 12px; transform: translateX(4px); }
 }
-@media (min-width: 992px) {
-  /* ================= Why Positiv (Figma "Mega Menu why positiv": 335 | 335 | divider | 363 featured, 431 tall) ================= */
-  #site-header .div-block-299 { height: auto; min-height: 431px; background-color: #f2f2ed; padding: 48px var(--mm-px); box-sizing: border-box; }
-  #site-header .wbs-dropdown-mega-grid-2.why {
-    display: grid; grid-template-columns: minmax(0, 335fr) minmax(0, 335fr) minmax(0, 434fr); column-gap: 48px; row-gap: 0;
-    height: auto; margin: 0; padding: 0; align-items: start;
-  }
-  /* ================= Resources (Figma "Mega Menu Resources": 326 | 325 | divider | 363 featured, 561 tall) ================= */
-  #site-header .div-block-300 { height: auto; min-height: 561px; background-color: #f2f2ed; padding: 48px var(--mm-px); box-sizing: border-box; }
-  #site-header .wbs-dropdown-mega-grid-2.resources {
-    display: grid; grid-template-columns: minmax(0, 326fr) minmax(0, 325fr) minmax(0, 437fr); column-gap: 56px; row-gap: 0;
-    height: auto; margin: 0; padding: 0; align-items: start;
-  }
-
-  /* ---- shared link columns: header (12px label + 2px rule) 32px above a list of rows 24px apart with hairlines between ---- */
-  #site-header :is(.div-block-299 .wbs-dropdown-item-2:not(.n4), .div-block-300 .wbs-dropdown-item-2.r1:not(.r3)) {
-    display: flex; flex-direction: column; align-items: stretch; gap: 24px; width: auto; height: auto; margin: 0; padding: 0;
-  }
-  #site-header :is(.div-block-299, .div-block-300) a.wbs-dropdown-icon-link-2 { display: flex; flex-direction: column; align-items: stretch; gap: 24px; width: 100%; margin: 0; padding: 0; }
-  #site-header :is(.div-block-299, .div-block-300) a.wbs-dropdown-icon-link-2:has(.div-block-237) { gap: 12px; }
-  #site-header :is(.div-block-299 .div-block-236, .div-block-300 a.title > .title) { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; margin: 0 0 8px; padding: 0; }
-  #site-header :is(.div-block-299 .wbs-dropdown-title-2.why, .div-block-300 .wbs-dropdown-title-2.titel) {
-    margin: 0; color: #393939; font-family: Poppins, sans-serif; font-size: 12px; line-height: normal; font-weight: 400; text-transform: uppercase; letter-spacing: 0;
-  }
-  #site-header :is(.div-block-233, .div-block-253) { height: 2px; background-color: #393939; }
-  #site-header .div-block-233 { width: 53px; }
-  #site-header .div-block-233.n2 { width: 47px; }
-  #site-header .div-block-253 { width: 67px; }
-  #site-header .div-block-253.r2 { width: 96px; }
-  #site-header .div-block-253.r2.r3 { width: 56px; }
-  #site-header :is(.div-block-234, .div-block-254) { display: flex; justify-content: space-between; align-items: center; gap: 4px; width: 100%; margin: 0; padding: 0; }
-  #site-header :is(.div-block-234, .div-block-254) > div:first-child { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 4px; transition: transform .3s var(--mm-ease); }
-  #site-header :is(.div-block-234, .div-block-254) > div:last-child { flex: none; width: 24px; height: 24px; }
-  #site-header :is(.div-block-234, .div-block-254) svg { display: block; width: 24px; height: 24px; }
-  #site-header :is(.wbs-dropdown-title-2.why2, .wbs-dropdown-title-2.r1) { margin: 0; color: #211d1d; font-size: 14px; line-height: normal; font-weight: 400; white-space: nowrap; transition: color .3s var(--mm-ease); }
-  #site-header :is(.div-block-299, .div-block-300) .wbs-dropdown-content-2 { margin: 0; color: #8e8e8e; font-size: 12px; line-height: 20px; }
-  #site-header :is(.div-block-235, .div-block-255) { width: 100%; height: 1px; margin: 0; background-color: var(--mm-line); opacity: 1; }
-  #site-header .div-block-237 { display: inline-flex; align-self: flex-start; align-items: center; justify-content: center; width: auto; height: auto; padding: 4px 10px; border: .5px solid #393939; border-radius: 71px; background: none; }
-  #site-header .text-block-55 { color: #393939; font-size: 10px; line-height: 1.5; }
-  /* row hover: the text nudges 4px right, as in the other menus */
-  #site-header :is(.div-block-299, .div-block-300) a.wbs-dropdown-icon-link-2:not(.title):hover :is(.div-block-234, .div-block-254) > div:first-child { transform: translateX(4px); }
-
-  /* ---- divider + featured column ---- */
-  #site-header :is(.div-block-299 .wbs-dropdown-item-2.n4, .div-block-300 .wbs-dropdown-item-2.r3) { display: flex; flex-direction: row; align-items: flex-start; gap: 0; width: auto; height: auto; margin: 0; padding: 0; }
-  #site-header .div-block-238.g1 { flex: none; width: 1px; height: 335px; margin: 0 47px 0 23px; background-color: var(--mm-line); }
-  #site-header .div-block-227.g2 { flex: none; width: 1px; height: 465px; margin: 0 73px 0 0; background-color: var(--mm-line); }
-  /* Why Positiv featured: photo 219px, copy 24px below, "Contact us" 12px under it (no label in the design) */
-  #site-header .div-block-293 { display: flex; flex-direction: column; align-items: stretch; gap: 0; flex: 1 1 auto; width: auto; }
-  #site-header .div-block-293 > a.wbs-dropdown-icon-link-2:first-child { display: none; }
-  #site-header .div-block-239 {
-    width: 100%; height: 219px !important; margin: 0 0 24px !important; border-radius: 12px;
-    background-image: url("../assets/img/menu/why-featured.jpg"); background-size: cover; background-position: 50%;
-  }
-  #site-header .text-block-57 { margin: 0; color: #4b4d4e; font-size: 14px; line-height: 22px; font-weight: 400; }
-  #site-header .link-block-21 { display: block; margin: 12px 0 0; text-decoration: none; }
-  #site-header .div-block-240 { display: flex; align-items: center; gap: 8px; margin: 0; transition: gap .3s var(--mm-ease), transform .3s var(--mm-ease); }
-  #site-header .text-block-56 { color: #211d1d; font-size: 18px; line-height: normal; }
-  #site-header .link-block-21:hover .div-block-240 { gap: 12px; transform: translateX(4px); }
-  /* Resources featured: label, then the lime promo card (391px: 210px preview, 18px/26px heading, "Get the report") */
-  #site-header .div-block-294 { display: flex; flex-direction: column; align-items: stretch; gap: 0; flex: 1 1 auto; width: auto; height: auto; }
-  #site-header .div-block-294 > a.title { margin: 0 0 24px; }
-  #site-header .div-block-257 {
-    display: flex; flex-direction: column; justify-content: flex-start; align-items: stretch; gap: 24px;
-    width: 100%; height: auto; min-height: 391px; margin: 0; padding: 16px; box-sizing: border-box; background-color: #fbfee0; border-radius: 18px;
-  }
-  #site-header .div-block-258 {
-    width: 100%; height: 210px; flex: none; margin: 0; border-radius: 12px;
-    background-image: url("../assets/img/menu/resources-featured.jpg"); background-size: cover; background-position: 50%;
-    box-shadow: 0 10px 15px -3px rgb(0 0 0 / .1), 0 4px 6px -4px rgb(0 0 0 / .1);
-  }
-  #site-header .text-block-59 { width: auto; margin: 0; padding: 0 8px; color: #393939; font-size: 18px; line-height: 26px; font-weight: 600; }
-  #site-header .div-block-256 { display: flex; align-items: center; gap: 8px; width: auto; margin: -8px 0 0; padding: 0 8px; cursor: pointer; transition: gap .3s var(--mm-ease), transform .3s var(--mm-ease); }
-  #site-header .heading-57 { margin: 0; color: #211d1d; font-size: 18px; line-height: normal; font-weight: 400; }
-  #site-header .div-block-257:hover .div-block-256 { gap: 12px; transform: translateX(4px); }
-}
-
 /* small desktops (992–1279): Figma only draws 1440, so the sides and gutters tighten to keep the four columns and the wide
    "Marketing & Campaign" pill inside the window */
 @media (min-width: 992px) and (max-width: 1279px) {
   #site-header { --mm-px: 40px; }
   #site-header .wbs-dropdown-mega-grid-2.m1 { column-gap: 32px; }
-  #site-header .div-block-297 > .wbs-dropdown-mega-grid-2, #site-header .wbs-dropdown-mega-grid-2.new.pricing.pricingtest,
-  #site-header .wbs-dropdown-mega-grid-2.why, #site-header .wbs-dropdown-mega-grid-2.resources { column-gap: 32px; }
-  #site-header .div-block-238.g1 { margin: 0 24px 0 8px; }
-  #site-header .div-block-227.g2 { margin-right: 32px; }
+  #site-header .div-block-297 > .wbs-dropdown-mega-grid-2, #site-header .wbs-dropdown-mega-grid-2.new.pricing.pricingtest { column-gap: 32px; }
 }
 @media (min-width: 992px) and (max-width: 1099px) {
   #site-header .m1 :is(.wbs-dropdown-title-2.top, .wbs-dropdown-title-2.top2, .wbs-dropdown-title-2.top3, .wbs-dropdown-title-2.top4) { font-size: 14px; }

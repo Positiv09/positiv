@@ -987,14 +987,23 @@
 }
 
 /* ==========================================================================
-   Phones: the hero picture columns become three horizontal rows that drift sideways (JS: "Hero image columns")
+   Phones: the whole hero fits one screen. The picture columns become three horizontal rows (JS: "Hero image columns") that
+   share whatever height the text leaves; copy, buttons and spacing are tightened so nothing is wasted.
    ========================================================================== */
 @media (max-width: 767px) {
-  .hero__media { display: flex; flex-direction: column; grid-template-columns: none; gap: 10px; width: 100%; height: auto; margin: 0; padding-bottom: 10px; }   /* closer to the buttons; the last row keeps the same 10px gap below it as between the rows */
-  .hero__col { touch-action: pan-y; }                               /* vertical swipes still scroll the page; sideways swipes drag the row */
-  .hero__track { flex-direction: row; width: max-content; gap: 10px; }
-  .hero__set { flex-direction: row; gap: 10px; }
-  .hero__tile { flex: none; width: 132px; height: 150px; }
-  .hero__tile--l { width: 196px; }
+  .hero-section { min-height: 100vh; min-height: 100svh; padding-top: 84px; }       /* 72px header + 12px */
+  .hero__content { margin-top: 0; }
+  .hero__eyebrow { font-size: clamp(21px, 6.2vw, 27px); line-height: 1.22; min-height: 0; }
+  .hero__word { font-size: clamp(27px, 8vw, 35px); line-height: 1.22; }
+  .hero__lead { max-width: 36ch; margin-inline: auto; padding: 10px 0 16px; font-size: 13.5px; line-height: 20px; }
+  .hero__actions { flex-wrap: nowrap; gap: 10px; padding: 0 0 18px; }
+  .hero__actions .btn { flex: 1 1 0; width: auto; max-width: 168px; height: 44px; font-size: 16px; padding-inline: 8px; }
+
+  .hero__media { flex: 1 1 auto; min-height: 270px; display: grid; grid-template-columns: none; grid-template-rows: repeat(3, minmax(0, 1fr)); gap: 10px; width: 100%; height: auto; margin: 0; padding-bottom: 10px; }
+  .hero__col { min-height: 0; touch-action: pan-y; }                  /* vertical swipes still scroll the page; sideways swipes drag the row */
+  .hero__track { flex-direction: row; width: max-content; height: 100%; gap: 10px; }
+  .hero__set { flex-direction: row; height: 100%; gap: 10px; }
+  .hero__tile { flex: none; height: 100%; width: auto; aspect-ratio: 132 / 150; }
+  .hero__tile--l { aspect-ratio: 196 / 150; }
   .hero__fade { inset: 0; height: 100%; background: linear-gradient(90deg, #211d1d, #8f8f8f00 14%, #80808000 86%, #211d1d); }
 }

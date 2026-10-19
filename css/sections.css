@@ -1054,6 +1054,7 @@
   .feature-card__heading, .feature-card--purple .feature-card__heading { margin-bottom: 8px; }
   .feature-card__lead { margin-bottom: 8px; }
   .feature-card__text { font-size: 13px; line-height: 20px; }
+  .feature-card__copy .btn--block { height: 42px; margin-top: 14px; font-size: 14px; padding: 0 16px; white-space: nowrap; }   /* proportionate to the card copy instead of a 52px/16px block */
 }
 @media (max-width: 767px) and (max-height: 760px) {
   .feature-card__text { display: none; }

@@ -1020,3 +1020,24 @@
   .features-section { padding-top: 32px; }
   .features__title { margin-bottom: 28px; }
 }
+
+/* Phones: every heading uses the hero heading's size ("The embedded Creative team for"), so the page reads in one consistent type scale */
+@media (max-width: 767px) {
+  :root { --h-phone: clamp(21px, 6.2vw, 27px); }
+  .hero__eyebrow,
+  .clients__title, .clients__title em,
+  .features__title, .features__title em,
+  .feature-card__label h5, .feature-card__heading,
+  .impact__title, .impact__sub,
+  .services__lines h4,
+  .svc-panel__title,
+  .testimonials__title, .testimonials__title strong,
+  .compare__title,
+  .cta__title { font-size: var(--h-phone); line-height: 1.24; }
+  .clients__title { line-height: 1.4; }
+  .features__title { margin-bottom: 24px; }
+  .feature-card__label h5 { line-height: 1.24; }
+  .impact__hl { font-size: 1em; line-height: inherit; }
+  .footer__col h6 { white-space: normal; overflow-wrap: break-word; }
+  .footer__col:last-child { grid-column: 1 / -1; }                         /* "Free tools & resources" gets its own full-width row, so its heading never runs out of a half column */
+}

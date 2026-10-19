@@ -733,6 +733,7 @@
      the middle of the move; the title words rise out of their mask and the deliverable pills follow in a small stagger —
      all driven by the scroll position, nothing on a timer, so stopping half-way leaves everything half-way. No scroll
      takeover: the site-wide smooth scrolling is the only smoothing. Desktop only; below 992px the panels are a list. */
+  let smoothHead = () => window.scrollY;                                   // where the site-wide smooth scroll is heading (set below)
   const svc = $('[data-svc]');
   if (svc) {
     const card = $('[data-svc-card]', svc);
@@ -895,16 +896,96 @@
       tile.addEventListener('click', () => {
         const i = tiles.indexOf(tile);
         if (i === mainTile || !mqS.matches) { open(); return; }
-        window.scrollTo({ top: g.pinStart + i * g.L + g.hold / 2, behavior: 'smooth' });
+        glideTo(restY(i));
       });
     });
+    /* ---- Magnetic pictures ("Version Rafik") ----
+       One gesture = one picture. Inside the card, the first wheel notch or swipe of a gesture glides the strip to the next
+       picture and it lands centred; the rest of that gesture (trackpad momentum, a wheel still spinning) is absorbed so it
+       never skips one. A new gesture — a short pause, or a fresh stronger flick once the glide has mostly landed — moves on.
+       Scrolling in from above stops on the first picture (from below, on the last); one more gesture past the end scrolls
+       the page on as usual. The glide is an ease-in-out curve (soft start, soft landing); redirecting mid-glide carries the
+       current speed into the new curve, so it never jolts. Keys step one picture too; a scrollbar or touch scroll that stops
+       part-way settles to the nearest picture. Desktop only, and off with reduced motion. */
+    const GLIDE_MS = 780, GESTURE_GAP = 140, PULL = 0.12;
+    let gl = null, glRaf = 0, glLastSet = -1, rwLast = 0, rwAbs = 0, rwBusy = false, sDir = 1, lastY = window.scrollY;
+    const magnetOn = () => mqS.matches && !reduceMotion;
+    const restY = (k) => g.pinStart + k * g.L + g.hold / 2;
+    const glVel = (now) => {
+      if (!gl) return 0;
+      const s = Math.min((now - gl.t0) / gl.T, 1);
+      return ((6 * s * s - 6 * s) * gl.p0 + (3 * s * s - 4 * s + 1) * gl.T * gl.v0 + (-6 * s * s + 6 * s) * gl.p1) / gl.T;
+    };
+    const glStep = (now) => {
+      glRaf = 0; if (!gl) return;
+      const s = clamp01((now - gl.t0) / gl.T), s2 = s * s, s3 = s2 * s;
+      const p = (2 * s3 - 3 * s2 + 1) * gl.p0 + (s3 - 2 * s2 + s) * gl.T * gl.v0 + (-2 * s3 + 3 * s2) * gl.p1;
+      window.scrollTo({ top: p, behavior: 'instant' }); glLastSet = window.scrollY;
+      if (s < 1) glRaf = requestAnimationFrame(glStep); else gl = null;
+    };
+    const stopGlideS = () => { cancelAnimationFrame(glRaf); glRaf = 0; gl = null; };
+    const glideTo = (dest) => {
+      const now = performance.now(), v0 = gl ? glVel(now) : 0;
+      dest = Math.min(Math.max(dest, 0), document.documentElement.scrollHeight - window.innerHeight);
+      const p0 = window.scrollY, T = GLIDE_MS * Math.min(Math.max(Math.sqrt(Math.abs(dest - p0) / g.pitch), 0.55), 1.35);
+      gl = { p0, p1: dest, v0, t0: now, T };
+      if (!glRaf) glRaf = requestAnimationFrame(glStep);
+    };
+    const headY = () => (gl ? gl.p1 : smoothHead());
+    const inZone = (y, down) => (down ? y >= restY(0) - 2 && y < restY(3) - 2 : y > restY(0) + 2 && y <= restY(3) + 2);
+    const stepTo = (d) => {
+      const kf = (headY() - g.pinStart - g.hold / 2) / g.L;
+      const k = Math.max(0, Math.min(3, d > 0 ? Math.floor(kf + 0.02) + 1 : Math.ceil(kf - 0.02) - 1));
+      rwBusy = true; glideTo(restY(k));
+    };
+    // a scroll that stopped part-way between two pictures settles to the nearest one in the direction it was going
+    const magnet = () => {
+      if (!magnetOn() || gl) return;
+      const y = window.scrollY, s = y - g.pinStart;
+      if (s <= 0 || s >= 3 * g.L) return;
+      const n = Math.floor(s / g.L), within = s - n * g.L;
+      if (within <= g.hold) return;
+      const p = (within - g.hold) / g.pitch, next = sDir >= 0 ? p > PULL : p > 1 - PULL;
+      glideTo(next ? g.pinStart + (n + 1) * g.L + 1 : g.pinStart + n * g.L + g.hold - 1);
+    };
+    // registered before the site-wide smooth scrolling, so a gesture taken here is left alone there
+    window.addEventListener('wheel', (e) => {
+      if (!magnetOn() || e.ctrlKey || Math.abs(e.deltaX) > Math.abs(e.deltaY) || !e.deltaY) return;
+      if (getComputedStyle(document.documentElement).overflowY === 'hidden' || getComputedStyle(document.body).overflowY === 'hidden') return;
+      const dy = e.deltaY * (e.deltaMode === 1 ? 40 : e.deltaMode === 2 ? window.innerHeight : 1);
+      const now = performance.now(), gap = now - rwLast, prev = rwAbs; rwLast = now; rwAbs = Math.abs(dy);
+      const down = dy > 0, y = headY(), r0 = restY(0), r3 = restY(3);
+      const landed = !gl || (now - gl.t0) / gl.T > 0.6;
+      const fresh = gap > GESTURE_GAP || (landed && Math.abs(dy) > prev * 1.6 + 6);
+      if (fresh) rwBusy = false;
+      if (down ? y < r0 - 2 && y + dy > r0 : y > r3 + 2 && y + dy < r3) { e.preventDefault(); rwBusy = true; glideTo(down ? r0 : r3); return; }
+      if (!inZone(y, down)) {
+        if (rwBusy && !fresh && y > r0 - 2 && y < r3 + 2) { e.preventDefault(); return; }   // the end of a gesture that just landed on the first / last picture
+        if (gl) stopGlideS();
+        return;
+      }
+      e.preventDefault();
+      if (!rwBusy) stepTo(down ? 1 : -1);
+    }, { passive: false });
+    window.addEventListener('keydown', (e) => {
+      if (!magnetOn() || e.altKey || e.ctrlKey || e.metaKey || e.defaultPrevented) return;
+      const t = e.target; if (t && (t.isContentEditable || /^(INPUT|TEXTAREA|SELECT|BUTTON|VIDEO)$/.test(t.tagName))) return;
+      if (getComputedStyle(document.documentElement).overflowY === 'hidden' || getComputedStyle(document.body).overflowY === 'hidden') return;
+      const k = e.key, dn = k === 'ArrowDown' || k === 'PageDown' || (k === ' ' && !e.shiftKey), up = k === 'ArrowUp' || k === 'PageUp' || (k === ' ' && e.shiftKey);
+      if ((dn || up) && inZone(headY(), dn)) { e.preventDefault(); stepTo(dn ? 1 : -1); }
+    });
+    window.addEventListener('pointerdown', () => { if (gl) stopGlideS(); }, { passive: true });
     window.addEventListener('scroll', () => {
+      const yNow = window.scrollY;
+      if (yNow !== lastY) sDir = yNow > lastY ? 1 : -1;
+      lastY = yNow;
+      if (gl && Math.abs(yNow - glLastSet) > 2) stopGlideS();               // a scrollbar drag, touch or anchor jump took over
       requestS();
       // while the page moves: hover effects pause and the moving parts get their own layer; both drop once it settles
       svc.classList.add('is-scrolling');
       if (hoverIdx !== -1) { spentIdx = hoverIdx; setHover(-1); }          // let go of the hovered picture; its hover is used up until the mouse leaves it
       clearTimeout(scT);
-      scT = setTimeout(() => svc.classList.remove('is-scrolling'), 160);
+      scT = setTimeout(() => { svc.classList.remove('is-scrolling'); magnet(); }, 160);
     }, { passive: true });
     const relayoutS = () => { layoutS(); drawS(); };
     window.addEventListener('resize', relayoutS);
@@ -922,6 +1003,7 @@
   if (!reduceMotion) {
     const LERP = 0.1;
     let cur = window.scrollY, target = cur, running = false, raf = 0, lastT = 0, lastSet = -1;
+    smoothHead = () => (running ? target : window.scrollY);
     const maxY = () => document.documentElement.scrollHeight - window.innerHeight;
     const stopGlide = () => { cancelAnimationFrame(raf); running = false; cur = target = window.scrollY; };
     const step = (now) => {

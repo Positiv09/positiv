@@ -743,7 +743,7 @@
     const clamp01 = (v) => Math.min(Math.max(v, 0), 1);
     const ss = (t) => t * t * (3 - 2 * t);
     const wrap4 = (v) => ((((v + 2) % 4) + 4) % 4) - 2;                  // signed distance from the front, looped (the last picture peeks above the first)
-    const HOLD = 0.3, TRAVEL = 90;                                         // pause per service (× one picture of travel), copy travel in px
+    const HOLD = 0.3, TRAVEL = 90;                                         // pause per service (× one picture of travel), copy travel in px; pictures sit 16px apart
     // title words sit in masks so they can rise into place
     panels.forEach((p) => {
       const t = $('.svc-panel__title', p); if (!t || t.dataset.split) return;
@@ -798,7 +798,7 @@
       const u = uAt(window.scrollY);
       tiles.forEach((t, i) => {
         const x = wrap4(i - u), ax = Math.min(Math.abs(x), 1);
-        t.style.transform = `translate3d(0,${(x * g.pitch).toFixed(2)}px,0) scale(${(1 - 0.05 * ax).toFixed(4)})`;
+        t.style.transform = `translate3d(0,${(x * g.pitch).toFixed(2)}px,0)`;      // full size, so the gap between pictures is always exactly 16px
         t.style.opacity = clamp01(2 - Math.abs(x)).toFixed(3);
         t.style.pointerEvents = Math.abs(x) < 1.4 ? '' : 'none';
         if (dims[i]) dims[i].style.opacity = reduceMotion ? '0' : (0.4 * ax).toFixed(3);

@@ -990,7 +990,7 @@
    Phones: the hero picture columns become three horizontal rows that drift sideways (JS: "Hero image columns")
    ========================================================================== */
 @media (max-width: 767px) {
-  .hero__media { display: flex; flex-direction: column; grid-template-columns: none; gap: 10px; width: 100%; height: auto; margin: 28px 0 0; }
+  .hero__media { display: flex; flex-direction: column; grid-template-columns: none; gap: 10px; width: 100%; height: auto; margin: 0; padding-bottom: 10px; }   /* closer to the buttons; the last row keeps the same 10px gap below it as between the rows */
   .hero__col { touch-action: pan-y; }                               /* vertical swipes still scroll the page; sideways swipes drag the row */
   .hero__track { flex-direction: row; width: max-content; gap: 10px; }
   .hero__set { flex-direction: row; gap: 10px; }

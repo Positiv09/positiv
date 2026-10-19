@@ -725,30 +725,26 @@
     measureV();
   }
 
-  /* ---------- Stacked service card ----------
-     Timings measured on the staging build (1920×1000): the card is pinned for 3.6vh of scroll; panels cross-fade
-     (opacity 0→1 with a 34px rise) at 1.15vh, then every .805vh; the image tiles rotate through four slots
-     (main · bottom-peek · hidden · top-peek) shortly before each cross-fade. Pure function of scroll → GSAP-ready. */
+  /* ---------- Stacked service card: pinned, scroll-scrubbed ----------
+     The card pins under the header (sized from the window) while the picture column moves as one strip, exactly as far
+     as the page scrolls — the same 1:1 feel as the "Four reasons" cards. Each service gets one picture of travel plus a
+     short pause (HOLD) so its copy can be read. The copy rides along with its picture at a slower rate and fades through
+     the middle of the move; the title words rise out of their mask and the deliverable pills follow in a small stagger —
+     all driven by the scroll position, nothing on a timer, so stopping half-way leaves everything half-way. No scroll
+     takeover: the site-wide smooth scrolling is the only smoothing. Desktop only; below 992px the panels are a list. */
   const svc = $('[data-svc]');
   if (svc) {
     const card = $('[data-svc-card]', svc);
     const panels = $$('[data-svc-panel]', svc);
     const tiles = $$('[data-svc-tile]', svc);
     const media = $('[data-svc-media]', svc);
+    const header = $('#site-header');
     const mqS = matchMedia('(min-width: 992px)');
     const clamp01 = (v) => Math.min(Math.max(v, 0), 1);
-    const lerp = (a, b, t) => a + (b - a) * t;
-    const E1 = 1.15, STEP = 0.805, PANEL_W = 0.10, TILE_END = 0.08, TILE_W = 0.17;   // in vh
-    // slots as fractions of the card height (measured at 800px): [top, height]
-    const SLOT = { main: [88, 640], bottom: [678, 200], hidden: [678, 0], top: [-62, 200], gone: [-85, 0] };
-    let pinStart = 0;
-    const measureS = () => { pinStart = svc.getBoundingClientRect().top + window.scrollY - parseFloat(getComputedStyle(card).top); updateS(true); };
-    // The target progress follows the scroll position; the value actually drawn eases toward it every frame, so wheel
-    // notches glide instead of stepping (time constant ≈ 110ms).
-    // Text choreography for a panel: title words rise out of a mask, then icon / copy / labels / pills / number follow in a
-    // soft stagger (power3.out, a little blur clearing). Runs each time the dominant panel changes. Reads as one brand
-    // motion language with the section headings.
-    let svcActive = -1;
+    const ss = (t) => t * t * (3 - 2 * t);
+    const wrap4 = (v) => ((((v + 2) % 4) + 4) % 4) - 2;                  // signed distance from the front, looped (the last picture peeks above the first)
+    const HOLD = 0.3, TRAVEL = 90;                                         // pause per service (× one picture of travel), copy travel in px
+    // title words sit in masks so they can rise into place
     panels.forEach((p) => {
       const t = $('.svc-panel__title', p); if (!t || t.dataset.split) return;
       t.dataset.split = '1'; const label = t.textContent; t.setAttribute('aria-label', label); t.textContent = '';
@@ -758,61 +754,74 @@
         if (i < arr.length - 1) t.appendChild(document.createTextNode(' '));
       });
     });
-    const playPanelText = (p) => {
-      if (!window.gsap || reduceMotion) return;
-      const words = $$('.svc-word', p), rest = $$('.svc-panel__icon, .svc-panel__work, .svc-label--deliv, .svc-pill, .svc-panel__num', p);
-      gsap.killTweensOf([...words, ...rest]);
-      gsap.fromTo(words, { yPercent: 115, rotation: 4 }, { yPercent: 0, rotation: 0, duration: 0.95, ease: 'power4.out', stagger: 0.07, transformOrigin: '0% 100%' });
-      gsap.fromTo(rest, { opacity: 0, y: 22, filter: 'blur(5px)' }, { opacity: 1, y: 0, filter: 'blur(0px)', duration: 0.8, ease: 'power3.out', stagger: 0.06, delay: 0.12 });
+    const words = panels.map((p) => $$('.svc-word', p));
+    const pills = panels.map((p) => $$('.svc-pill', p));
+    tiles.forEach((tile) => tile.insertAdjacentHTML('beforeend', '<span class="svc-tile__dim" aria-hidden="true"></span>'));
+    const dims = tiles.map((t) => $('.svc-tile__dim', t));
+
+    const g = { pinStart: 0, pitch: 1, hold: 0, L: 1 };
+    let mainTile = 0, ticking = false, scT = 0;
+    const clearS = () => {
+      [card, svc].forEach((el) => { el.style.top = el.style.height = ''; });
+      svc.classList.remove('is-compact');
+      panels.forEach((p) => { p.style.opacity = p.style.transform = p.style.pointerEvents = ''; });
+      tiles.forEach((t) => { t.style.top = t.style.height = t.style.opacity = t.style.transform = t.style.pointerEvents = ''; });
+      words.flat().forEach((w) => { w.style.transform = ''; });
+      pills.flat().forEach((q) => { q.style.opacity = q.style.transform = ''; });
     };
-    const SVC_SPEED = 1.8;
-    let curPx = null, targetPx = 0, rafS = 0, lastS = 0, mainTile = 0;
-    const applyS = (px) => {
-      const scale = media.clientHeight / 800;
-      // tiles: find the running transition k (0..2) and its progress
-      let k = 0, t = 0;
-      for (let n = 1; n <= 3; n++) {
-        const end = E1 + STEP * (n - 1) - TILE_END, start = end - TILE_W;
-        if (px >= end) { k = n; t = 0; } else if (px > start) { k = n - 1; t = clamp01((px - start) / TILE_W); break; } else break;
-      }
-      k = Math.min(k, 3);
-      // The four pictures sit on a big horizontal drum: picture i is at angle (i - pos)·38° around the drum's axis, so scrolling just
-      // rotates the drum. Each face is pushed along the circle (y = R·sin a, z = R·cos a − R) and tipped by the same angle, so the
-      // neighbours curve away above and below and the face in front is flat. The drum loops: the last picture sits above the first and the first below the last.
-      const pos = k + t * t * (3 - 2 * t);
-      mainTile = Math.round(pos);
-      const tileH = SLOT.main[1] * scale, cy = (SLOT.main[0] + SLOT.main[1] / 2) * scale, R = 760 * scale, SPREAD = 38;
-      // the texts ride the very same drum as the pictures: each panel is a face at the same angle, so the copy rolls away and in
-      // together with its picture (only the face in front, and the one arriving, is readable)
+    const layoutS = () => {
+      if (!mqS.matches) { clearS(); return; }
+      const vh = window.innerHeight, navH = header ? header.offsetHeight : 85;
+      const cardH = Math.round(Math.min(Math.max(vh - navH - 48, 460), 900));
+      const cardTop = Math.round(navH + Math.max(12, (vh - navH - cardH) / 2));
+      card.style.top = `${cardTop}px`; card.style.height = `${cardH}px`;
+      const mh = media.clientHeight;
+      const tileH = Math.round(mh * 0.8), tileTop = Math.round(mh * 0.11);   // the design's slot: picture at 80% of the column, peeks above and below
+      tiles.forEach((t) => { t.style.top = `${tileTop}px`; t.style.height = `${tileH}px`; });
+      g.pitch = tileH + 16;
+      g.hold = Math.round(g.pitch * HOLD);
+      g.L = g.pitch + g.hold;
+      svc.style.height = `${Math.round(cardH + 3 * g.L + g.hold + 0.2 * g.pitch)}px`;
+      g.pinStart = svc.getBoundingClientRect().top + window.scrollY - cardTop;
+      svc.classList.toggle('is-compact', cardH < 700);             // short windows: tighter type, icon and number tucked away
+    };
+    // scroll → position along the strip (0…3): pauses on each service, then moves linearly (1:1) to the next
+    const uAt = (y) => {
+      const s = y - g.pinStart;
+      if (s <= 0) return 0;
+      const n = Math.floor(s / g.L);
+      return n >= 3 ? 3 : n + clamp01((s - n * g.L - g.hold) / g.pitch);
+    };
+    const drawS = () => {
+      ticking = false;
+      if (!mqS.matches) return;
+      const u = uAt(window.scrollY);
+      tiles.forEach((t, i) => {
+        const x = wrap4(i - u), ax = Math.min(Math.abs(x), 1);
+        t.style.transform = `translate3d(0,${(x * g.pitch).toFixed(2)}px,0) scale(${(1 - 0.05 * ax).toFixed(4)})`;
+        t.style.opacity = clamp01(2 - Math.abs(x)).toFixed(3);
+        t.style.pointerEvents = Math.abs(x) < 1.4 ? '' : 'none';
+        if (dims[i]) dims[i].style.opacity = reduceMotion ? '0' : (0.4 * ax).toFixed(3);
+      });
       panels.forEach((p, i) => {
-        const x = ((((i - pos + 2) % 4) + 4) % 4) - 2, a = x * SPREAD, r = (a * Math.PI) / 180, o = clamp01(1 - Math.abs(x) * 1.25);
+        const d = i - u, ad = Math.abs(d), o = ss(clamp01((0.5 - ad) / 0.3));
         p.style.opacity = o.toFixed(3);
-        p.style.transform = `translateY(${(R * Math.sin(r)).toFixed(1)}px) translateZ(${(R * Math.cos(r) - R).toFixed(1)}px) rotateX(${(-a).toFixed(2)}deg)`;
+        p.style.transform = reduceMotion ? '' : `translate3d(0,${(d * TRAVEL).toFixed(2)}px,0)`;
         p.style.pointerEvents = o > 0.5 ? 'auto' : 'none';
+        if (ad > 1 || reduceMotion) return;
+        words[i].forEach((w, k) => {
+          const wp = ss(clamp01((0.5 - ad - k * 0.06) / 0.28));
+          w.style.transform = wp >= 1 ? '' : `translate3d(0,${((1 - wp) * 112).toFixed(1)}%,0) rotate(${((1 - wp) * 4).toFixed(2)}deg)`;
+        });
+        pills[i].forEach((q, k) => {
+          const pp = ss(clamp01((0.46 - ad - k * 0.035) / 0.24));
+          q.style.opacity = pp >= 1 ? '' : pp.toFixed(3);
+          q.style.transform = pp >= 1 ? '' : `translate3d(0,${((1 - pp) * 10).toFixed(1)}px,0)`;
+        });
       });
-      tiles.forEach((tile, i) => {
-        const x = ((((i - pos + 2) % 4) + 4) % 4) - 2;                   // signed distance from the front, wrapped so the drum is a loop
-        const a = x * SPREAD, r = (a * Math.PI) / 180;
-        tile.style.top = `${cy - tileH / 2}px`; tile.style.height = `${tileH}px`;
-        tile.style.opacity = clamp01(2 - Math.abs(x)).toFixed(3);       // neighbours are fully there, the face behind the drum fades out
-        tile.style.transform = `translateY(${(x * (tileH + 16)).toFixed(1)}px)`;                 // pictures slide flat (no tilt); only the copy rolls on the drum
-        tile.style.pointerEvents = Math.abs(x) < 1.4 ? '' : 'none';
-      });
+      mainTile = Math.min(Math.max(Math.round(u), 0), 3);
     };
-    const loopS = (now) => {
-      rafS = 0;
-      const dt = Math.min((now - lastS) / 1000, 0.05); lastS = now;
-      curPx += (targetPx - curPx) * (1 - Math.exp(-dt * 9));
-      if (Math.abs(targetPx - curPx) < 0.0004) curPx = targetPx;
-      applyS(curPx);
-      if (curPx !== targetPx) rafS = requestAnimationFrame(loopS);
-    };
-    const updateS = (instant) => {
-      if (!mqS.matches) { panels.forEach((p) => p.removeAttribute('style')); tiles.forEach((t) => t.removeAttribute('style')); curPx = null; return; }
-      targetPx = (window.scrollY - pinStart) / window.innerHeight * SVC_SPEED;           // progress in vh units; the services change SVC_SPEED× faster than the page scrolls
-      if (curPx === null || instant === true || reduceMotion) { curPx = targetPx; applyS(curPx); return; }
-      if (!rafS) { lastS = performance.now(); rafS = requestAnimationFrame(loopS); }
-    };
+    const requestS = () => { if (!ticking) { ticking = true; requestAnimationFrame(drawS); } };
     // hover: every tile gets an expand button that opens the image in the lightbox
     tiles.forEach((tile) => {
       tile.insertAdjacentHTML('beforeend', '<button class="svc-tile__expand" type="button" aria-label="Expand image"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M10 20H4v-6M20 4l-7 7M4 20l7-7"/></svg></button>');
@@ -820,75 +829,25 @@
         const m = /url\(["']?([^"')]+)["']?\)/.exec(getComputedStyle(tile).backgroundImage);
         if (m && openLightbox) openLightbox(m[1], tile.querySelector('.svc-tile__expand'), panels[tiles.indexOf(tile)], (tile.dataset.extra || '').split(',').filter(Boolean));
       };
-      // the picture in the main slot opens the lightbox; a peeking picture (above / below) jumps to its own service
+      // the picture in front opens the lightbox; a peeking picture (above / below) glides to its own service
       tile.addEventListener('click', () => {
         const i = tiles.indexOf(tile);
         if (i === mainTile || !mqS.matches) { open(); return; }
-        const px = i === 0 ? 0.55 : E1 + STEP * (i - 1) + 0.4 * STEP;
-        window.scrollTo({ top: pinStart + (px / SVC_SPEED) * window.innerHeight, behavior: 'smooth' });
+        window.scrollTo({ top: g.pinStart + i * g.L + g.hold / 2, behavior: 'smooth' });
       });
     });
-    // Never rest mid-animation: when the scroll stops while a picture/text transition is running, it finishes on its own
-    // (forward in the scrolling direction). The page scroll is not touched, so nothing is ever held or trapped.
-    let settleT = 0, lastY = window.scrollY, dirS = 1;
-    const settle = () => {
-      if (!mqS.matches || curPx === null) return;
-      for (let n = 1; n <= 3; n++) {
-        const end = E1 + STEP * (n - 1) - TILE_END, start = end - TILE_W;
-        if (targetPx > start + 0.001 && targetPx < end - 0.001) {
-          targetPx = dirS >= 0 ? end : start;
-          if (!rafS) { lastS = performance.now(); rafS = requestAnimationFrame(loopS); }
-          return;
-        }
-      }
-    };
     window.addEventListener('scroll', () => {
-      const y = window.scrollY; if (y !== lastY) dirS = y > lastY ? 1 : -1; lastY = y;
-      updateS(); clearTimeout(settleT); if (!reduceMotion) settleT = setTimeout(settle, 140);
+      requestS();
+      // while the page moves: hover effects pause and the moving parts get their own layer; both drop once it settles
+      svc.classList.add('is-scrolling');
+      clearTimeout(scT);
+      scT = setTimeout(() => svc.classList.remove('is-scrolling'), 160);
     }, { passive: true });
-    window.addEventListener('resize', measureS);
-    window.addEventListener('load', measureS);
-    mqS.addEventListener?.('change', measureS);
-    measureS();
-
-    /* One wheel gesture = one service (same behaviour as the "Four reasons" cards): while the stacked card is in view, a wheel gesture
-       glides to the next / previous service instead of scrolling freely. Snap points = where each service has fully settled.
-       Before the first and after the last service the page scrolls normally, so the section never traps the user. Desktop wheel only. */
-    if (!reduceMotion) {
-      let animS = false, lastWheelS = 0, rafSn = 0;
-      const snapPtsS = () => [0.55, ...[1, 2, 3].map((n) => E1 + STEP * (n - 1) - TILE_END + 0.12)].map((px) => Math.round(pinStart + (px / SVC_SPEED) * window.innerHeight));
-      const glideS = (target) => {
-        const from = window.scrollY, dist = target - from, dur = Math.min(1100, 600 + Math.abs(dist) * 0.35), t0 = performance.now();
-        animS = true;
-        const ease = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
-        const step = (now) => {
-          const k = Math.min((now - t0) / dur, 1);
-          window.scrollTo({ top: from + dist * ease(k), behavior: 'instant' });
-          if (k < 1) rafSn = requestAnimationFrame(step);
-          else { animS = false; lastWheelS = performance.now(); }
-        };
-        cancelAnimationFrame(rafSn); rafSn = requestAnimationFrame(step);
-      };
-      window.addEventListener('wheel', (e) => {
-        if (!mqS.matches || e.ctrlKey || Math.abs(e.deltaY) < Math.abs(e.deltaX) || Math.abs(e.deltaY) < 4) return;
-        const now = performance.now(), newGesture = now - lastWheelS > 150;
-        lastWheelS = now;
-        const pts = snapPtsS(), y = window.scrollY, vh = window.innerHeight, down = e.deltaY > 0;
-        const first = pts[0], last = pts[pts.length - 1];
-        let target = null;
-        if (down) {
-          if (y >= first - 0.6 * vh && y < last - 4) target = pts.find((q) => q > y + 4);          // next service down
-        } else if (y <= last + 0.5 * vh && y > first + 4) {
-          target = [...pts].reverse().find((q) => q < y - 4);                                      // previous service up
-          if (target === undefined && y > last) target = last;
-        }
-        if (!down && y > last + 4 && y <= last + 0.5 * vh) target = last;                          // coming back from below
-        if (target == null) return;                                                                // outside the stack: normal scroll
-        e.preventDefault();                                                                        // inside: we own this gesture
-        if (animS || !newGesture) return;                                                          // ignore the tail of the same gesture
-        glideS(target);
-      }, { passive: false });
-    }
+    const relayoutS = () => { layoutS(); drawS(); };
+    window.addEventListener('resize', relayoutS);
+    window.addEventListener('load', relayoutS);
+    mqS.addEventListener?.('change', relayoutS);
+    relayoutS();
   }
 
   /* ---------- Smooth wheel scrolling (site-wide) ----------

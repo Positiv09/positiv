@@ -843,7 +843,7 @@
     const requestS = () => { if (!ticking) { ticking = true; requestAnimationFrame(drawS); } };
     const stepOpen = (now) => {
       const dt = Math.min((now - openT) / 1000, 0.05); openT = now;
-      open += (openTarget - open) * (1 - Math.exp(-dt / 0.11));             // ≈ 0.45s ease-out
+      open += (openTarget - open) * (1 - Math.exp(-dt / 0.055));            // ≈ 0.25s ease-out
       if (Math.abs(openTarget - open) < 0.002) open = openTarget;
       drawS();
       openRaf = open !== openTarget ? requestAnimationFrame(stepOpen) : 0;

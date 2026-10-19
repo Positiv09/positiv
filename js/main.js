@@ -894,7 +894,14 @@
       if (i === spentIdx) return;                                           // still on that same picture: wait until the mouse leaves it
       if (i !== hoverIdx) setHover(i);
     }, { passive: true });
-    document.documentElement.addEventListener('mouseleave', () => { spentIdx = -1; if (hoverIdx !== -1) setHover(-1); });
+    document.documentElement.addEventListener('mouseleave', () => { spentIdx = -1; px = py = -1; if (hoverIdx !== -1) setHover(-1); });
+    // once the page comes to rest, the picture under a still cursor takes the hover by itself — no need to wiggle the mouse
+    const hoverUnderCursor = () => {
+      if (!mqS.matches || px < 0 || py < 0) return;
+      const el = document.elementFromPoint(px, py), t = el && el.closest ? el.closest('[data-svc-tile]') : null;
+      spentIdx = -1;
+      setHover(t ? tiles.indexOf(t) : -1);
+    };
     // hover: every tile gets an expand button that opens the image in the lightbox
     tiles.forEach((tile) => {
       tile.insertAdjacentHTML('beforeend', '<button class="svc-tile__expand" type="button" aria-label="Expand image"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M10 20H4v-6M20 4l-7 7M4 20l7-7"/></svg></button>');
@@ -1009,7 +1016,7 @@
       svc.classList.add('is-scrolling');
       if (hoverIdx !== -1) { spentIdx = hoverIdx; setHover(-1); }          // let go of the hovered picture; its hover is used up until the mouse leaves it
       clearTimeout(scT);
-      scT = setTimeout(() => { svc.classList.remove('is-scrolling'); magnet(); }, 160);
+      scT = setTimeout(() => { svc.classList.remove('is-scrolling'); magnet(); if (!gl) hoverUnderCursor(); }, 160);
     }, { passive: true });
     const relayoutS = () => { layoutS(); drawS(); };
     window.addEventListener('resize', relayoutS);

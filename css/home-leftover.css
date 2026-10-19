@@ -230,10 +230,10 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .feature-card__media { height: 96%;
   background-size: cover; background-position: 50%; background-repeat: no-repeat;
 }
-.feature-card--yellow .feature-card__media { background-image: url("../assets/img/feature-card-1.webp"); }
-.feature-card--purple .feature-card__media { background-image: url("../assets/img/feature-card-2.webp"); }
-.feature-card--white  .feature-card__media { background-image: url("../assets/img/feature-card-3-team.webp"); }
-.feature-card--orange .feature-card__media { background-image: url("../assets/img/feature-card-4.webp"); }
+.feature-card--yellow .feature-card__media { background-image: url("https://cdn.jsdelivr.net/gh/Positiv09/positiv@5ea22822d06698a886cf1d1cb3b4bd2379753598/assets/img/feature-card-1.webp"); }
+.feature-card--purple .feature-card__media { background-image: url("https://cdn.jsdelivr.net/gh/Positiv09/positiv@5ea22822d06698a886cf1d1cb3b4bd2379753598/assets/img/feature-card-2.webp"); }
+.feature-card--white  .feature-card__media { background-image: url("https://cdn.jsdelivr.net/gh/Positiv09/positiv@5ea22822d06698a886cf1d1cb3b4bd2379753598/assets/img/feature-card-3-team.webp"); }
+.feature-card--orange .feature-card__media { background-image: url("https://cdn.jsdelivr.net/gh/Positiv09/positiv@5ea22822d06698a886cf1d1cb3b4bd2379753598/assets/img/feature-card-4.webp"); }
 
 /* hover: the picture zooms in a little and the yellow Positiv mark fades in at the bottom-right corner */
 .feature-card__media::before { background: inherit; background-size: cover; background-position: 50%;
@@ -325,11 +325,11 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .portfolio-card__media {
   background-size: cover; background-position: 50%; background-repeat: no-repeat;
 }
-.portfolio-card__media--1 { background-image: url("../assets/img/portfolio-1.jpg"); }
-.portfolio-card__media--2 { background-image: url("../assets/img/portfolio-2.webp"); }
-.portfolio-card__media--3 { background-image: url("../assets/img/portfolio-3.webp"); }
-.portfolio-card__media--web { background-image: url("../assets/img/service-web.jpg"); }
-.portfolio-card__media--fig { background-image: url("../assets/img/portfolio-fig.webp"); }
+.portfolio-card__media--1 { background-image: url("https://cdn.jsdelivr.net/gh/Positiv09/positiv@5ea22822d06698a886cf1d1cb3b4bd2379753598/assets/img/portfolio-1.jpg"); }
+.portfolio-card__media--2 { background-image: url("https://cdn.jsdelivr.net/gh/Positiv09/positiv@5ea22822d06698a886cf1d1cb3b4bd2379753598/assets/img/portfolio-2.webp"); }
+.portfolio-card__media--3 { background-image: url("https://cdn.jsdelivr.net/gh/Positiv09/positiv@5ea22822d06698a886cf1d1cb3b4bd2379753598/assets/img/portfolio-3.webp"); }
+.portfolio-card__media--web { background-image: url("https://cdn.jsdelivr.net/gh/Positiv09/positiv@5ea22822d06698a886cf1d1cb3b4bd2379753598/assets/img/service-web.jpg"); }
+.portfolio-card__media--fig { background-image: url("https://cdn.jsdelivr.net/gh/Positiv09/positiv@5ea22822d06698a886cf1d1cb3b4bd2379753598/assets/img/portfolio-fig.webp"); }
 /* hover (Figma "Hover card project"): the picture zooms a little, the corner logo slides up and out, and the project name + category slide in with the Positiv bolt */
 .portfolio-card__media::before { background: inherit; background-size: cover; background-position: 50%;
 }
@@ -436,8 +436,8 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .testimonial-card--white .testimonial-card__title,
 .testimonial-card--peach .testimonial-card__title { color: #2b2b2b; }
 .testimonial-card__shape { top: 0; right: 0; background-position: 50%; background-repeat: no-repeat; background-size: 450px; }
-.testimonial-card__shape--b { background-image: url("../assets/img/shape-intersect-a.webp"); background-size: 500px; }
-.testimonial-card__shape--c { background-image: url("../assets/img/shape-intersect-b.webp"); background-size: 500px; }
+.testimonial-card__shape--b { background-image: url("https://cdn.jsdelivr.net/gh/Positiv09/positiv@5ea22822d06698a886cf1d1cb3b4bd2379753598/assets/img/shape-intersect-a.webp"); background-size: 500px; }
+.testimonial-card__shape--c { background-image: url("https://cdn.jsdelivr.net/gh/Positiv09/positiv@5ea22822d06698a886cf1d1cb3b4bd2379753598/assets/img/shape-intersect-b.webp"); background-size: 500px; }
 .testimonial-card__person { right: 5%; bottom: 0; background-size: cover; background-position: 50% 100%; background-repeat: no-repeat; }
 
 /* ---------- 7. COMPARISON TABLE --------------------------------------- */
@@ -468,7 +468,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 
 /* ---------- 8. CTA + FOOTER — rules taken from the staging stylesheet, per breakpoint ------------------- */
 .cta-section {
-  background: linear-gradient(rgb(33 29 29 / .47), var(--c-ink)), url("../assets/img/cta-bg.webp");
+  background: linear-gradient(rgb(33 29 29 / .47), var(--c-ink)), url("https://cdn.jsdelivr.net/gh/Positiv09/positiv@5ea22822d06698a886cf1d1cb3b4bd2379753598/assets/img/cta-bg.webp");
   background-size: auto, cover; background-position: 0 0, 50%; background-repeat: no-repeat;
 }
 .cta__mark img { width: 379px; height: 420px; display: block; overflow: visible; }
@@ -857,10 +857,10 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
     content: ""; grid-area: 1 / 1 / 2 / -1; align-self: stretch; min-height: 180px; border-radius: 18px;
     background-size: cover; background-position: 62% 50%; background-repeat: no-repeat;
   }
-  .svc-panel[data-service="brand"]::before     { background-image: linear-gradient(to top, rgb(20 20 19 / .9), rgb(20 20 19 / .4) 48%, transparent 75%), url("../assets/img/svc-brand.webp"); }
-  .svc-panel[data-service="sales"]::before     { background-image: linear-gradient(to top, rgb(20 20 19 / .9), rgb(20 20 19 / .4) 48%, transparent 75%), url("../assets/img/svc-sales.webp"); }
-  .svc-panel[data-service="web"]::before       { background-image: linear-gradient(to top, rgb(20 20 19 / .9), rgb(20 20 19 / .4) 48%, transparent 75%), url("../assets/img/svc-web.webp"); }
-  .svc-panel[data-service="marketing"]::before { background-image: linear-gradient(to top, rgb(20 20 19 / .9), rgb(20 20 19 / .4) 48%, transparent 75%), url("../assets/img/svc-marketing.webp"); }
+  .svc-panel[data-service="brand"]::before     { background-image: linear-gradient(to top, rgb(20 20 19 / .9), rgb(20 20 19 / .4) 48%, transparent 75%), url("https://cdn.jsdelivr.net/gh/Positiv09/positiv@5ea22822d06698a886cf1d1cb3b4bd2379753598/assets/img/svc-brand.webp"); }
+  .svc-panel[data-service="sales"]::before     { background-image: linear-gradient(to top, rgb(20 20 19 / .9), rgb(20 20 19 / .4) 48%, transparent 75%), url("https://cdn.jsdelivr.net/gh/Positiv09/positiv@5ea22822d06698a886cf1d1cb3b4bd2379753598/assets/img/svc-sales.webp"); }
+  .svc-panel[data-service="web"]::before       { background-image: linear-gradient(to top, rgb(20 20 19 / .9), rgb(20 20 19 / .4) 48%, transparent 75%), url("https://cdn.jsdelivr.net/gh/Positiv09/positiv@5ea22822d06698a886cf1d1cb3b4bd2379753598/assets/img/svc-web.webp"); }
+  .svc-panel[data-service="marketing"]::before { background-image: linear-gradient(to top, rgb(20 20 19 / .9), rgb(20 20 19 / .4) 48%, transparent 75%), url("https://cdn.jsdelivr.net/gh/Positiv09/positiv@5ea22822d06698a886cf1d1cb3b4bd2379753598/assets/img/svc-marketing.webp"); }
 
   /* Deliverables inside the picture: the pills fill the same grid cell, pinned to its bottom, with their own small heading */
   .svc-text .svc-panel__pills {

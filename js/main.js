@@ -903,32 +903,40 @@
        One gesture = one picture. Inside the card, the first wheel notch or swipe of a gesture glides the strip to the next
        picture and it lands centred; the rest of that gesture (trackpad momentum, a wheel still spinning) is absorbed so it
        never skips one. A new gesture — a short pause, or a fresh stronger flick once the glide has mostly landed — moves on.
-       Scrolling in from above stops on the first picture (from below, on the last); one more gesture past the end scrolls
-       the page on as usual. The glide is an ease-in-out curve (soft start, soft landing); redirecting mid-glide carries the
-       current speed into the new curve, so it never jolts. Keys step one picture too; a scrollbar or touch scroll that stops
+       Scrolling in from above stops on the first picture (from below, on the last); one more gesture past the end glides the
+       page out of the card. Every glide is a quintic ease-in-out (speed and acceleration both start and end at zero: a soft
+       start and a soft landing), and it picks up the page's current speed, so going into, between and out of the pictures
+       never jolts. Keys step one picture too; a scrollbar or touch scroll that stops
        part-way settles to the nearest picture. Desktop only, and off with reduced motion. */
-    const GLIDE_MS = 780, GESTURE_GAP = 140, PULL = 0.12;
+    const GLIDE_MS = 880, GESTURE_GAP = 140, PULL = 0.12, EXIT = 0.55;     // ms per picture; exit glide = share of the window
     let gl = null, glRaf = 0, glLastSet = -1, rwLast = 0, rwAbs = 0, rwBusy = false, sDir = 1, lastY = window.scrollY;
+    let vY = 0, vT = 0;                                                    // the page's current scroll speed (px/ms), to start a glide without a jolt
     const magnetOn = () => mqS.matches && !reduceMotion;
     const restY = (k) => g.pinStart + k * g.L + g.hold / 2;
+    // quintic Hermite: from p0 with speed v0 to p1, arriving at rest; zero acceleration at both ends
     const glVel = (now) => {
       if (!gl) return 0;
-      const s = Math.min((now - gl.t0) / gl.T, 1);
-      return ((6 * s * s - 6 * s) * gl.p0 + (3 * s * s - 4 * s + 1) * gl.T * gl.v0 + (-6 * s * s + 6 * s) * gl.p1) / gl.T;
+      const s = Math.min((now - gl.t0) / gl.T, 1), s2 = s * s, s3 = s2 * s, s4 = s3 * s;
+      const d = 30 * s2 - 60 * s3 + 30 * s4;
+      return (-d * gl.p0 + (1 - 18 * s2 + 32 * s3 - 15 * s4) * gl.T * gl.v0 + d * gl.p1) / gl.T;
     };
     const glStep = (now) => {
       glRaf = 0; if (!gl) return;
-      const s = clamp01((now - gl.t0) / gl.T), s2 = s * s, s3 = s2 * s;
-      const p = (2 * s3 - 3 * s2 + 1) * gl.p0 + (s3 - 2 * s2 + s) * gl.T * gl.v0 + (-2 * s3 + 3 * s2) * gl.p1;
+      const s = clamp01((now - gl.t0) / gl.T), s3 = s * s * s, s4 = s3 * s, s5 = s4 * s;
+      const e = 10 * s3 - 15 * s4 + 6 * s5;
+      const p = (1 - e) * gl.p0 + (s - 6 * s3 + 8 * s4 - 3 * s5) * gl.T * gl.v0 + e * gl.p1;
       window.scrollTo({ top: p, behavior: 'instant' }); glLastSet = window.scrollY;
       if (s < 1) glRaf = requestAnimationFrame(glStep); else gl = null;
     };
     const stopGlideS = () => { cancelAnimationFrame(glRaf); glRaf = 0; gl = null; };
-    const glideTo = (dest) => {
-      const now = performance.now(), v0 = gl ? glVel(now) : 0;
+    const glideTo = (dest, exit) => {
+      const now = performance.now();
+      let v0 = gl ? glVel(now) : (now - vT < 60 ? vY : 0);                 // carry the speed the page already has
       dest = Math.min(Math.max(dest, 0), document.documentElement.scrollHeight - window.innerHeight);
       const p0 = window.scrollY, T = GLIDE_MS * Math.min(Math.max(Math.sqrt(Math.abs(dest - p0) / g.pitch), 0.55), 1.35);
-      gl = { p0, p1: dest, v0, t0: now, T };
+      if (v0 * (dest - p0) < 0) v0 = 0;                                     // moving the other way: start from rest
+      v0 = Math.max(-1, Math.min(1, v0 * 0.9)) * Math.min(1, Math.abs(dest - p0) / (T * 0.35) || 0) ;  // never so fast it overshoots
+      gl = { p0, p1: dest, v0, t0: now, T, exit: !!exit };
       if (!glRaf) glRaf = requestAnimationFrame(glStep);
     };
     const headY = () => (gl ? gl.p1 : smoothHead());
@@ -960,7 +968,11 @@
       if (fresh) rwBusy = false;
       if (down ? y < r0 - 2 && y + dy > r0 : y > r3 + 2 && y + dy < r3) { e.preventDefault(); rwBusy = true; glideTo(down ? r0 : r3); return; }
       if (!inZone(y, down)) {
+        if (gl && gl.exit && !fresh) { e.preventDefault(); return; }         // the rest of the gesture that is gliding out
         if (rwBusy && !fresh && y > r0 - 2 && y < r3 + 2) { e.preventDefault(); return; }   // the end of a gesture that just landed on the first / last picture
+        if (fresh && (down ? Math.abs(y - r3) <= 2 : Math.abs(y - r0) <= 2)) {          // a new gesture on the first / last picture: glide out of the card
+          e.preventDefault(); rwBusy = true; glideTo(y + (down ? 1 : -1) * window.innerHeight * EXIT, true); return;
+        }
         if (gl) stopGlideS();
         return;
       }
@@ -976,7 +988,9 @@
     });
     window.addEventListener('pointerdown', () => { if (gl) stopGlideS(); }, { passive: true });
     window.addEventListener('scroll', () => {
-      const yNow = window.scrollY;
+      const yNow = window.scrollY, tNow = performance.now();
+      if (tNow - vT > 4 && tNow - vT < 120) vY = 0.5 * vY + 0.5 * (yNow - lastY) / (tNow - vT); else if (tNow - vT >= 120) vY = 0;
+      vT = tNow;
       if (yNow !== lastY) sDir = yNow > lastY ? 1 : -1;
       lastY = yNow;
       if (gl && Math.abs(yNow - glLastSet) > 2) stopGlideS();               // a scrollbar drag, touch or anchor jump took over

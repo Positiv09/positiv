@@ -741,22 +741,19 @@
   #site-header .div-block-297 .heading-49.n1 { color: #393939; font-weight: 400; }
   /* category card: 128px, 6px corners; on hover the corners open to 12px and the photo eases in a touch */
   #site-header .div-block-297 .div-block-201 {
-    position: relative; height: 128px !important; margin: 20px 0 0 !important; border-radius: 6px; overflow: hidden; isolation: isolate;
-    transition: border-radius .4s var(--mm-ease);
+    position: relative; height: 128px !important; margin: 16px 0 0 !important; border-radius: 6px; overflow: hidden; isolation: isolate;
   }
   #site-header .div-block-297 .div-block-201::before {
     content: ""; position: absolute; inset: 0; background: inherit; background-size: cover; background-position: 50%;
-    transition: transform .6s var(--mm-ease);
+    transition: transform .9s var(--mm-ease);
   }
   #site-header .div-block-297 .div-block-201.n1 { background-size: 100% 125.05%; background-position: 0 18.8%; }   /* Figma's crop for "Technology" */
   #site-header .div-block-297 .n0 > :is(.div-block-213, .div-block-214, .div-block-216) { margin: 20px 0 0; }
-  #site-header .div-block-297 .div-block-202 { display: flex; align-items: center; gap: 8px; margin: 0; transition: gap .3s var(--mm-ease), transform .3s var(--mm-ease); }
+  #site-header .div-block-297 .div-block-202 { display: flex; align-items: center; gap: 8px; margin: 0; }
   #site-header .div-block-297 .heading-50 { margin: 0; color: #211d1d; font-size: 18px; line-height: normal; font-weight: 400; }
   #site-header .div-block-297 .text-block-48.n2 { margin: 8px 0 0; color: #8e8e8e; font-size: 12px; line-height: 1.5; }
   #site-header .div-block-297 :is(.div-block-213, .div-block-214, .div-block-216) > .div-block-203 { display: none; }
-  #site-header .div-block-297 .n0:has(> .div-block-201:hover, .div-block-202:hover, .text-block-48:hover) .div-block-201 { border-radius: 12px; }
-  #site-header .div-block-297 .n0:has(> .div-block-201:hover, .div-block-202:hover, .text-block-48:hover) .div-block-201::before { transform: scale(1.046); }
-  #site-header .div-block-297 .n0:has(> .div-block-201:hover, .div-block-202:hover, .text-block-48:hover) .div-block-202 { gap: 12px; transform: translateX(4px); }
+  #site-header .div-block-297 .n0:has(> .div-block-201:hover, .div-block-202:hover, .text-block-48:hover) .div-block-201::before { transform: scale(1.06); }
   /* bullet rows: 14px, 4px apart, hairline between them, swatch / 24px icon on the right */
   #site-header .div-block-297 .n0 > a.wbs-dropdown-icon-link-2 { display: block; width: 100%; margin: 4px 0 0; padding: 0; }
   #site-header .div-block-297 .n0 > :is(.div-block-213, .div-block-214, .div-block-216) + a.wbs-dropdown-icon-link-2 { margin-top: 20px; }
@@ -814,7 +811,7 @@
   #site-header .pricing2 .div-block-295.ps { display: flex; flex-direction: column; gap: 16px; flex: 1 1 auto; width: auto; height: auto; }
   #site-header .pricing2 .div-block-206.new.pricingtest.ps {
     display: flex; flex-direction: column; justify-content: flex-start; align-items: stretch; gap: 24px;
-    height: auto; min-height: 398px; margin: 0; padding: 16px; box-sizing: border-box; background-color: #fbfee0; border-radius: 18px; overflow: visible;
+    height: auto; min-height: 398px; margin: 0; padding: 16px; box-sizing: border-box; background-color: #fbfee0; border-radius: 12px; overflow: visible;
   }
   #site-header .pricing2 .div-block-291 {
     width: 100%; height: 226px; flex: none; border-radius: 12px; background-size: cover; background-position: 50%;
@@ -851,4 +848,26 @@
   #site-header :is(a.why2:hover .div-block-234, a.r1:hover .div-block-254) .wbs-dropdown-title-2 { color: #000; }
   #site-header :is(a.why2:hover .div-block-234, a.r1:hover .div-block-254) > div:last-child svg [fill]:not([fill="none"]) { fill: #211d1d; }
   #site-header :is(a.why2:hover .div-block-234, a.r1:hover .div-block-254) > div:last-child svg [stroke]:not([stroke="none"]) { stroke: #211d1d; }
+}
+
+/* ---- Why Positiv + Resources lined up with Pricing / Expertise: no rule under the labels; label 40px from the top, the first
+   row / picture / featured card 16px under it (74px); dividers run the full height from the top; equal thirds like Pricing ---- */
+@media (min-width: 992px) {
+  #site-header .wbs-dropdown-mega-grid-2.why { grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: 48px; align-items: stretch; }
+  #site-header .wbs-dropdown-mega-grid-2.resources { align-items: stretch; }
+  #site-header :is(.div-block-233, .div-block-253) { display: none; }
+  #site-header :is(.wbs-dropdown-title-2.why, .wbs-dropdown-title-2.titel) { margin: 0; line-height: normal; }
+  #site-header :is(.div-block-236, .div-block-294 > a.title > .title, .wbs-dropdown-item-2.r1 > a.title > .title) { display: block; margin: 0; padding: 0; }
+  #site-header .div-block-299 .wbs-dropdown-item-2 > a.wbs-dropdown-icon-link-2:first-child,
+  #site-header :is(.div-block-300 .wbs-dropdown-item-2.r1 > a.title, .div-block-294 > a.title, .div-block-293 > a:first-child) { display: block; margin: 0 0 var(--mm-head-gap, 0px); padding: 0; }
+  /* dividers: from the top of the content to the bottom, like Pricing */
+  #site-header :is(.wbs-dropdown-item-2.n4, .wbs-dropdown-item-2.r1.r2.r3) { display: flex; flex-direction: row; align-items: stretch; gap: 0; height: auto; }
+  #site-header :is(.div-block-238.g1, .div-block-227.g2) { flex: none; align-self: stretch; width: 1px; height: auto; margin: 0 47px 0 0; background-color: #b2b2b24d; opacity: 1; }
+  #site-header :is(.div-block-293, .div-block-294) { flex: 1 1 auto; gap: 0; width: auto; height: auto; }
+  /* the rows keep their own spacing; the label's gap is trimmed so the first row's title lands 16px under the label (74px) */
+  #site-header .div-block-299 .wbs-dropdown-item-2:not(.n4) > a:first-child { margin-bottom: -4px; }
+  #site-header .div-block-300 .wbs-dropdown-item-2.r1:not(.r3) > a.title { margin-bottom: -14px; }
+  /* featured pictures / card 16px under their label */
+  #site-header .div-block-239 { margin-top: 16px !important; }
+  #site-header .div-block-257 { margin-top: 16px; }
 }

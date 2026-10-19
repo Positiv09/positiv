@@ -4,7 +4,7 @@
 
 @font-face {
   font-family: "Optima Nova";
-  src: url("../assets/fonts/OptimaNovaLTProDemi.otf") format("opentype");
+  src: url("../assets/fonts/OptimaNovaLTProDemi.woff2") format("woff2"), url("../assets/fonts/OptimaNovaLTProDemi.woff") format("woff"), url("../assets/fonts/OptimaNovaLTProDemi.otf") format("opentype");
   font-weight: 400;   /* single weight, so 700 is browser-synthesised bold exactly like the live h1 words */
   font-style: normal;
   font-display: swap;

@@ -2,7 +2,7 @@
    Header + mega-menus — ported 1:1 from the staging stylesheet (positiv-002d0a.webflow.io)
    Class names are kept as-is so the markup in index.html can be diffed against Webflow.
    ========================================================================== */
-@font-face { font-family: "Optimanovaltprodemi"; src: url("../assets/fonts/OptimaNovaLTProDemi.otf") format("opentype"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "Optimanovaltprodemi"; src: url("../assets/fonts/OptimaNovaLTProDemi.woff2") format("woff2"), url("../assets/fonts/OptimaNovaLTProDemi.woff") format("woff"), url("../assets/fonts/OptimaNovaLTProDemi.otf") format("opentype"); font-weight: 400; font-style: normal; font-display: swap; }
 :root {
   --flowstica-webflow-library--light-slate-grey: #fff;
   --flowstica-webflow-library--white: #211d1d;
@@ -688,6 +688,7 @@
     border-bottom: 1px solid var(--mm-line); box-sizing: border-box;
   }
   #site-header .m1 .div-block-167 { display: none; }
+  #site-header .m1 > a:last-child .div-block-166 { border-bottom: 0; }      /* no hairline under the last service */
   #site-header .m1:nth-child(1) .div-block-166 { min-height: 79px; }      /* Figma's column heights give each list a slightly different row pitch */
   #site-header .m1:nth-child(3) .div-block-166 { min-height: 78.6px; }
   #site-header .m1:is(:nth-child(2), :nth-child(4)) .div-block-166 { min-height: 78px; }
@@ -795,14 +796,14 @@
   #site-header .div-block-297 .link-block-19:hover .text-block-51 { color: #f2f2ed; }
 
   /* ================= Pricing ================= */
-  #site-header .pricing2.pr.pricingtest.expertise2.w--open { height: auto; min-height: 547px; background-color: #f2f2ed; padding: 40px var(--mm-px); box-sizing: border-box; }
+  #site-header .pricing2.pr.pricingtest.expertise2.w--open { height: auto; min-height: 605px; background-color: #f2f2ed; padding: 40px var(--mm-px); box-sizing: border-box; }
   #site-header .wbs-dropdown-mega-grid-2.new.pricing.pricingtest {
     display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: 48px; row-gap: 0;
     height: auto; margin: 0; padding: 0; align-items: stretch;
   }
   #site-header .pricing2 .div-block-219.pricingtest { display: flex; flex-direction: column; gap: 16px; height: auto; padding: 0; }
   #site-header .pricing2 .heading-64 { margin: 0; color: #393939; font-size: 12px; line-height: normal; font-weight: 400; text-transform: uppercase; }
-  #site-header .pricing2 .div-block-218.pricingtest { width: 100%; height: 242px !important; border-radius: 12px; background-size: cover; background-position: 50%; }
+  #site-header .pricing2 .div-block-218.pricingtest { width: 100%; height: 300px !important; border-radius: 12px; background-size: cover; background-position: 50%; }
   #site-header .pricing2 .div-block-218.f6.pricingtest { background-size: 100% 185.4%; background-position: 0 81.1%; }   /* Figma's crop: the photo at 185% height, 69% up */
   #site-header .pricing2 .text-block-52.pricingtest { margin: 0; color: #8e8e8e; font-size: 12px; line-height: 1.5; }
   #site-header .pricing2 .div-block-220.pricingtest { display: flex; align-items: center; gap: 8px; margin: -4px 0 0; transition: gap .3s var(--mm-ease), transform .3s var(--mm-ease); }
@@ -813,10 +814,10 @@
   #site-header .pricing2 .div-block-295.ps { display: flex; flex-direction: column; gap: 16px; flex: 1 1 auto; width: auto; height: auto; }
   #site-header .pricing2 .div-block-206.new.pricingtest.ps {
     display: flex; flex-direction: column; justify-content: flex-start; align-items: stretch; gap: 24px;
-    height: 340px; margin: 0; padding: 16px; box-sizing: border-box; background-color: #fbfee0; border-radius: 18px; overflow: visible;
+    height: auto; min-height: 398px; margin: 0; padding: 16px; box-sizing: border-box; background-color: #fbfee0; border-radius: 18px; overflow: visible;
   }
   #site-header .pricing2 .div-block-291 {
-    width: 100%; height: 168px; flex: none; border-radius: 12px; background-size: cover; background-position: 50%;
+    width: 100%; height: 226px; flex: none; border-radius: 12px; background-size: cover; background-position: 50%;
     box-shadow: 0 10px 15px -3px rgb(0 0 0 / .1), 0 4px 6px -4px rgb(0 0 0 / .1);
   }
   #site-header .pricing2 .div-block-210.pricingtest { display: flex; flex-direction: column; gap: 16px; width: 100%; margin: 0; padding: 0 8px; box-sizing: border-box; }
@@ -834,4 +835,39 @@
 }
 @media (min-width: 992px) and (prefers-reduced-motion: reduce) {
   #site-header .w-dropdown-list * { transition-duration: .01ms !important; }
+}
+
+/* ---- one real weight of Optima on the site: never let the browser fake a bold (Safari smears the capitals) ---- */
+#site-header .w-dropdown-list, #site-header .w-dropdown-list * { font-synthesis: none; }
+#site-header .w-dropdown-list :is(h4, h5, h6, .heading-57, .heading-53, .heading-50, .text-block-56, .text-block-68) { font-weight: 400; }
+
+/* ---- Why Positiv + Resources: the Services hover (title to black, text nudges 4px, icon turns solid) on their original layout ---- */
+@media (min-width: 992px) {
+  #site-header :is(.div-block-234, .div-block-254) > div:first-child { transition: transform .3s cubic-bezier(.22, 1, .36, 1); }
+  #site-header :is(.div-block-234, .div-block-254) .wbs-dropdown-title-2 { transition: color .3s cubic-bezier(.22, 1, .36, 1); }
+  #site-header :is(.div-block-234, .div-block-254) > div:last-child { position: relative; }
+  #site-header :is(.div-block-234, .div-block-254) > div:last-child svg { transition: opacity .3s ease; }
+  #site-header :is(.div-block-234, .div-block-254) > div:last-child::after {
+    content: ""; position: absolute; left: 50%; top: 50%; width: 24px; height: 24px; transform: translate(-50%, -50%);
+    background: var(--icon-on) center / 24px 24px no-repeat; opacity: 0; transition: opacity .3s ease; pointer-events: none;
+  }
+  #site-header a.why2:hover .div-block-234 > div:first-child, #site-header a.r1:hover .div-block-254 > div:first-child { transform: translateX(4px); }
+  #site-header a.why2:hover .div-block-234 .wbs-dropdown-title-2, #site-header a.r1:hover .div-block-254 .wbs-dropdown-title-2 { color: #000; }
+  #site-header a.why2:hover .div-block-234 > div:last-child svg, #site-header a.r1:hover .div-block-254 > div:last-child svg { opacity: 0; }
+  #site-header a.why2:hover .div-block-234 > div:last-child::after, #site-header a.r1:hover .div-block-254 > div:last-child::after { opacity: 1; }
+  #site-header .wbs-dropdown-mega-grid-2.why > .wbs-dropdown-item-2:nth-child(1) > a:nth-of-type(2) { --icon-on: url("../assets/img/menu/hover/why-1.svg"); }
+  #site-header .wbs-dropdown-mega-grid-2.why > .wbs-dropdown-item-2:nth-child(1) > a:nth-of-type(3) { --icon-on: url("../assets/img/menu/hover/why-2.svg"); }
+  #site-header .wbs-dropdown-mega-grid-2.why > .wbs-dropdown-item-2:nth-child(1) > a:nth-of-type(4) { --icon-on: url("../assets/img/menu/hover/why-3.svg"); }
+  #site-header .wbs-dropdown-mega-grid-2.why > .wbs-dropdown-item-2:nth-child(2) > a:nth-of-type(2) { --icon-on: url("../assets/img/menu/hover/why-4.svg"); }
+  #site-header .wbs-dropdown-mega-grid-2.why > .wbs-dropdown-item-2:nth-child(2) > a:nth-of-type(3) { --icon-on: url("../assets/img/menu/hover/why-5.svg"); }
+  #site-header .wbs-dropdown-mega-grid-2.resources > .wbs-dropdown-item-2:nth-child(1) > a:nth-of-type(2) { --icon-on: url("../assets/img/menu/hover/res-1.svg"); }
+  #site-header .wbs-dropdown-mega-grid-2.resources > .wbs-dropdown-item-2:nth-child(1) > a:nth-of-type(3) { --icon-on: url("../assets/img/menu/hover/res-2.svg"); }
+  #site-header .wbs-dropdown-mega-grid-2.resources > .wbs-dropdown-item-2:nth-child(1) > a:nth-of-type(4) { --icon-on: url("../assets/img/menu/hover/res-3.svg"); }
+  #site-header .wbs-dropdown-mega-grid-2.resources > .wbs-dropdown-item-2:nth-child(1) > a:nth-of-type(5) { --icon-on: url("../assets/img/menu/hover/res-4.svg"); }
+  #site-header .wbs-dropdown-mega-grid-2.resources > .wbs-dropdown-item-2:nth-child(1) > a:nth-of-type(6) { --icon-on: url("../assets/img/menu/hover/res-5.svg"); }
+  #site-header .wbs-dropdown-mega-grid-2.resources > .wbs-dropdown-item-2:nth-child(2) > a:nth-of-type(2) { --icon-on: url("../assets/img/menu/hover/res-6.svg"); }
+  #site-header .wbs-dropdown-mega-grid-2.resources > .wbs-dropdown-item-2:nth-child(2) > a:nth-of-type(3) { --icon-on: url("../assets/img/menu/hover/res-7.svg"); }
+  #site-header .wbs-dropdown-mega-grid-2.resources > .wbs-dropdown-item-2:nth-child(2) > a:nth-of-type(4) { --icon-on: url("../assets/img/menu/hover/res-8.svg"); }
+  #site-header .wbs-dropdown-mega-grid-2.resources > .wbs-dropdown-item-2:nth-child(2) > a:nth-of-type(5) { --icon-on: url("../assets/img/menu/hover/res-9.svg"); }
+  #site-header .wbs-dropdown-mega-grid-2.resources > .wbs-dropdown-item-2:nth-child(2) > a:nth-of-type(6) { --icon-on: url("../assets/img/menu/hover/res-10.svg"); }
 }

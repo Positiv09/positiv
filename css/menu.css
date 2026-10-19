@@ -788,9 +788,7 @@
   #site-header .div-block-297 .div-block-212 { border: 1px solid #393939; box-sizing: border-box; }
   #site-header .div-block-297 .text-block-50.new { color: #f0f879; font-size: 16px; }
   #site-header .div-block-297 .text-block-51 { color: #393939; font-size: 16px; transition: color .3s ease; }
-  #site-header .div-block-297 .link-block-20:hover .div-block-211.new { background-color: #211d1d; }
-  #site-header .div-block-297 .link-block-19:hover .div-block-212 { background-color: #393939; }
-  #site-header .div-block-297 .link-block-19:hover .text-block-51 { color: #f2f2ed; }
+
 
   /* ================= Pricing ================= */
   #site-header .pricing2.pr.pricingtest.expertise2.w--open { height: auto; min-height: 605px; background-color: #f2f2ed; padding: 40px var(--mm-px); box-sizing: border-box; }
@@ -886,3 +884,33 @@
 @media (min-width: 992px) { #site-header .m1 .div-block-166 { gap: 4px; } }
 /* same 4px between a 16px item title and its 14px description in every menu (Services already has it) */
 @media (min-width: 992px) { #site-header :is(.div-block-234, .div-block-254) .wbs-dropdown-content-2 { margin-top: 4px; } }
+
+/* ---- Expertise "Are you the right fit?" card: top level with the photos (16px under the labels), bottom level with the last
+   row of the lists; its buttons get the site's button hover (a circle of colour rises from below, the label inverts) ---- */
+@media (min-width: 992px) {
+  #site-header .div-block-297 > .wbs-dropdown-mega-grid-2 { align-items: stretch; }
+  #site-header .div-block-297 .wbs-dropdown-item-2.cta { display: flex; flex-direction: column; height: auto; }
+  #site-header .div-block-297 .div-block-206.new { flex: 1 1 auto; height: auto; min-height: 0; margin: 34px 0 0; }
+  #site-header .div-block-297 :is(.div-block-211.new, .div-block-212) {
+    position: relative; overflow: hidden; isolation: isolate; transition: transform .4s cubic-bezier(.22, 1, .36, 1);
+  }
+  #site-header .div-block-297 :is(.div-block-211.new, .div-block-212)::before {
+    content: ""; position: absolute; z-index: -1; left: 50%; top: 100%; width: 150%; aspect-ratio: 1; border-radius: 50%;
+    background: var(--fill); transform: translate(-50%, -50%) scale(0); transition: transform .7s cubic-bezier(.22, 1, .36, 1);
+  }
+  #site-header .div-block-297 .div-block-211.new { --fill: #f0f879; }
+  #site-header .div-block-297 .div-block-212 { --fill: #393939; }
+  #site-header .div-block-297 :is(.text-block-50.new, .text-block-51) { transition: color .45s cubic-bezier(.22, 1, .36, 1) .05s; }
+  #site-header .div-block-297 :is(.link-block-20, .link-block-19):is(:hover, :focus-visible) :is(.div-block-211.new, .div-block-212)::before { transform: translate(-50%, -50%) scale(1.15); }
+  #site-header .div-block-297 .link-block-20:is(:hover, :focus-visible) .text-block-50.new { color: #211d1d; }
+  #site-header .div-block-297 .link-block-19:is(:hover, :focus-visible) .text-block-51 { color: #f2f2ed; }
+  #site-header .div-block-297 :is(.link-block-20, .link-block-19):active :is(.div-block-211.new, .div-block-212) { transform: scale(.98); }
+
+  /* ---- "Contact us" (Why Positiv) and "Get the report" (Resources, Pricing): arrow slides out, text nudges 4px ---- */
+  #site-header :is(.div-block-240, .div-block-256, .div-block-292) { gap: 8px; transition: gap .3s cubic-bezier(.22, 1, .36, 1), transform .3s cubic-bezier(.22, 1, .36, 1); }
+  #site-header :is(.link-block-21:hover .div-block-240, .div-block-256:hover, .link-block-23:hover .div-block-292) { gap: 12px; transform: translateX(4px); }
+  #site-header .div-block-256 { cursor: pointer; }
+}
+@media (prefers-reduced-motion: reduce) {
+  #site-header .div-block-297 :is(.div-block-211.new, .div-block-212)::before { transition-duration: .01ms; }
+}

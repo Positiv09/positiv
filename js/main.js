@@ -763,8 +763,10 @@
 
     const g = { pinStart: 0, pitch: 1, hold: 0, L: 1, H0: 1, Hx: 1 };
     let mainTile = 0, ticking = false, scT = 0;
-    // hover: the front picture grows from REST to OPEN; the pictures around it slide away so the gap stays GAP
-    let open = 0, openTarget = 0, openRaf = 0, openT = 0;
+    // hover: one state per picture. The picture under the mouse zooms and shades (is-hot); if it is the one in front it also
+    // grows from REST to OPEN and the pictures around it slide away so the gap stays GAP. Each eases on its own.
+    const opens = [0, 0, 0, 0], openTargets = [0, 0, 0, 0];
+    let openRaf = 0, openT = 0, hoverIdx = -1, spentIdx = -1, px = -1, py = -1;
     const clearS = () => {
       [card, svc].forEach((el) => { el.style.top = el.style.height = ''; });
       svc.classList.remove('is-compact');
@@ -803,9 +805,9 @@
       ticking = false;
       if (!mqS.matches) return;
       const u = uAt(window.scrollY);
-      // heights: every picture at rest size; the front one (and, mid-move, the one arriving) grows by `open` when hovered
+      // heights: each picture from its own hover state — rest size unless that picture itself is open
       const xs = tiles.map((_, i) => wrap4(i - u));
-      const hs = xs.map((x) => g.H0 + (g.Hx - g.H0) * open * Math.max(0, 1 - Math.abs(x)));
+      const hs = opens.map((o) => g.H0 + (g.Hx - g.H0) * o);
       // stack them with exactly GAP between edges, then slide the stack so the scroll position sits in the middle
       const n = Math.min(Math.floor(u), 3), f = u - n, at = (k) => (((n + k) % 4) + 4) % 4;
       const c = { 0: 0 };
@@ -839,20 +841,49 @@
           q.style.transform = pp >= 1 ? '' : `translate3d(0,${((1 - pp) * 10).toFixed(1)}px,0)`;
         });
       });
-      mainTile = Math.min(Math.max(Math.round(u), 0), 3);
+      const front = Math.min(Math.max(Math.round(u), 0), 3);
+      if (front !== mainTile || !tiles[front].classList.contains('is-front')) {
+        mainTile = front;
+        tiles.forEach((t, j) => t.classList.toggle('is-front', j === front));
+      }
     };
     const requestS = () => { if (!ticking) { ticking = true; requestAnimationFrame(drawS); } };
+    // each picture eases toward its own target in about half a second (≈ 4.5 time constants of 0.11s)
     const stepOpen = (now) => {
       const dt = Math.min((now - openT) / 1000, 0.05); openT = now;
-      open += (openTarget - open) * (1 - Math.exp(-dt / 0.055));            // ≈ 0.25s ease-out
-      if (Math.abs(openTarget - open) < 0.002) open = openTarget;
+      let moving = false;
+      for (let i = 0; i < 4; i++) {
+        opens[i] += (openTargets[i] - opens[i]) * (1 - Math.exp(-dt / 0.11));
+        if (Math.abs(openTargets[i] - opens[i]) < 0.002) opens[i] = openTargets[i]; else moving = true;
+      }
       drawS();
-      openRaf = open !== openTarget ? requestAnimationFrame(stepOpen) : 0;
+      openRaf = moving ? requestAnimationFrame(stepOpen) : 0;
     };
-    const setOpen = (v) => {
-      openTarget = reduceMotion ? 0 : v;
-      if (!openRaf && open !== openTarget) { openT = performance.now(); openRaf = requestAnimationFrame(stepOpen); }
+    const setHover = (i) => {
+      hoverIdx = mqS.matches ? i : -1;
+      tiles.forEach((t, j) => {
+        t.classList.toggle('is-hot', j === hoverIdx);
+        openTargets[j] = j === hoverIdx && j === mainTile && !reduceMotion ? 1 : 0;
+      });
+      if (!openRaf && opens.some((o, j) => o !== openTargets[j])) { openT = performance.now(); openRaf = requestAnimationFrame(stepOpen); }
     };
+    /* Hover intent: a picture responds only when the mouse itself moves onto it. Scrolling lets go of the hovered picture
+       (it folds back on its own) and uses up that one picture's hover until the mouse leaves it — a picture that slides
+       under a still cursor never opens. Any other picture responds to a real mouse move straight away. The browser's own
+       hover re-checks after a scroll (no real movement) are ignored. */
+    document.addEventListener('pointermove', (e) => {
+      if (e.pointerType && e.pointerType !== 'mouse') return;
+      const moved = (e.movementX || e.movementY) || e.clientX !== px || e.clientY !== py;
+      px = e.clientX; py = e.clientY;
+      if (!moved || !mqS.matches || svc.classList.contains('is-scrolling')) return;
+      const t = e.target && e.target.closest ? e.target.closest('[data-svc-tile]') : null;
+      const i = t ? tiles.indexOf(t) : -1;
+      if (i !== spentIdx) spentIdx = -1;                                    // left the picture you scrolled from: ready again
+      if (i < 0) { if (hoverIdx !== -1) setHover(-1); return; }
+      if (i === spentIdx) return;                                           // still on that same picture: wait until the mouse leaves it
+      if (i !== hoverIdx) setHover(i);
+    }, { passive: true });
+    document.documentElement.addEventListener('mouseleave', () => { spentIdx = -1; if (hoverIdx !== -1) setHover(-1); });
     // hover: every tile gets an expand button that opens the image in the lightbox
     tiles.forEach((tile) => {
       tile.insertAdjacentHTML('beforeend', '<button class="svc-tile__expand" type="button" aria-label="Expand image"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M10 20H4v-6M20 4l-7 7M4 20l7-7"/></svg></button>');
@@ -860,8 +891,6 @@
         const m = /url\(["']?([^"')]+)["']?\)/.exec(getComputedStyle(tile).backgroundImage);
         if (m && openLightbox) openLightbox(m[1], tile.querySelector('.svc-tile__expand'), panels[tiles.indexOf(tile)], (tile.dataset.extra || '').split(',').filter(Boolean));
       };
-      tile.addEventListener('pointerenter', () => { if (mqS.matches && tiles.indexOf(tile) === mainTile) setOpen(1); });
-      tile.addEventListener('pointerleave', () => setOpen(0));
       // the picture in front opens the lightbox; a peeking picture (above / below) glides to its own service
       tile.addEventListener('click', () => {
         const i = tiles.indexOf(tile);
@@ -873,12 +902,9 @@
       requestS();
       // while the page moves: hover effects pause and the moving parts get their own layer; both drop once it settles
       svc.classList.add('is-scrolling');
-      if (openTarget) setOpen(0);                                         // scrolling folds the open picture back to rest
+      if (hoverIdx !== -1) { spentIdx = hoverIdx; setHover(-1); }          // let go of the hovered picture; its hover is used up until the mouse leaves it
       clearTimeout(scT);
-      scT = setTimeout(() => {
-        svc.classList.remove('is-scrolling');
-        if (tiles[mainTile]?.matches(':hover')) setOpen(1);               // still pointing at the front picture once the page stops
-      }, 160);
+      scT = setTimeout(() => svc.classList.remove('is-scrolling'), 160);
     }, { passive: true });
     const relayoutS = () => { layoutS(); drawS(); };
     window.addEventListener('resize', relayoutS);

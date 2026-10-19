@@ -615,11 +615,11 @@
 
 /* ==========================================================================
    Mega menus — matched to the Figma "Menu" frame (website-design › Menu: Services / Expertise / Pricing panels and their
-   component states). Desktop only; the mobile sheet above is untouched. Figma is drawn at 1440 with a 1200px content
-   width (120px sides): the side padding below gives exactly that at 1440 and scales with the window elsewhere.
+   component states). Desktop only; the mobile sheet above is untouched. The panels sit on the same grid as the Why Positiv
+   and Resources menus (and the header): 10% sides, 40px top, 48px gutters, equal columns.
    ========================================================================== */
 @media (min-width: 992px) {
-  #site-header { --mm-px: max(8.333vw, calc((100vw - 1200px) / 2)); --mm-line: rgb(178 178 178 / .3); --mm-ease: cubic-bezier(.22, 1, .36, 1); }
+  #site-header { --mm-px: 10%; --mm-line: rgb(178 178 178 / .3); --mm-ease: cubic-bezier(.22, 1, .36, 1); }
 
   /* ---- nav toggles ("menu Button"): 14px label + 16px caret 8px apart; hover / open: label and caret turn lime, caret flips ---- */
   #site-header .wbs-nav-link-2 { gap: 8px; }
@@ -630,9 +630,9 @@
   #site-header .wbs-nav-link-2:hover .nav-arrow-icon svg path, #site-header .wbs-nav-link-2.w--open .nav-arrow-icon svg path { fill: #f0f879; }
 
   /* ================= Services ================= */
-  #site-header .div-block-296 { height: auto; min-height: 723px; background-color: #efefeb; padding: 48px var(--mm-px) 80px; box-sizing: border-box; }
+  #site-header .div-block-296 { height: auto; min-height: 723px; background-color: #efefeb; padding: 40px var(--mm-px) 80px; box-sizing: border-box; }
   #site-header .wbs-dropdown-mega-grid-2.m1 {
-    display: grid; grid-template-columns: repeat(4, minmax(0, 250px)); column-gap: 68px; justify-content: start; row-gap: 0;
+    display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); column-gap: 48px; row-gap: 0;
     height: auto; margin: 0; padding: 0; align-items: start;
   }
   #site-header .wbs-dropdown-item-2.m1 { display: flex; flex-direction: column; gap: 4px; width: auto; }
@@ -728,9 +728,9 @@
   #site-header .m1:nth-child(4) > a:nth-of-type(5) { --icon-on: url("../assets/img/menu/hover/mkt-4.svg"); }
 
   /* ================= Expertise ================= */
-  #site-header .div-block-297 { height: auto; min-height: 643px; background-color: #f2f2ed; padding: 48px var(--mm-px); box-sizing: border-box; }
+  #site-header .div-block-297 { height: auto; min-height: 643px; background-color: #f2f2ed; padding: 40px var(--mm-px); box-sizing: border-box; }
   #site-header .div-block-297 > .wbs-dropdown-mega-grid-2 {
-    display: grid; grid-template-columns: repeat(3, minmax(0, 240fr)) minmax(0, 336fr); column-gap: 48px; row-gap: 0;
+    display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); column-gap: 48px; row-gap: 0;
     height: auto; margin: 0; padding: 0; align-items: start;
   }
   #site-header .div-block-297 .wbs-dropdown-item-2.n0 { display: flex; flex-direction: column; align-items: stretch; gap: 0; height: auto; }
@@ -773,7 +773,7 @@
     background-color: rgb(255 255 255 / .5); border-radius: 18px;
   }
   #site-header .div-block-297 .div-block-208.expertise {
-    position: absolute; inset: auto; left: 46px; top: -10px; width: 291px; height: 139px;
+    position: absolute; inset: auto; left: 13.7%; top: -10px; width: 86.6%; height: auto; aspect-ratio: 291 / 139;   /* Figma's placement, scaled to the card width */
     background-size: 100% 100%; background-position: 0 0; border-radius: 0;
   }
   #site-header .div-block-297 .div-block-209 { width: 100%; margin: 0; }
@@ -795,9 +795,9 @@
   #site-header .div-block-297 .link-block-19:hover .text-block-51 { color: #f2f2ed; }
 
   /* ================= Pricing ================= */
-  #site-header .pricing2.pr.pricingtest.expertise2.w--open { height: auto; min-height: 547px; background-color: #f2f2ed; padding: 48px var(--mm-px); box-sizing: border-box; }
+  #site-header .pricing2.pr.pricingtest.expertise2.w--open { height: auto; min-height: 547px; background-color: #f2f2ed; padding: 40px var(--mm-px); box-sizing: border-box; }
   #site-header .wbs-dropdown-mega-grid-2.new.pricing.pricingtest {
-    display: grid; grid-template-columns: minmax(0, 335fr) minmax(0, 335fr) minmax(0, 434fr); column-gap: 48px; row-gap: 0;
+    display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: 48px; row-gap: 0;
     height: auto; margin: 0; padding: 0; align-items: stretch;
   }
   #site-header .pricing2 .div-block-219.pricingtest { display: flex; flex-direction: column; gap: 16px; height: auto; padding: 0; }
@@ -809,7 +809,7 @@
   #site-header .pricing2 .heading-53 { margin: 0; color: #211d1d; font-size: 18px; line-height: normal; font-weight: 400; }
   #site-header .pricing2 .div-block-219.pricingtest:hover .div-block-220.pricingtest { gap: 12px; transform: translateX(4px); }
   #site-header .pricing2 .wbs-dropdown-item-2.cta.new.pricingtest.ps { display: flex; flex-direction: row; align-items: stretch; gap: 0; margin: 0; }
-  #site-header .pricing2 .div-block-227 { flex: none; width: 1px; height: auto; margin: 0 47px 0 23px; background-color: var(--mm-line); opacity: 1; }
+  #site-header .pricing2 .div-block-227 { flex: none; width: 1px; height: auto; margin: 0 47px 0 0; background-color: var(--mm-line); opacity: 1; }
   #site-header .pricing2 .div-block-295.ps { display: flex; flex-direction: column; gap: 16px; flex: 1 1 auto; width: auto; height: auto; }
   #site-header .pricing2 .div-block-206.new.pricingtest.ps {
     display: flex; flex-direction: column; justify-content: flex-start; align-items: stretch; gap: 24px;
@@ -826,13 +826,7 @@
   #site-header .pricing2 .text-block-68 { color: #211d1d; font-size: 18px; }
   #site-header .pricing2 .link-block-23:hover .div-block-292 { gap: 12px; transform: translateX(4px); }
 }
-/* small desktops (992–1279): Figma only draws 1440, so the sides and gutters tighten to keep the four columns and the wide
-   "Marketing & Campaign" pill inside the window */
-@media (min-width: 992px) and (max-width: 1279px) {
-  #site-header { --mm-px: 40px; }
-  #site-header .wbs-dropdown-mega-grid-2.m1 { column-gap: 32px; }
-  #site-header .div-block-297 > .wbs-dropdown-mega-grid-2, #site-header .wbs-dropdown-mega-grid-2.new.pricing.pricingtest { column-gap: 32px; }
-}
+/* small desktops: the pill labels step down so the wide "Marketing & Campaign" pill stays inside the window */
 @media (min-width: 992px) and (max-width: 1099px) {
   #site-header .m1 :is(.wbs-dropdown-title-2.top, .wbs-dropdown-title-2.top2, .wbs-dropdown-title-2.top3, .wbs-dropdown-title-2.top4) { font-size: 14px; }
   #site-header .m1 .div-block-165, #site-header .m1 .div-block-162 { padding-right: 12px; }

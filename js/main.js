@@ -464,13 +464,17 @@
   }
   };
   if (!inWebflow) initHeader();
-  else window.addEventListener('load', () => {
-    // Webflow has bound its own handlers to this navbar by now (and moves the collapsed menu into an overlay). Swap in a fresh copy of the
-    // navbar (no listeners) and drive it with the same code as the local build, so the menu behaves exactly like the repo's.
-    const nb = $('#site-header .w-nav');
-    if (nb) nb.replaceWith(nb.cloneNode(true));
-    initHeader();
-  });
+  else {
+    const swapHeader = () => {
+      // Webflow has bound its own handlers to this navbar by now (and moves the collapsed menu into an overlay). Swap in a fresh copy of the
+      // navbar (no listeners) and drive it with the same code as the local build, so the menu behaves exactly like the repo's.
+      const nb = $('#site-header .w-nav');
+      if (nb) nb.replaceWith(nb.cloneNode(true));
+      initHeader();
+    };
+    if (document.readyState === 'complete') swapHeader();
+    else document.addEventListener('DOMContentLoaded', () => setTimeout(swapHeader, 300));   // after Webflow's own DOM-ready init, well before window load
+  }
 
   /* ---------- Stats: light count-up (GSAP) ----------
      Short and quiet: each stat fades up, its number counts from 0 with a soft ease-out (~1.1s, tabular digits so the

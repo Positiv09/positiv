@@ -878,7 +878,7 @@
 @media (min-width: 992px) {
   #site-header .m1 .div-block-166 .wbs-dropdown-title-2 { font-size: 16px; }
   #site-header :is(.wbs-dropdown-title-2.why2, .div-block-254 .wbs-dropdown-title-2.r1) { font-size: 16px; line-height: normal; }
-  #site-header :is(.m1 .wbs-dropdown-content-2, .div-block-299 .wbs-dropdown-content-2, .div-block-300 .wbs-dropdown-content-2) { font-size: 14px; line-height: 22px; }
+  #site-header :is(.div-block-299 .wbs-dropdown-content-2, .div-block-300 .wbs-dropdown-content-2) { font-size: 14px; line-height: 22px; }
   #site-header .pricing2 .text-block-52.pricingtest { font-size: 14px; line-height: 1.5; }
 }
 @media (min-width: 992px) { #site-header .m1 .div-block-166 { gap: 4px; } }
@@ -930,6 +930,37 @@
   #site-header .div-block-299 > .wbs-dropdown-mega-grid-2 { height: auto; align-content: start; }
 }
 
+/* ---- Expertise column titles (Channel Partners / Technology / Finance & Consulting): same hover as the other menu
+   title links — the arrow slides out and the title nudges 4px; fires from the photo, title or description ---- */
+@media (min-width: 992px) {
+  #site-header .div-block-297 .div-block-202 { transition: gap .3s cubic-bezier(.22, 1, .36, 1), transform .3s cubic-bezier(.22, 1, .36, 1); }
+  #site-header .div-block-297 .heading-50 { transition: color .3s cubic-bezier(.22, 1, .36, 1); }
+  #site-header .div-block-297 .n0:has(> .div-block-201:hover, .div-block-202:hover, .text-block-48:hover) .div-block-202 { gap: 12px; transform: translateX(4px); }
+  #site-header .div-block-297 .n0:has(> .div-block-201:hover, .div-block-202:hover, .text-block-48:hover) .heading-50 { color: #000; }
+  #site-header .div-block-297 .n0 > :is(.div-block-201, .div-block-213, .div-block-214, .div-block-216) :is(.div-block-202, .text-block-48),
+  #site-header .div-block-297 .n0 > .div-block-201 { cursor: pointer; }
+}
+
+/* ---- Pricing photos: the same slow zoom as the Expertise photos, fired from anywhere on the card ---- */
+@media (min-width: 992px) {
+  #site-header .pricing2 :is(.div-block-218.pricingtest, .div-block-291) { position: relative; overflow: hidden; isolation: isolate; }
+  #site-header .pricing2 :is(.div-block-218.pricingtest, .div-block-291)::before {
+    content: ""; position: absolute; inset: 0; z-index: -1; background: inherit; border-radius: inherit;
+    transition: transform .9s cubic-bezier(.22, 1, .36, 1);
+  }
+  #site-header .pricing2 :is(.div-block-219.pricingtest:hover .div-block-218.pricingtest, .div-block-206.new.pricingtest.ps:hover .div-block-291)::before { transform: scale(1.06); }
+  #site-header .pricing2 :is(.div-block-219.pricingtest, .div-block-206.new.pricingtest.ps) { cursor: pointer; }
+}
+@media (prefers-reduced-motion: reduce) {
+  #site-header .pricing2 :is(.div-block-218.pricingtest, .div-block-291)::before { transition-duration: .01ms; }
+}
+
+/* ---- Resources lists: rows stack from the top (were spread with space-between, so the first row drifted with the
+   panel width); first title 16px under the label line, same as Why Positiv, then 25px / 26px around each divider ---- */
+@media (min-width: 992px) {
+  #site-header .div-block-300 .wbs-dropdown-item-2.r1:not(.r3) { justify-content: flex-start; row-gap: 0; }
+  #site-header .div-block-300 .wbs-dropdown-item-2.r1:not(.r3) > a.title { margin-bottom: 16px; }
+  #site-header .div-block-300 .wbs-dropdown-item-2.r1:not(.r3) > .div-block-255 { margin: 25px 0 26px; }
 /* ==========================================================================
    Phone / tablet sheet: every menu opens to its MAIN TITLES only, as a light panel (same colour as the desktop mega menu)
    of full-width, thumb-sized rows - title on the left, arrow on the right. Services keeps the four coloured desktop pills.

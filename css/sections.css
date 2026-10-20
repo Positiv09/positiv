@@ -1156,7 +1156,7 @@
 
 
 /* ==========================================================================
-   Phones: testimonials, the gap above them, and the compare table
+   Phones: testimonials, the gap above them, and the compare table (turned on its side)
    ========================================================================== */
 @media (max-width: 767px) {
   /* less empty space between the services card and the testimonials (was 80px + 80px) */
@@ -1184,14 +1184,32 @@
   .testi-tab .portfolio-card__logo { height: auto; aspect-ratio: 124 / 22; }
   .testi-tab .portfolio-card__logo img { opacity: 1; }
 
-  /* compare table: it scrolls sideways, but the label column and the Positiv column stay pinned (the spacer cell is opaque, so the other
-     columns slide under it) */
-  .compare-table { grid-template-columns: 104px 80px repeat(4, 92px); width: max-content; min-width: 0; }
-  .compare-table .cell--spacer, .compare-table .cell--label { position: sticky; left: 0; z-index: 3; background: #211d1d; opacity: 1; overflow: hidden; }
-  .compare-table .cell--label { padding: 0 6px 0 12px; }
-  .compare-table .cell--label .cell__txt { overflow-wrap: anywhere; font-size: 12.5px; line-height: 17px; }
-  .compare-table .cell--brand, .compare-table .cell--us { position: sticky; left: 104px; z-index: 2; box-shadow: 10px 0 14px -8px rgb(0 0 0 / .55); }
+  /* compare table turned on its side: one row per option (Positiv first), one column per criterion. The cells come in the markup row by row
+     (6 per row: label, Positiv, 4 others), so cell (row i, column j) is moved to (row j+1, column i+1). It scrolls sideways; the option names
+     stay pinned and the yellow Positiv row is always in view. */
+  .compare-table { grid-template-columns: 112px repeat(7, 96px); grid-template-rows: 84px repeat(5, 62px); grid-auto-rows: auto; width: max-content; min-width: 0; border-radius: 0; }
+  .compare-table > div:nth-child(6n + 1) { grid-row: 1; }
+  .compare-table > div:nth-child(6n + 2) { grid-row: 2; }
+  .compare-table > div:nth-child(6n + 3) { grid-row: 3; }
+  .compare-table > div:nth-child(6n + 4) { grid-row: 4; }
+  .compare-table > div:nth-child(6n + 5) { grid-row: 5; }
+  .compare-table > div:nth-child(6n) { grid-row: 6; }
+  .compare-table > div:nth-child(-n + 6) { grid-column: 1; }
+  .compare-table > div:nth-child(n + 7):nth-child(-n + 12) { grid-column: 2; }
+  .compare-table > div:nth-child(n + 13):nth-child(-n + 18) { grid-column: 3; }
+  .compare-table > div:nth-child(n + 19):nth-child(-n + 24) { grid-column: 4; }
+  .compare-table > div:nth-child(n + 25):nth-child(-n + 30) { grid-column: 5; }
+  .compare-table > div:nth-child(n + 31):nth-child(-n + 36) { grid-column: 6; }
+  .compare-table > div:nth-child(n + 37):nth-child(-n + 42) { grid-column: 7; }
+  .compare-table > div:nth-child(n + 43):nth-child(-n + 48) { grid-column: 8; }
+  .compare-table > div { border: 0 !important; border-right: .5px solid rgb(255 255 255 / .12) !important; border-bottom: .5px solid rgb(255 255 255 / .12) !important; border-radius: 0 !important; }
+  .compare-table .cell--spacer { position: sticky; left: 0; z-index: 4; background: #211d1d; opacity: 1; }
+  .compare-table .cell--brand, .compare-table .cell--col-head { position: sticky; left: 0; z-index: 3; justify-content: flex-start; padding: 0 10px 0 14px; text-align: left; font-size: 13px; line-height: 17px; box-shadow: 8px 0 12px -8px rgb(0 0 0 / .5); }
+  .compare-table .cell--brand { border-radius: 12px 0 0 12px !important; }
   .compare-table .cell--brand img { width: 68px; height: auto; }
+  .compare-table .cell--label { position: static; justify-content: center !important; padding: 6px 8px; text-align: center; background: transparent; }
+  .compare-table .cell--label .cell__txt { overflow-wrap: anywhere; font-size: 12px; line-height: 16px; }
+  .compare-table .cell--us { border-right: .5px solid rgb(57 57 57 / .15) !important; }
 }
 
 /* ==========================================================================

@@ -256,7 +256,7 @@
   /* ---------- CTA heading ----------
      Masked letters that rise each time the heading scrolls into view; without GSAP / with reduced motion it is simply static. */
   const ctaTitle = $('.cta__title');
-  if (ctaTitle && !ctaTitle.dataset.split) {
+  if (ctaTitle && !ctaTitle.dataset.split && !ctaTitle.classList.contains('pr-reveal')) {   // home: the shared fade-up (js/reveal.js) owns it
     const nodes = [...ctaTitle.childNodes];
     ctaTitle.setAttribute('aria-label', ctaTitle.textContent.replace(/\s+/g, ' ').trim());
     ctaTitle.dataset.split = '1';

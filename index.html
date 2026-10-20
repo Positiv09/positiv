@@ -19,7 +19,7 @@
   <link rel="stylesheet" href="css/tokens.css?v=20261019b">
   <link rel="stylesheet" href="css/base.css?v=20261006a">
   <link rel="stylesheet" href="css/menu.css?v=20261020f">
-  <link rel="stylesheet" href="css/sections.css?v=20261020m">
+  <link rel="stylesheet" href="css/sections.css?v=20261020n">
   <link rel="stylesheet" href="css/chooser.css?v=4">
 </head>
 <body>
@@ -377,7 +377,7 @@
   </div>
 
   <!-- Swap tiles for a WebGL / Three.js canvas by replacing .hero__media -->
-  <div class="hero__media" id="hero-media" data-hero-media>
+  <div class="hero__media pr-reveal" id="hero-media" data-hero-media style="--d:.36s">
     <div class="hero__col" data-marquee="y">
       <div class="hero__track"><div class="hero__set" data-marquee-set>
         <div class="hero__tile hero__tile--s" style="background-image:url(assets/img/hero/col1-01.jpg)"></div>
@@ -468,7 +468,7 @@
     <div class="features__wrap">
 
       <article class="feature-card feature-card--yellow service-feature" data-card="1" style="--sticky-top:118px">
-        <div class="feature-card__media"></div>
+        <div class="pr-reveal feature-card__media"></div>
         <div class="feature-card__body">
           <div class="feature-card__label"><img class="feature-card__icon" src="assets/icons/feature-icon-1.svg" alt="" width="64" height="64"><h5>Sales Foundation</h5></div>
           <div class="feature-card__rule"></div>
@@ -482,7 +482,7 @@
       </article>
 
       <article class="feature-card feature-card--purple service-feature" data-card="2" style="--sticky-top:132px">
-        <div class="feature-card__media"></div>
+        <div class="pr-reveal feature-card__media"></div>
         <div class="feature-card__body">
           <div class="feature-card__label"><img class="feature-card__icon" src="assets/icons/feature-icon-2.svg" alt="" width="64" height="64"><h5>Differentiation</h5></div>
           <div class="feature-card__rule"></div>
@@ -496,7 +496,7 @@
       </article>
 
       <article class="feature-card feature-card--white service-feature" data-card="3" style="--sticky-top:146px">
-        <div class="feature-card__media"></div>
+        <div class="pr-reveal feature-card__media"></div>
         <div class="feature-card__body">
           <div class="feature-card__label"><img class="feature-card__icon" src="assets/icons/feature-icon-3.svg" alt="" width="64" height="64"><h5>Team economics</h5></div>
           <div class="feature-card__rule"></div>
@@ -510,7 +510,7 @@
       </article>
 
       <article class="feature-card feature-card--orange service-feature" data-card="4" style="--sticky-top:160px">
-        <div class="feature-card__media"></div>
+        <div class="pr-reveal feature-card__media"></div>
         <div class="feature-card__body">
           <div class="feature-card__label"><img class="feature-card__icon" src="assets/icons/feature-icon-4.svg" alt="" width="64" height="64"><h5>Channel-native</h5></div>
           <div class="feature-card__rule"></div>
@@ -564,8 +564,8 @@
       <div class="portfolio__viewport" data-portfolio-viewport>
         <div class="portfolio__track" data-portfolio-track>
         <article class="portfolio-card" data-card="3">
-          <div class="portfolio-card__media" style="background-image:url('assets/img/caravel.jpg');background-position:24% 50%"><div class="pc-hover" aria-hidden="true"><img class="pc-hover__logo" src="assets/logos/portfolio-hover-logo.svg" alt="" draggable="false"><div class="pc-hover__text"><div><strong>Caravel</strong><span>Technology</span></div><img src="assets/icons/positiv-bolt.svg" alt="" draggable="false"></div></div></div>
-          <div class="portfolio-card__info">
+          <div class="pr-reveal portfolio-card__media" style="background-image:url('assets/img/caravel.jpg');background-position:24% 50%"><div class="pc-hover" aria-hidden="true"><img class="pc-hover__logo" src="assets/logos/portfolio-hover-logo.svg" alt="" draggable="false"><div class="pc-hover__text"><div><strong>Caravel</strong><span>Technology</span></div><img src="assets/icons/positiv-bolt.svg" alt="" draggable="false"></div></div></div>
+          <div class="portfolio-card__info pr-reveal">
             <span class="portfolio-card__tag">Technology</span>
             <div class="portfolio-card__desc">
               <img class="portfolio-card__logo-img" src="assets/logos/clients/caravel.png?v=3" alt="Caravel — BPM Technology Solutions" draggable="false">
@@ -574,8 +574,8 @@
           </div>
         </article>
         <article class="portfolio-card" data-card="1">
-          <div class="portfolio-card__media" style="background-image:url('assets/img/angel-east-poster.jpg')"><div class="pc-hover" aria-hidden="true"><img class="pc-hover__logo" src="assets/logos/portfolio-hover-logo.svg" alt="" draggable="false"><div class="pc-hover__text"><div><strong>Angel East</strong><span>Investment</span></div><img src="assets/icons/positiv-bolt.svg" alt="" draggable="false"></div></div></div>
-          <div class="portfolio-card__info">
+          <div class="pr-reveal portfolio-card__media" style="background-image:url('assets/img/angel-east-poster.jpg')"><div class="pc-hover" aria-hidden="true"><img class="pc-hover__logo" src="assets/logos/portfolio-hover-logo.svg" alt="" draggable="false"><div class="pc-hover__text"><div><strong>Angel East</strong><span>Investment</span></div><img src="assets/icons/positiv-bolt.svg" alt="" draggable="false"></div></div></div>
+          <div class="portfolio-card__info pr-reveal">
             <span class="portfolio-card__tag">Investment</span>
             <div class="portfolio-card__desc">
               <span class="portfolio-card__logo" role="img" aria-label="Angel East"><img src="assets/logos/angel-east-a.svg" alt="" draggable="false"><img src="assets/logos/angel-east-b.svg" alt="" draggable="false"></span>
@@ -584,8 +584,8 @@
           </div>
         </article>
         <article class="portfolio-card" data-card="4">
-          <div class="portfolio-card__media" style="background-image:url('assets/img/light-node.jpg')"><div class="pc-hover" aria-hidden="true"><img class="pc-hover__logo" src="assets/logos/portfolio-hover-logo.svg" alt="" draggable="false"><div class="pc-hover__text"><div><strong>Light Node Ventures</strong><span>Web3 &amp; Blockchain</span></div><img src="assets/icons/positiv-bolt.svg" alt="" draggable="false"></div></div></div>
-          <div class="portfolio-card__info">
+          <div class="pr-reveal portfolio-card__media" style="background-image:url('assets/img/light-node.jpg')"><div class="pc-hover" aria-hidden="true"><img class="pc-hover__logo" src="assets/logos/portfolio-hover-logo.svg" alt="" draggable="false"><div class="pc-hover__text"><div><strong>Light Node Ventures</strong><span>Web3 &amp; Blockchain</span></div><img src="assets/icons/positiv-bolt.svg" alt="" draggable="false"></div></div></div>
+          <div class="portfolio-card__info pr-reveal">
             <span class="portfolio-card__tag">Web3 &amp; Blockchain</span>
             <div class="portfolio-card__desc">
               <img class="portfolio-card__logo-img portfolio-card__logo-img--auto" src="assets/logos/clients/light-node.svg" width="182" height="16" style="--logo-h:16px" alt="Light Node Ventures" draggable="false">
@@ -594,8 +594,8 @@
           </div>
         </article>
         <article class="portfolio-card" data-card="5">
-          <div class="portfolio-card__media" style="background-image:url('assets/img/trees-for-the-future.jpg')"><div class="pc-hover" aria-hidden="true"><img class="pc-hover__logo" src="assets/logos/portfolio-hover-logo.svg" alt="" draggable="false"><div class="pc-hover__text"><div><strong>Trees for the Future</strong><span>Agriculture &amp; Reforestation</span></div><img src="assets/icons/positiv-bolt.svg" alt="" draggable="false"></div></div></div>
-          <div class="portfolio-card__info">
+          <div class="pr-reveal portfolio-card__media" style="background-image:url('assets/img/trees-for-the-future.jpg')"><div class="pc-hover" aria-hidden="true"><img class="pc-hover__logo" src="assets/logos/portfolio-hover-logo.svg" alt="" draggable="false"><div class="pc-hover__text"><div><strong>Trees for the Future</strong><span>Agriculture &amp; Reforestation</span></div><img src="assets/icons/positiv-bolt.svg" alt="" draggable="false"></div></div></div>
+          <div class="portfolio-card__info pr-reveal">
             <span class="portfolio-card__tag">Agriculture &amp; Reforestation</span>
             <div class="portfolio-card__desc">
               <img class="portfolio-card__logo-img portfolio-card__logo-img--auto" src="assets/logos/clients/trees-for-the-future.svg" width="124" height="51" style="--logo-h:51px" alt="Trees for the Future" draggable="false">
@@ -604,8 +604,8 @@
           </div>
         </article>
         <article class="portfolio-card" data-card="2">
-          <div class="portfolio-card__media" style="background-image:url('assets/img/quickpick-ship.jpg')"><div class="pc-hover" aria-hidden="true"><img class="pc-hover__logo" src="assets/logos/portfolio-hover-logo.svg" alt="" draggable="false"><div class="pc-hover__text"><div><strong>Quick Pick</strong><span>Brand</span></div><img src="assets/icons/positiv-bolt.svg" alt="" draggable="false"></div></div></div>
-          <div class="portfolio-card__info">
+          <div class="pr-reveal portfolio-card__media" style="background-image:url('assets/img/quickpick-ship.jpg')"><div class="pc-hover" aria-hidden="true"><img class="pc-hover__logo" src="assets/logos/portfolio-hover-logo.svg" alt="" draggable="false"><div class="pc-hover__text"><div><strong>Quick Pick</strong><span>Brand</span></div><img src="assets/icons/positiv-bolt.svg" alt="" draggable="false"></div></div></div>
+          <div class="portfolio-card__info pr-reveal">
             <span class="portfolio-card__tag">Brand</span>
             <div class="portfolio-card__desc">
               <img class="portfolio-card__logo-img portfolio-card__logo-img--auto" src="assets/logos/clients/quickpick.svg" width="119" height="22" style="--logo-h:22px" alt="Quick Pick" draggable="false">
@@ -614,8 +614,8 @@
           </div>
         </article>
         <article class="portfolio-card" data-card="6">
-          <div class="portfolio-card__media" style="background-image:url('assets/img/energy-advance.jpg')"><div class="pc-hover" aria-hidden="true"><img class="pc-hover__logo" src="assets/logos/portfolio-hover-logo.svg" alt="" draggable="false"><div class="pc-hover__text"><div><strong>Energy Advance</strong><span>Energy Efficiency</span></div><img src="assets/icons/positiv-bolt.svg" alt="" draggable="false"></div></div></div>
-          <div class="portfolio-card__info">
+          <div class="pr-reveal portfolio-card__media" style="background-image:url('assets/img/energy-advance.jpg')"><div class="pc-hover" aria-hidden="true"><img class="pc-hover__logo" src="assets/logos/portfolio-hover-logo.svg" alt="" draggable="false"><div class="pc-hover__text"><div><strong>Energy Advance</strong><span>Energy Efficiency</span></div><img src="assets/icons/positiv-bolt.svg" alt="" draggable="false"></div></div></div>
+          <div class="portfolio-card__info pr-reveal">
             <span class="portfolio-card__tag">Energy Efficiency</span>
             <div class="portfolio-card__desc">
               <img class="portfolio-card__logo-img portfolio-card__logo-img--auto" src="assets/logos/clients/energy.png?v=3" width="100" height="50" style="--logo-h:50px" alt="Energy Advance" draggable="false">
@@ -625,8 +625,8 @@
         </article>
         </div>
       </div>
-      <div class="portfolio__progress"><div class="portfolio__bar"><div class="portfolio__bar-fill" data-portfolio-progress></div></div></div>
-      <a href="work.html" id="view-all" class="btn btn--lime portfolio__all">View all projects</a>
+      <div class="portfolio__progress pr-reveal"><div class="portfolio__bar"><div class="portfolio__bar-fill" data-portfolio-progress></div></div></div>
+      <a href="work.html" id="view-all" class="btn btn--lime portfolio__all pr-reveal">View all projects</a>
     </div>
   </div>
 </section>
@@ -657,7 +657,7 @@
     <!-- Stacked service card (design from the staging site). .svc is 440vh tall; .svc-card is sticky and the scroll
          cross-fades the four panels while the image tiles rotate through their slots (see main.js). -->
     <div class="svc" data-svc>
-      <div class="svc-card" data-svc-card>
+      <div class="svc-card pr-reveal" data-svc-card>
         <div class="svc-text">
         <article class="svc-panel is-active" data-svc-panel data-service="brand">
           <span class="svc-panel__icon"><img src="assets/icons/service-brand.svg" alt="" width="35" height="30"></span>
@@ -840,7 +840,7 @@
 <!-- ========================== CTA + FOOTER ========================== -->
 <section class="section cta-section" id="contact" data-section="cta">
   <div class="cta__inner">
-    <div class="cta__mark"><svg class="cta-mark" width="379" height="420" viewBox="0 0 379 420" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+    <div class="cta__mark pr-reveal"><svg class="cta-mark" width="379" height="420" viewBox="0 0 379 420" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
         <defs>
           <path id="ctaMarkPath" pathLength="1" d="M150.395 0.5H244.963C257.384 0.5 267.584 10.6174 266.597 22.9238C265.216 40.1243 262.313 67.6814 258.035 94.9336C253.755 122.202 248.106 149.108 241.249 165.042C240.034 167.862 240.865 170.538 242.698 172.091C244.473 173.594 247.149 174.014 249.691 172.576L249.937 172.432C281.394 153.101 316.713 140.351 354.274 136.422C367.156 135.074 378.5 144.959 378.5 157.871V251.421C378.5 261.9 370.016 272.02 359.698 273.991C302.932 284.846 258.065 342.094 249.959 401.12C248.507 411.686 239.496 419.5 228.82 419.5H134.042C121.184 419.5 111.42 408.319 112.564 395.499C115.653 360.916 125.196 327.315 139.94 296.366H139.941C141.21 293.699 140.453 290.938 138.74 289.215C137.023 287.487 134.318 286.782 131.729 288.25C99.5424 306.498 63.2213 318.293 24.4883 321.806C11.6803 322.968 0.5 313.147 0.5 300.327V206.524C0.500083 201.633 2.41029 196.501 5.5459 192.382C8.68198 188.262 13.0097 185.198 17.8066 184.375C46.5412 179.454 72.2308 153.025 91.7568 120.525C111.299 87.9993 124.755 49.2492 128.958 19.4414C130.43 8.99447 139.851 0.5 150.395 0.5Z"/>
           <linearGradient id="ctaMarkFill" x1="337.106" y1="-177.842" x2="153.981" y2="246.499" gradientUnits="userSpaceOnUse"><stop offset="0.0721154" stop-color="#FBFEE0" stop-opacity="0.39"/><stop offset="1" stop-color="white" stop-opacity="0"/></linearGradient>
@@ -851,28 +851,28 @@
         <g class="cta-mark__formed"><use href="#ctaMarkPath" fill="url(#ctaMarkFill)" stroke="url(#ctaMarkLine)"/></g>
         <g mask="url(#ctaFade)"><use class="cta-mark__head" style="--L:0.025;--w:2.20" href="#ctaMarkPath"/><use class="cta-mark__head" style="--L:0.047;--w:2.03" href="#ctaMarkPath"/><use class="cta-mark__head" style="--L:0.069;--w:1.86" href="#ctaMarkPath"/><use class="cta-mark__head" style="--L:0.091;--w:1.69" href="#ctaMarkPath"/><use class="cta-mark__head" style="--L:0.113;--w:1.52" href="#ctaMarkPath"/><use class="cta-mark__head" style="--L:0.135;--w:1.35" href="#ctaMarkPath"/><use class="cta-mark__head" style="--L:0.157;--w:1.18" href="#ctaMarkPath"/><use class="cta-mark__head" style="--L:0.179;--w:1.01" href="#ctaMarkPath"/><use class="cta-mark__head" style="--L:0.201;--w:0.84" href="#ctaMarkPath"/><use class="cta-mark__head" style="--L:0.223;--w:0.67" href="#ctaMarkPath"/></g>
       </svg></div>
-    <h4 class="cta__title">The creative team <br>for channel partners.</h4>
-    <p class="cta__text">Book a 30-minute call — walk us through what you need, and we'll <br>show you how we'd approach it. No pitch, just a conversation.</p>
-    <a href="contact.html" class="btn btn--lime">Book a call</a>
+    <h4 class="cta__title pr-reveal">The creative team <br>for channel partners.</h4>
+    <p class="cta__text pr-reveal">Book a 30-minute call — walk us through what you need, and we'll <br>show you how we'd approach it. No pitch, just a conversation.</p>
+    <a href="contact.html" class="btn btn--lime pr-reveal">Book a call</a>
   </div>
 
   <footer class="footer" id="footer">
     <div class="footer__container">
       <div class="footer__main">
-        <div class="footer__about">
+        <div class="footer__about pr-reveal">
           <a href="/" aria-label="Positiv"><img src="assets/logo-footer.svg" alt="Positiv" width="143" height="36"></a>
           <p class="footer__tagline">Sales-effective brand systems for the channel. The embedded creative team for channel partners.</p>
         </div>
         <div class="footer__links">
-          <div class="footer__col"><h6>Services</h6><ul><li><a href="#">Brand</a></li><li><a href="#">Sales Assets</a></li><li><a href="#">Web</a></li><li><a href="#">Marketing &amp; Campaign</a></li></ul></div>
-          <div class="footer__col"><h6>Expertise</h6><ul><li><a href="#">Channel Partners</a></li><li><a href="#">Technology</a></li><li><a href="#">Finance &amp; Consulting</a></li></ul></div>
-          <div class="footer__col"><h6>Company</h6><ul><li><a href="about.html">Positiv Story</a></li><li><a href="#results">Results</a></li><li><a href="#pricing">Pricing</a></li><li><a href="contact.html">Book a call</a></li></ul></div>
-          <div class="footer__col"><h6>Free tools &amp; resources</h6><ul><li><a href="#">ROI Calculator</a></li><li><a href="#">Brand Drift Forecast</a></li><li><a href="#">Blog</a></li><li><a href="#">Referral Program</a></li></ul></div>
+          <div class="footer__col pr-reveal"><h6>Services</h6><ul><li><a href="#">Brand</a></li><li><a href="#">Sales Assets</a></li><li><a href="#">Web</a></li><li><a href="#">Marketing &amp; Campaign</a></li></ul></div>
+          <div class="footer__col pr-reveal"><h6>Expertise</h6><ul><li><a href="#">Channel Partners</a></li><li><a href="#">Technology</a></li><li><a href="#">Finance &amp; Consulting</a></li></ul></div>
+          <div class="footer__col pr-reveal"><h6>Company</h6><ul><li><a href="about.html">Positiv Story</a></li><li><a href="#results">Results</a></li><li><a href="#pricing">Pricing</a></li><li><a href="contact.html">Book a call</a></li></ul></div>
+          <div class="footer__col pr-reveal"><h6>Free tools &amp; resources</h6><ul><li><a href="#">ROI Calculator</a></li><li><a href="#">Brand Drift Forecast</a></li><li><a href="#">Blog</a></li><li><a href="#">Referral Program</a></li></ul></div>
         </div>
       </div>
       <div class="footer__bottom">
-        <p class="footer__copy">Copyright © 2026 Positiv Studio</p>
-        <div class="footer__social">
+        <p class="footer__copy pr-reveal">Copyright © 2026 Positiv Studio</p>
+        <div class="footer__social pr-reveal">
           <a href="https://www.linkedin.com/company/positiv-agency/" aria-label="LinkedIn"><img src="assets/icons/social-linkedin.svg" alt="" width="24" height="24"></a>
           <a href="https://www.instagram.com/positivagency/" aria-label="Instagram"><img src="assets/icons/social-instagram.svg" alt="" width="24" height="24"></a>
           <a href="https://www.facebook.com/Positivagency" aria-label="Facebook"><img src="assets/icons/social-facebook.svg" alt="" width="24" height="24"></a>
@@ -946,8 +946,8 @@
 <script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1/dist/lenis.min.js"></script>
 -->
 <script src="js/vendor/gsap.min.js" defer></script>
-<script src="js/main.js?v=20261020b" defer></script>
-<script src="js/reveal.js?v=1" defer></script>
+<script src="js/main.js?v=20261020c" defer></script>
+<script src="js/reveal.js?v=3" defer></script>
 <script src="js/intro.js?v=1" defer></script>
 <script src="js/chooser.js?v=1" defer></script>
 </body>

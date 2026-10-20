@@ -1263,10 +1263,9 @@
 
 /* ---------- Scroll reveal (pricing page + home page; js/reveal.js adds .is-in) ----------
    One motion everywhere: the block fades up 28px over .9s; siblings are staggered .12s via --d. */
-.js .pr-reveal { opacity: 0; transform: translateY(28px); transition: opacity .9s var(--ease-out), transform .9s var(--ease-out); transition-delay: var(--d, 0s); }
-.js .pr-reveal.is-in { opacity: 1; transform: none; }
-@media (prefers-reduced-motion: reduce) { .js .pr-reveal { opacity: 1; transform: none; transition: none; } }
+.js .pr-reveal:not(.is-done) { transition: opacity .9s var(--ease-out), transform .9s var(--ease-out); transition-delay: var(--d, 0s); }
+.js .pr-reveal:not(.is-in) { opacity: 0; transform: translateY(28px); }
+@media (prefers-reduced-motion: reduce) { .js .pr-reveal:not(.is-in) { opacity: 1; transform: none; } .js .pr-reveal:not(.is-done) { transition: none; } }
 /* home: the "Brand. Sales. / Web. Marketing." lines hold the video's landing slot, which js/main.js measures, so they fade
-   without the 28px rise; the services blurb keeps its softer .9 opacity once in */
-.js .services__lines.pr-reveal { transform: none; }
-.js .services__desc.pr-reveal.is-in { opacity: .9; }
+   without the 28px rise */
+.js .services__lines.pr-reveal:not(.is-in) { transform: none; }

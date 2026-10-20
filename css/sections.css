@@ -1248,3 +1248,15 @@
   .features__wrap { gap: 0; }
   .features__stack { padding-bottom: 8px; }
 }
+
+/* ==========================================================================
+   Touch screens: no blue tap rectangle (Webflow's html.w-mod-touch * sets rgba(51,181,229,.4); the menu rows had a grey one) - a press is
+   shown by the element itself instead: buttons shrink a touch, links / list rows / menu rows / tabs fade, social icons shrink.
+   ========================================================================== */
+@media (hover: none) and (pointer: coarse) {
+  * { -webkit-tap-highlight-color: transparent !important; }
+  .btn, .btn--block, .vplayer__btn { transition: transform .18s cubic-bezier(.22, 1, .36, 1), opacity .18s ease, background-color .25s, color .25s; }
+  .btn:active, .portfolio__all:active { transform: scale(.97); }
+  a:not(.btn):active, button:not(.btn):not(.w-nav-button):active, .testi-tab:active, .w-dropdown-toggle:active, .w-dropdown-link:active { opacity: .6; }
+  .footer__social a:active { transform: scale(.9); opacity: .8; }
+}

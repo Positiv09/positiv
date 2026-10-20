@@ -1239,4 +1239,6 @@
 @media (max-width: 767px) {
   .section.cta-section { padding-top: 24px; }
   .cta-section .cta__inner { padding-top: 40px; padding-bottom: 32px; }
+  .cta-section .cta__title { font-size: var(--h-phone); line-height: 1.24; }                  /* same size as the other section headings */
+  .cta-section .cta__text { width: 84%; font-size: 14px; line-height: 22px; padding-bottom: 28px; }   /* the paragraph was 20px - as big as the heading */
 }

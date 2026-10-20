@@ -961,6 +961,8 @@
   #site-header .div-block-300 .wbs-dropdown-item-2.r1:not(.r3) { justify-content: flex-start; row-gap: 0; }
   #site-header .div-block-300 .wbs-dropdown-item-2.r1:not(.r3) > a.title { margin-bottom: 16px; }
   #site-header .div-block-300 .wbs-dropdown-item-2.r1:not(.r3) > .div-block-255 { margin: 25px 0 26px; }
+}
+
 /* ==========================================================================
    Phone / tablet sheet: every menu opens to its MAIN TITLES only, as a light panel (same colour as the desktop mega menu)
    of full-width, thumb-sized rows - title on the left, arrow on the right. Services keeps the four coloured desktop pills.

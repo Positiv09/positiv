@@ -1154,3 +1154,42 @@
   .svc-text .svc-panel__work { grid-area: 3 / 1 / 4 / -1; margin: 14px 8px 0; }
 }
 
+
+/* ==========================================================================
+   Phones: testimonials, the gap above them, and the compare table
+   ========================================================================== */
+@media (max-width: 767px) {
+  /* less empty space between the services card and the testimonials (was 80px + 80px) */
+  .services__inner { margin-bottom: 16px; }
+
+  /* testimonials: photo on top, compact text under it, the next card peeks in from the right (swipe hint), tabs get a 48px tap target.
+     Knobs: --t-photo = photo height, --t-peek = how much of the next card shows. */
+  .testimonials-section { --t-photo: 190px; --t-peek: 12%; padding: 40px 0 80px; }
+  .testimonials__head { gap: 16px; margin-bottom: 24px; }
+  .testimonials__viewport { width: 96%; margin: 0 0 0 4%; padding-left: 0; }
+  .testimonial-card { position: relative; flex: 0 0 calc(100% - var(--t-peek)); height: auto; padding: 0; display: flex; flex-direction: column; overflow: hidden; }
+  .testimonial-card__visual { order: -1; position: relative; inset: auto; height: var(--t-photo); margin: 0; overflow: hidden; }
+  .testimonial-card__shape { width: 100%; background-size: 300px; background-position: 72% 50%; }
+  .testimonial-card__person { width: 66%; right: 3%; height: 100%; background-size: cover; background-position: 50% 12%; }
+  .testimonial-card__copy { position: static; width: auto; margin: 0; padding: 22px 20px 22px; }
+  .testimonial-card__logo { position: absolute; z-index: 4; left: 20px; top: calc(var(--t-photo) - 20px); width: 40px; height: 30px; }
+  .testimonial-card__title { margin-top: 16px; font-size: 17px; line-height: 22px; }
+  .testimonial-card__quote { margin-top: 6px; font-size: 13.5px; line-height: 21px; }
+  .testimonial-card__rule { margin-top: 14px; width: 100%; }
+  .testimonial-card__name { margin-top: 14px; font-size: 16px; line-height: 20px; }
+  .testimonial-card__role { margin-top: 4px; font-size: 13px; line-height: 18px; }
+  .testimonials__tabs { gap: 8px; }
+  .testi-tab { padding: 6px 0 10px; min-height: 48px; }
+  /* the Angel East logo (icon + word in a 124x22 box) keeps its proportions in the narrow tab, and its fade is applied once, not twice */
+  .testi-tab .portfolio-card__logo { height: auto; aspect-ratio: 124 / 22; }
+  .testi-tab .portfolio-card__logo img { opacity: 1; }
+
+  /* compare table: it scrolls sideways, but the label column and the Positiv column stay pinned (the spacer cell is opaque, so the other
+     columns slide under it) */
+  .compare-table { grid-template-columns: 104px 80px repeat(4, 92px); width: max-content; min-width: 0; }
+  .compare-table .cell--spacer, .compare-table .cell--label { position: sticky; left: 0; z-index: 3; background: #211d1d; opacity: 1; overflow: hidden; }
+  .compare-table .cell--label { padding: 0 6px 0 12px; }
+  .compare-table .cell--label .cell__txt { overflow-wrap: anywhere; font-size: 12.5px; line-height: 17px; }
+  .compare-table .cell--brand, .compare-table .cell--us { position: sticky; left: 104px; z-index: 2; box-shadow: 10px 0 14px -8px rgb(0 0 0 / .55); }
+  .compare-table .cell--brand img { width: 68px; height: auto; }
+}

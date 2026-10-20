@@ -1129,7 +1129,7 @@
     content: ""; grid-area: 1 / 1 / 2 / -1; align-self: stretch; min-height: 180px; border-radius: 18px;
     background-size: cover; background-position: 62% 50%; background-repeat: no-repeat;
   }
-  .svc-panel[data-service="brand"]::before     { background-image: linear-gradient(to top, rgb(20 20 19 / .9), rgb(20 20 19 / .4) 48%, transparent 75%), url("../assets/img/svc-brand.webp"); }
+  .svc-panel[data-service="brand"]::before     { background-image: linear-gradient(to top, rgb(20 20 19 / .9), rgb(20 20 19 / .4) 48%, transparent 75%), url("../assets/img/svc-brand-v2.webp"); }
   .svc-panel[data-service="sales"]::before     { background-image: linear-gradient(to top, rgb(20 20 19 / .9), rgb(20 20 19 / .4) 48%, transparent 75%), url("../assets/img/svc-sales.webp"); }
   .svc-panel[data-service="web"]::before       { background-image: linear-gradient(to top, rgb(20 20 19 / .9), rgb(20 20 19 / .4) 48%, transparent 75%), url("../assets/img/svc-web.webp"); }
   .svc-panel[data-service="marketing"]::before { background-image: linear-gradient(to top, rgb(20 20 19 / .9), rgb(20 20 19 / .4) 48%, transparent 75%), url("../assets/img/svc-marketing.webp"); }

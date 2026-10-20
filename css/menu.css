@@ -968,13 +968,13 @@
   #site-header .w--nav-menu-open .div-block-220 .heading-53,
   #site-header .w--nav-menu-open .expertise2 .wbs-dropdown-title-2.why2,
   #site-header .w--nav-menu-open .expertise2 .wbs-dropdown-title-2.r1 {
-    margin: 0 !important; color: #fff !important; font-family: Optimanovaltprodemi, "Optima Nova", Optima, Arial, sans-serif; font-size: 18px !important; line-height: 26px !important;
+    margin: 0 !important; color: #211d1d !important; font-family: Optimanovaltprodemi, "Optima Nova", Optima, Arial, sans-serif; font-size: 18px !important; line-height: 26px !important;
     font-weight: 400 !important; letter-spacing: 0 !important; text-transform: none !important;
   }
   #site-header .w--nav-menu-open .div-block-202 svg,
-  #site-header .w--nav-menu-open .div-block-220 svg { width: 16px !important; height: 11px !important; color: #fff; }
+  #site-header .w--nav-menu-open .div-block-220 svg { width: 16px !important; height: 11px !important; color: #211d1d; }
   #site-header .w--nav-menu-open .div-block-202 svg path,
-  #site-header .w--nav-menu-open .div-block-220 svg path { fill: #fff !important; }
+  #site-header .w--nav-menu-open .div-block-220 svg path { fill: #211d1d !important; }
   #site-header .w--nav-menu-open .div-block-220 { display: flex !important; align-items: center; justify-content: space-between; gap: 8px; width: 100% !important; padding: 12px 0 !important; }
   #site-header .w--nav-menu-open .expertise2.why-choose-positiv a.why2,
   #site-header .w--nav-menu-open .expertise2.resources a.r1 { padding: 11px 0 !important; }
@@ -1019,4 +1019,9 @@
   #site-header .w--nav-menu-open .expertise2.serv a.top2 { color: #211d1d; }
   #site-header .w--nav-menu-open .expertise2.serv a.top3 { color: #fe572a; }
   #site-header .w--nav-menu-open .expertise2.serv a.top4 { color: #393939; }
+
+  /* 4. the opened menu sits on the same light panel colour as the desktop mega menu */
+  #site-header .w--nav-menu-open .w-dropdown-list.w--open { background: #f2f2ed !important; border-radius: 16px !important; padding: 14px 18px !important; margin: 0 0 16px !important; }
+  #site-header .w--nav-menu-open .expertise2 .text-block-55 { color: #8e8e8e !important; }
+  #site-header .w--nav-menu-open .expertise2 .div-block-237 { border-color: #393939 !important; }
 }

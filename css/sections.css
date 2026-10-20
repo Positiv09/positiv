@@ -1231,3 +1231,9 @@
   .footer .footer__copy { font-size: 12.5px; line-height: 18px; }
   .footer .footer__social a { width: 38px; height: 38px; }
 }
+
+/* Phones: less empty space above the CTA mark (was 64 + 64 + 100px), more room under the "Book a call" button before the footer (40 -> 72px) */
+@media (max-width: 767px) {
+  .section.cta-section { padding-top: 24px; }
+  .cta-section .cta__inner { padding-top: 40px; padding-bottom: 32px; }
+}

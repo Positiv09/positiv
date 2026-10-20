@@ -929,3 +929,14 @@
   #site-header .wbs-dropdown-item-2.n4 > .div-block-293 { padding-bottom: 20px; box-sizing: border-box; }
   #site-header .div-block-299 > .wbs-dropdown-mega-grid-2 { height: auto; align-content: start; }
 }
+
+/* ---- Expertise column titles (Channel Partners / Technology / Finance & Consulting): same hover as the other menu
+   title links — the arrow slides out and the title nudges 4px; fires from the photo, title or description ---- */
+@media (min-width: 992px) {
+  #site-header .div-block-297 .div-block-202 { transition: gap .3s cubic-bezier(.22, 1, .36, 1), transform .3s cubic-bezier(.22, 1, .36, 1); }
+  #site-header .div-block-297 .heading-50 { transition: color .3s cubic-bezier(.22, 1, .36, 1); }
+  #site-header .div-block-297 .n0:has(> .div-block-201:hover, .div-block-202:hover, .text-block-48:hover) .div-block-202 { gap: 12px; transform: translateX(4px); }
+  #site-header .div-block-297 .n0:has(> .div-block-201:hover, .div-block-202:hover, .text-block-48:hover) .heading-50 { color: #000; }
+  #site-header .div-block-297 .n0 > :is(.div-block-201, .div-block-213, .div-block-214, .div-block-216) :is(.div-block-202, .text-block-48),
+  #site-header .div-block-297 .n0 > .div-block-201 { cursor: pointer; }
+}

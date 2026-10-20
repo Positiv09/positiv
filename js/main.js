@@ -1175,6 +1175,32 @@
     video.play().catch(() => {});            // started by the user's click, so sound is allowed; if blocked the centre button shows
   }
 
+  /* Phones: the video opens straight in full screen and turns landscape with the phone (either landscape side, so it flips as the
+     phone is tilted). The orientation lock only works while in full screen (Android); on iPhone, which has no element full screen,
+     the video's own native full screen is used - it follows the tilt by itself. Leaving full screen closes the player again. */
+  const phoneMq = matchMedia('(max-width: 767px) and (pointer: coarse)');
+  let autoFs = false;
+  const unlockOrientation = () => { try { screen.orientation?.unlock?.(); } catch (e) { /* not supported */ } };
+  function phoneFullscreen() {
+    const root = $('.vplayer', modalBox), video = root && $('video', root);
+    if (!root || !video) return;
+    autoFs = true;
+    if (root.requestFullscreen) {
+      root.requestFullscreen({ navigationUI: 'hide' })
+        .then(() => { try { screen.orientation?.lock?.('landscape').catch(() => {}); } catch (e) { /* not supported */ } })
+        .catch(() => { autoFs = false; });
+    } else if (video.webkitEnterFullscreen) {
+      const go = () => { try { video.webkitEnterFullscreen(); } catch (e) { autoFs = false; } };
+      video.addEventListener('webkitendfullscreen', () => { if (autoFs) closeModal(); }, { once: true });
+      if (video.readyState >= 1) go(); else video.addEventListener('loadedmetadata', go, { once: true });
+    } else autoFs = false;
+  }
+  document.addEventListener('fullscreenchange', () => {
+    if (document.fullscreenElement) return;
+    unlockOrientation();
+    if (autoFs && modal.classList.contains('is-open')) closeModal();
+  });
+
   function openModal() {
     const src = $('video', frame)?.dataset.videoSrc;
     if (!src) return;
@@ -1182,10 +1208,13 @@
     modal.classList.add('is-open');
     ball.classList.remove('is-visible');
     $('#video-modal-close')?.focus({ preventScroll: true });
+    if (phoneMq.matches) phoneFullscreen();                  // still inside the click, so the browser allows it
   }
   function closeModal() {
     if (!modal.classList.contains('is-open')) return;
+    autoFs = false;
     if (document.fullscreenElement) document.exitFullscreen?.();
+    unlockOrientation();
     playerCleanup?.(); playerCleanup = null;
     modal.classList.remove('is-open');
     setTimeout(() => { if (!modal.classList.contains('is-open')) modalBox.innerHTML = ''; }, 350);   // after the fade-out

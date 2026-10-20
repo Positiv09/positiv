@@ -533,6 +533,9 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 /* ---- brand-styled player ---- */
 .vplayer { position: relative; aspect-ratio: 16 / 9; background: #000; cursor: pointer; outline: 0; }
 .vplayer:fullscreen { width: 100vw; height: 100vh; aspect-ratio: auto; }
+.vplayer:fullscreen video { object-fit: contain; }   /* whole frame in full screen, in either orientation (the card version crops to fill) */
+.vplayer:-webkit-full-screen { width: 100vw; height: 100vh; aspect-ratio: auto; }
+.vplayer:-webkit-full-screen video { object-fit: contain; }
 .vplayer video { display: block; width: 100%; height: 100%; object-fit: cover; }
 .vplayer.is-idle:not(.is-paused) { cursor: none; }
 

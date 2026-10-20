@@ -878,7 +878,7 @@
 @media (min-width: 992px) {
   #site-header .m1 .div-block-166 .wbs-dropdown-title-2 { font-size: 16px; }
   #site-header :is(.wbs-dropdown-title-2.why2, .div-block-254 .wbs-dropdown-title-2.r1) { font-size: 16px; line-height: normal; }
-  #site-header :is(.m1 .wbs-dropdown-content-2, .div-block-299 .wbs-dropdown-content-2, .div-block-300 .wbs-dropdown-content-2) { font-size: 14px; line-height: 22px; }
+  #site-header :is(.div-block-299 .wbs-dropdown-content-2, .div-block-300 .wbs-dropdown-content-2) { font-size: 14px; line-height: 22px; }
   #site-header .pricing2 .text-block-52.pricingtest { font-size: 14px; line-height: 1.5; }
 }
 @media (min-width: 992px) { #site-header .m1 .div-block-166 { gap: 4px; } }

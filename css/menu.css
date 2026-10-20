@@ -931,8 +931,8 @@
 }
 
 /* ==========================================================================
-   Phone / tablet sheet: every menu opens to its MAIN TITLES only (no descriptions, sub-lists, labels or promo cards).
-   Services keeps the four coloured pills of the desktop panel; the other menus show their headings in white.
+   Phone / tablet sheet: every menu opens to its MAIN TITLES only, as a light panel (same colour as the desktop mega menu)
+   of full-width, thumb-sized rows - title on the left, arrow on the right. Services keeps the four coloured desktop pills.
    ========================================================================== */
 @media (max-width: 991px) {
   /* 1. hide everything that is not a main title */
@@ -958,70 +958,101 @@
   #site-header .w--nav-menu-open .expertise2.pricingtest .wbs-dropdown-item-2.cta,
   #site-header .w--nav-menu-open .expertise2.why-choose-positiv a.wbs-dropdown-icon-link-2:not(.why2),
   #site-header .w--nav-menu-open .expertise2.why-choose-positiv a.why2 > div:not(.div-block-234):not(.div-block-237),
-  #site-header .w--nav-menu-open .expertise2.resources a.title { display: none !important; }
+  #site-header .w--nav-menu-open .expertise2.resources a.title,
   #site-header .w--nav-menu-open .expertise2 a.why2 .div-block-234 > div:nth-child(2),
   #site-header .w--nav-menu-open .expertise2.resources a.r1 .div-block-254 > div:nth-child(2) { display: none !important; }
 
-  /* 2. main titles: one clean row each */
-  #site-header .w--nav-menu-open .div-block-202 { display: flex !important; align-items: center; justify-content: space-between; gap: 8px; width: 100% !important; padding: 12px 0 !important; margin: 0 !important; }
+  /* 2. every open menu = a light panel of full-width rows (title left, arrow right) */
+  #site-header .w--nav-menu-open .w-dropdown-list.w--open { background: #f2f2ed !important; border-radius: 18px !important; padding: 6px 18px !important; margin: 4px 0 18px !important; overflow: hidden !important; box-sizing: border-box !important; }
+  #site-header .w--nav-menu-open .div-block-202,
+  #site-header .w--nav-menu-open .div-block-220,
+  #site-header .w--nav-menu-open .expertise2.why-choose-positiv a.why2,
+  #site-header .w--nav-menu-open .expertise2.resources a.r1 { display: flex !important; align-items: center; justify-content: space-between; gap: 12px; width: 100% !important; min-height: 52px; padding: 0 !important; margin: 0 !important; box-sizing: border-box; cursor: pointer; -webkit-tap-highlight-color: rgb(33 29 29 / .08); transition: opacity .2s; }
+  /* rows are always a single horizontal line, left aligned, full width (the desktop styles stack them in a column) */
+  #site-header .w--nav-menu-open .expertise2.why-choose-positiv a.why2,
+  #site-header .w--nav-menu-open .expertise2.resources a.r1 { flex-direction: row !important; flex-wrap: nowrap !important; text-align: left !important; }
+  #site-header .w--nav-menu-open .expertise2.expertise .div-block-213,
+  #site-header .w--nav-menu-open .expertise2.expertise .div-block-214,
+  #site-header .w--nav-menu-open .expertise2.expertise .div-block-216,
+  #site-header .w--nav-menu-open .expertise2.pricingtest .div-block-219,
+  #site-header .w--nav-menu-open .expertise2.pricingtest .wbs-dropdown-mega-grid-2 > div { display: block !important; width: 100% !important; margin: 0 !important; padding: 0 !important; }
+  #site-header .w--nav-menu-open .expertise2.why-choose-positiv a.why2 .div-block-234 > div:first-child,
+  #site-header .w--nav-menu-open .expertise2.resources a.r1 .div-block-254 > div:first-child { flex: 1; width: auto !important; min-width: 0; text-align: left !important; }
+  #site-header .w--nav-menu-open .div-block-202 .heading-50,
+  #site-header .w--nav-menu-open .div-block-220 .heading-53 { flex: 1; text-align: left !important; }
+  #site-header .w--nav-menu-open .div-block-202:active,
+  #site-header .w--nav-menu-open .div-block-220:active,
+  #site-header .w--nav-menu-open .expertise2.why-choose-positiv a.why2:active,
+  #site-header .w--nav-menu-open .expertise2.resources a.r1:active { opacity: .55; }
+  /* thin separators between rows (never before the first one) */
+  #site-header .w--nav-menu-open .wbs-dropdown-item-2.n0 ~ .wbs-dropdown-item-2.n0 .div-block-202,
+  #site-header .w--nav-menu-open .expertise2.pricingtest .wbs-dropdown-mega-grid-2 > div + div .div-block-220,
+  #site-header .w--nav-menu-open .expertise2.why-choose-positiv a.why2 ~ a.why2,
+  #site-header .w--nav-menu-open .expertise2.why-choose-positiv .wbs-dropdown-item-2.n2 a.why2.f1,
+  #site-header .w--nav-menu-open .expertise2.resources a.r1 ~ a.r1,
+  #site-header .w--nav-menu-open .expertise2.resources .wbs-dropdown-item-2.r2 a.r1:first-of-type { border-top: 1px solid rgb(33 29 29 / .1) !important; }
+  #site-header .w--nav-menu-open .expertise2.resources .wbs-dropdown-item-2.r2 { margin-top: 0 !important; }
+  /* titles */
   #site-header .w--nav-menu-open .div-block-202 .heading-50,
   #site-header .w--nav-menu-open .div-block-220 .heading-53,
   #site-header .w--nav-menu-open .expertise2 .wbs-dropdown-title-2.why2,
   #site-header .w--nav-menu-open .expertise2 .wbs-dropdown-title-2.r1 {
-    margin: 0 !important; color: #211d1d !important; font-family: Optimanovaltprodemi, "Optima Nova", Optima, Arial, sans-serif; font-size: 18px !important; line-height: 26px !important;
-    font-weight: 400 !important; letter-spacing: 0 !important; text-transform: none !important;
+    margin: 0 !important; color: #211d1d !important; font-family: Optimanovaltprodemi, "Optima Nova", Optima, Arial, sans-serif; font-size: 18px !important; line-height: 24px !important;
+    font-weight: 400 !important; letter-spacing: 0 !important; text-transform: none !important; white-space: normal !important;
   }
+  /* arrows: the real arrow icons stay on the right; Why Positiv / Resources get one drawn the same way */
   #site-header .w--nav-menu-open .div-block-202 svg,
-  #site-header .w--nav-menu-open .div-block-220 svg { width: 16px !important; height: 11px !important; color: #211d1d; }
+  #site-header .w--nav-menu-open .div-block-220 svg { flex: none; width: 16px !important; height: 11px !important; color: #211d1d; }
   #site-header .w--nav-menu-open .div-block-202 svg path,
   #site-header .w--nav-menu-open .div-block-220 svg path { fill: #211d1d !important; }
-  #site-header .w--nav-menu-open .div-block-220 { display: flex !important; align-items: center; justify-content: space-between; gap: 8px; width: 100% !important; padding: 12px 0 !important; }
-  #site-header .w--nav-menu-open .expertise2.why-choose-positiv a.why2,
-  #site-header .w--nav-menu-open .expertise2.resources a.r1 { padding: 11px 0 !important; }
-  #site-header .w--nav-menu-open .expertise2 .div-block-234,
-  #site-header .w--nav-menu-open .expertise2 .div-block-254 { display: flex !important; align-items: center; justify-content: space-between; padding: 0 !important; }
+  #site-header .w--nav-menu-open .expertise2.why-choose-positiv a.why2 .div-block-234,
+  #site-header .w--nav-menu-open .expertise2.resources a.r1 .div-block-254 { display: flex !important; align-items: center; justify-content: space-between; flex: 1; gap: 12px; width: auto !important; min-width: 0; padding: 0 !important; }
+  #site-header .w--nav-menu-open .expertise2.why-choose-positiv a.why2 .div-block-234::after,
+  #site-header .w--nav-menu-open .expertise2.resources a.r1 .div-block-254::after { content: "\2192"; flex: none; color: #211d1d; font-family: Poppins, system-ui, sans-serif; font-size: 21px; font-weight: 600; line-height: 1; }
+  #site-header .w--nav-menu-open .expertise2 .wbs-dropdown-item-2 { margin-bottom: 0 !important; }
+  /* "coming soon" rows: no arrow, a small SOON tag instead, dimmed */
+  #site-header .w--nav-menu-open .expertise2.why-choose-positiv a.why2:has(.div-block-237) .div-block-234::after { content: none; }
+  #site-header .w--nav-menu-open .expertise2.why-choose-positiv a.why2:has(.div-block-237) { opacity: .6; cursor: default; }
+  #site-header .w--nav-menu-open .expertise2 .div-block-237 { display: inline-flex !important; align-items: center; flex: none; width: auto !important; height: auto !important; padding: 3px 10px !important; margin: 0 !important; border: 1px solid #393939 !important; border-radius: 20px !important; background: transparent !important; }
+  #site-header .w--nav-menu-open .expertise2 .text-block-55 { color: #393939 !important; font-family: Poppins, system-ui, sans-serif; font-size: 10px !important; line-height: 14px !important; letter-spacing: .08em; font-weight: 500 !important; }
 
-  /* 3. Services: the four pills, same colours as the desktop panel */
-  #site-header .w--nav-menu-open .expertise2.serv .wbs-dropdown-item-2 { margin-bottom: 0 !important; }
+  /* 3. Services: four full-width pills, same colours as the desktop panel */
+  #site-header .w--nav-menu-open .expertise2.serv .wbs-dropdown-item-2 { margin: 0 !important; }
   #site-header .w--nav-menu-open .expertise2.serv a.top,
   #site-header .w--nav-menu-open .expertise2.serv a.top2,
   #site-header .w--nav-menu-open .expertise2.serv a.top3,
-  #site-header .w--nav-menu-open .expertise2.serv a.top4 { display: block !important; width: auto !important; padding: 6px 0 !important; }
+  #site-header .w--nav-menu-open .expertise2.serv a.top4 { display: block !important; width: 100% !important; padding: 0 !important; margin: 10px 0 !important; -webkit-tap-highlight-color: transparent; transition: transform .2s; }
+  #site-header .w--nav-menu-open .expertise2.serv a:active { transform: scale(.98); }
   #site-header .w--nav-menu-open .expertise2.serv a.top > div,
   #site-header .w--nav-menu-open .expertise2.serv a.top2 > div,
   #site-header .w--nav-menu-open .expertise2.serv a.top3 > div,
-  #site-header .w--nav-menu-open .expertise2.serv a.top4 > div { display: inline-flex !important; align-items: center; width: auto !important; height: 37px !important; padding: 0 16px 0 5px !important; border-radius: 32px !important; }
+  #site-header .w--nav-menu-open .expertise2.serv a.top4 > div { display: flex !important; align-items: center; width: 100% !important; min-height: 52px; height: auto !important; padding: 0 20px 0 10px !important; border-radius: 999px !important; box-sizing: border-box; }
   #site-header .w--nav-menu-open .expertise2.serv .div-block-165.top  { background: #dcd5fb !important; }
   #site-header .w--nav-menu-open .expertise2.serv .div-block-162.top2 { background: #fbfee0 !important; }
   #site-header .w--nav-menu-open .expertise2.serv .div-block-165.top3 { background: #ffd2c6 !important; }
   #site-header .w--nav-menu-open .expertise2.serv .div-block-165.top4 { background: #fff !important; }
   #site-header .w--nav-menu-open .expertise2.serv .div-block-164,
-  #site-header .w--nav-menu-open .expertise2.serv .div-block-163 { display: flex !important; align-items: center; gap: 12px !important; width: auto !important; height: 28px !important; padding: 0 !important; background: transparent !important; }
+  #site-header .w--nav-menu-open .expertise2.serv .div-block-163 { display: flex !important; align-items: center; gap: 14px !important; width: 100% !important; height: auto !important; padding: 0 !important; background: transparent !important; }
   #site-header .w--nav-menu-open .expertise2.serv .div-block-249,
   #site-header .w--nav-menu-open .expertise2.serv .div-block-250,
   #site-header .w--nav-menu-open .expertise2.serv .div-block-251,
-  #site-header .w--nav-menu-open .expertise2.serv .div-block-252 { display: flex !important; align-items: center; gap: 8px !important; width: auto !important; height: auto !important; padding: 0 !important; background: transparent !important; }
+  #site-header .w--nav-menu-open .expertise2.serv .div-block-252 { display: flex !important; align-items: center; justify-content: space-between; flex: 1; gap: 8px !important; width: auto !important; min-width: 0; height: auto !important; padding: 0 !important; background: transparent !important; }
   #site-header .w--nav-menu-open .expertise2.serv .wbs-dropdown-title-2.top,
   #site-header .w--nav-menu-open .expertise2.serv .wbs-dropdown-title-2.top2,
   #site-header .w--nav-menu-open .expertise2.serv .wbs-dropdown-title-2.top3,
-  #site-header .w--nav-menu-open .expertise2.serv .wbs-dropdown-title-2.top4 { font-family: Optimanovaltprodemi, "Optima Nova", Optima, Arial, sans-serif; font-size: 18px !important; line-height: normal !important; letter-spacing: 0 !important; text-transform: none !important; font-weight: 400 !important; white-space: nowrap !important; }
+  #site-header .w--nav-menu-open .expertise2.serv .wbs-dropdown-title-2.top4 { font-family: Optimanovaltprodemi, "Optima Nova", Optima, Arial, sans-serif; font-size: 18px !important; line-height: 24px !important; letter-spacing: 0 !important; text-transform: none !important; font-weight: 400 !important; white-space: normal !important; }
   #site-header .w--nav-menu-open .expertise2.serv .wbs-dropdown-title-2.top  { color: #5915ff !important; }
   #site-header .w--nav-menu-open .expertise2.serv .wbs-dropdown-title-2.top2 { color: #211d1d !important; }
   #site-header .w--nav-menu-open .expertise2.serv .wbs-dropdown-title-2.top3 { color: #fe572a !important; }
   #site-header .w--nav-menu-open .expertise2.serv .wbs-dropdown-title-2.top4 { color: #393939 !important; }
   #site-header .w--nav-menu-open .expertise2.serv .div-block-164 > div:first-child svg,
-  #site-header .w--nav-menu-open .expertise2.serv .div-block-163 > div:first-child svg { width: 28px !important; height: 28px !important; }
+  #site-header .w--nav-menu-open .expertise2.serv .div-block-163 > div:first-child svg { flex: none; width: 30px !important; height: 30px !important; }
   #site-header .w--nav-menu-open .expertise2.serv .div-block-249 svg,
   #site-header .w--nav-menu-open .expertise2.serv .div-block-250 svg,
   #site-header .w--nav-menu-open .expertise2.serv .div-block-251 svg,
-  #site-header .w--nav-menu-open .expertise2.serv .div-block-252 svg { width: 16px !important; height: 11px !important; }
+  #site-header .w--nav-menu-open .expertise2.serv .div-block-252 svg { flex: none; width: 18px !important; height: 12px !important; }
   #site-header .w--nav-menu-open .expertise2.serv a.top  { color: #5915ff; }
   #site-header .w--nav-menu-open .expertise2.serv a.top2 { color: #211d1d; }
   #site-header .w--nav-menu-open .expertise2.serv a.top3 { color: #fe572a; }
   #site-header .w--nav-menu-open .expertise2.serv a.top4 { color: #393939; }
-
-  /* 4. the opened menu sits on the same light panel colour as the desktop mega menu */
-  #site-header .w--nav-menu-open .w-dropdown-list.w--open { background: #f2f2ed !important; border-radius: 16px !important; padding: 14px 18px !important; margin: 0 0 16px !important; }
-  #site-header .w--nav-menu-open .expertise2 .text-block-55 { color: #8e8e8e !important; }
-  #site-header .w--nav-menu-open .expertise2 .div-block-237 { border-color: #393939 !important; }
 }

@@ -1242,3 +1242,9 @@
   .cta-section .cta__title { font-size: var(--h-phone); line-height: 1.24; }                  /* same size as the other section headings */
   .cta-section .cta__text { width: 84%; font-size: 14px; line-height: 22px; padding-bottom: 28px; }   /* the paragraph was 20px - as big as the heading */
 }
+
+/* Phones: the "Why Positiv" cards sit 16px apart (was 16px margin + the 76.8px desktop gap = 93px) */
+@media (max-width: 767px) {
+  .features__wrap { gap: 0; }
+  .features__stack { padding-bottom: 8px; }
+}

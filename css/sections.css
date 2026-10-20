@@ -1053,14 +1053,18 @@
 }
 
 /* Phones: each "Why Positiv" card fills exactly one screen (below the fixed header), so a card is always seen whole while scrolling:
-   the picture takes a share of the height, the icon sits beside the card name, and spacing tightens. On short phones the long paragraph is dropped (as on short desktop windows). */
+   the picture takes every pixel the text leaves (never less than 40% of the card) and the card name + icon sit on its foot over a dark fade;
+   the body wrapper is dissolved so the label and the copy share the card grid. On short phones the long paragraph is dropped (as on short desktop windows). */
 @media (max-width: 767px) {
-  .feature-card { height: calc(100svh - 100px); min-height: 440px; grid-template-rows: auto minmax(0, 1fr); margin-bottom: 16px; overflow: hidden; }
-  .feature-card__media { height: clamp(130px, 24svh, 230px); }
-  .feature-card__body { width: 90%; padding: 14px 0 12px; justify-content: center; min-height: 0; }
-  .feature-card__label { flex-direction: row; align-items: center; gap: 12px; margin-bottom: 12px; }
+  .feature-card { height: calc(100svh - 100px); min-height: 440px; grid-template-columns: 1fr; grid-template-rows: minmax(40%, 1fr) auto; margin-bottom: 16px; overflow: hidden; }
+  .feature-card__media { grid-area: 1 / 1; align-self: stretch; width: 100%; height: auto; min-height: 0; }
+  .feature-card__body { display: contents; }
+  .feature-card__label { grid-area: 1 / 1; align-self: end; justify-self: stretch; position: relative; z-index: 2; margin: 0; padding: 48px 16px 14px; box-sizing: border-box;
+    flex-direction: row; align-items: center; gap: 12px; background: linear-gradient(to top, rgb(20 20 19 / .74), rgb(20 20 19 / 0)); border-radius: 0 0 15px 15px; }
+  .feature-card__label h5 { color: #fff; margin: 0; }
   .feature-card__icon { width: 44px; height: 44px; padding: 8px; }
-  .feature-card__copy { margin-top: 12px; }
+  .feature-card__rule { display: none; }
+  .feature-card__copy { grid-area: 2 / 1; align-self: start; justify-self: stretch; width: auto; margin: 14px 5% 6px; }
   .feature-card__heading, .feature-card--purple .feature-card__heading { margin-bottom: 8px; }
   .feature-card__lead { margin-bottom: 8px; }
   .feature-card__text { font-size: 13px; line-height: 20px; }

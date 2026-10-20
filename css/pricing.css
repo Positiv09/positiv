@@ -9,10 +9,7 @@
 .pr-wrap { width: 80%; max-width: 1360px; margin: 0 auto; }
 #foundations, #embedded, #boundaries, #faq { scroll-margin-top: 90px; }
 
-/* ---------- scroll reveal (js/pricing.js adds .is-in) ---------- */
-.js .pr-reveal { opacity: 0; transform: translateY(28px); transition: opacity .9s var(--ease-out), transform .9s var(--ease-out); transition-delay: var(--d, 0s); }
-.js .pr-reveal.is-in { opacity: 1; transform: none; }
-@media (prefers-reduced-motion: reduce) { .js .pr-reveal { opacity: 1; transform: none; transition: none; } }
+/* scroll reveal: .pr-reveal lives in css/sections.css (shared with the home page), driven by js/reveal.js */
 
 /* ---------- shared bits ---------- */
 /* section eyebrow: plain text like the site's "What we build" / "Testimonials" labels (no pill) */

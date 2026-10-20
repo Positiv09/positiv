@@ -322,6 +322,7 @@
     window.addEventListener('resize', runChecks);
     setInterval(runChecks, 350);
     const revealHeading = (heading) => {
+      if (heading.closest('.pr-reveal')) return;            // the shared fade-up (js/reveal.js) owns this heading
       const label = heading.textContent.replace(/\s+/g, ' ').trim();
       heading.setAttribute('aria-label', label);
       const fw = [];
@@ -386,7 +387,10 @@
       words.forEach((w, i) => { w.classList.toggle('is-active', i === 0); });
       gsap.set(words.slice(1), { opacity: 0 });
       const introOn = document.documentElement.classList.contains('intro-on');
-      const intro = gsap.from(words[0], { y: 40, opacity: 0, filter: 'blur(8px)', duration: 1, ease: 'power3.out', delay: introOn ? 0.15 : 0.5, paused: introOn });
+      const shared = !!rotator.closest('.pr-reveal') || rotator.classList.contains('pr-reveal');   // home: the hero fades up with js/reveal.js
+      const intro = shared
+        ? gsap.to({}, { duration: 1.2, paused: introOn })                                           // just a pause while the hero rises
+        : gsap.from(words[0], { y: 40, opacity: 0, filter: 'blur(8px)', duration: 1, ease: 'power3.out', delay: introOn ? 0.15 : 0.5, paused: introOn });
       if (introOn) document.addEventListener('positiv:intro-done', () => intro.play(), { once: true });   // start when the intro curtain has lifted
       const change = () => {
         const next = (cur + 1) % words.length;
@@ -492,15 +496,16 @@
       const end = +numEl.dataset.count, value = { v: 0 };
       numEl.style.fontVariantNumeric = 'tabular-nums';
       const parts = [text, numEl, unit].filter(Boolean);
-      const hide = () => { numEl.textContent = '0'; gsap.set(parts, { opacity: 0, y: 12 }); gsap.set(rule, { scaleX: 0, transformOrigin: 'left' }); };
+      const shared = stat.classList.contains('pr-reveal');                       // home: the stat fades up with js/reveal.js
+      const hide = () => { numEl.textContent = '0'; if (shared) return; gsap.set(parts, { opacity: 0, y: 12 }); gsap.set(rule, { scaleX: 0, transformOrigin: 'left' }); };
       hide();
       let shown = false, tl = null;
       const play = () => {
         shown = true; tl?.kill(); value.v = 0;
         tl = gsap.timeline();
-        tl.to(parts, { opacity: 1, y: 0, duration: 0.7, ease: 'power2.out', stagger: 0.06 }, 0)
-          .to(value, { v: end, duration: 1.1, ease: 'power2.out', onUpdate: () => { numEl.textContent = Math.round(value.v); } }, 0)
-          .to(rule, { scaleX: 1, duration: 0.9, ease: 'power2.out' }, 0.1);
+        const delay = shared ? parseFloat(stat.style.getPropertyValue('--d')) || 0 : 0;   // count while its row rises
+        tl.to(value, { v: end, duration: 1.1, ease: 'power2.out', onUpdate: () => { numEl.textContent = Math.round(value.v); } }, delay);
+        if (!shared) tl.to(parts, { opacity: 1, y: 0, duration: 0.7, ease: 'power2.out', stagger: 0.06 }, 0).to(rule, { scaleX: 1, duration: 0.9, ease: 'power2.out' }, 0.1);
       };
       if ('IntersectionObserver' in window) {
         new IntersectionObserver((ens) => {

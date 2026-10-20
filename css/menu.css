@@ -940,3 +940,17 @@
   #site-header .div-block-297 .n0 > :is(.div-block-201, .div-block-213, .div-block-214, .div-block-216) :is(.div-block-202, .text-block-48),
   #site-header .div-block-297 .n0 > .div-block-201 { cursor: pointer; }
 }
+
+/* ---- Pricing photos: the same slow zoom as the Expertise photos, fired from anywhere on the card ---- */
+@media (min-width: 992px) {
+  #site-header .pricing2 :is(.div-block-218.pricingtest, .div-block-291) { position: relative; overflow: hidden; isolation: isolate; }
+  #site-header .pricing2 :is(.div-block-218.pricingtest, .div-block-291)::before {
+    content: ""; position: absolute; inset: 0; z-index: -1; background: inherit; border-radius: inherit;
+    transition: transform .9s cubic-bezier(.22, 1, .36, 1);
+  }
+  #site-header .pricing2 :is(.div-block-219.pricingtest:hover .div-block-218.pricingtest, .div-block-206.new.pricingtest.ps:hover .div-block-291)::before { transform: scale(1.06); }
+  #site-header .pricing2 :is(.div-block-219.pricingtest, .div-block-206.new.pricingtest.ps) { cursor: pointer; }
+}
+@media (prefers-reduced-motion: reduce) {
+  #site-header .pricing2 :is(.div-block-218.pricingtest, .div-block-291)::before { transition-duration: .01ms; }
+}

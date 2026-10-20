@@ -1187,7 +1187,7 @@
   /* compare table turned on its side: one row per option (Positiv first), one column per criterion. The cells come in the markup row by row
      (6 per row: label, Positiv, 4 others), so cell (row i, column j) is moved to (row j+1, column i+1). It scrolls sideways; the option names
      stay pinned and the yellow Positiv row is always in view. */
-  .compare__scroll { border-radius: 18px; overflow-y: hidden; background: #211d1d; }   /* the table reads as one rounded card */
+  .compare__scroll { border-radius: 18px; overflow-y: hidden; background: #262222; border: 1px solid rgb(255 255 255 / .12); }   /* the table reads as one rounded card */
   .compare-table { grid-template-columns: 112px 108px 132px repeat(5, 108px); grid-template-rows: 76px repeat(5, 62px); grid-auto-rows: auto; width: max-content; min-width: 0; border-radius: 0; }   /* the 2nd criterion ("Channel/ecosystem fluency") needs the wider column so the word is not split */
   .compare-table > div:nth-child(6n + 1) { grid-row: 1; }
   .compare-table > div:nth-child(6n + 2) { grid-row: 2; }
@@ -1206,7 +1206,7 @@
   .compare-table > div { border: 0 !important; border-right: .5px solid rgb(255 255 255 / .12) !important; border-bottom: .5px solid rgb(255 255 255 / .12) !important; border-radius: 0 !important; }
   .compare-table .cell--spacer { position: sticky; left: 0; z-index: 4; background: #2b2727; opacity: 1; }
   .compare-table .cell--brand, .compare-table .cell--col-head { position: sticky; left: 0; z-index: 3; justify-content: flex-start; padding: 0 10px 0 14px; text-align: left; font-size: 13px; line-height: 17px; box-shadow: 8px 0 12px -8px rgb(0 0 0 / .5); }
-  .compare-table .cell--brand { border-radius: 18px 0 0 18px !important; }
+  .compare-table .cell--brand { border-radius: 0 !important; box-shadow: none; }   /* square: the rounded frame clips it, so no dark notches at the corners */
   .compare-table .cell--brand img { width: 68px; height: auto; }
   .compare-table > div.cell--label { position: static; justify-content: center !important; padding: 6px; text-align: center; background: #2b2727; border-top: 0 !important; border-left: 0 !important; border-right: 0 !important; }   /* the criteria row is a tinted header band */
   .compare-table .cell--label .cell__txt { overflow-wrap: break-word; font-size: 11.5px; line-height: 15px; letter-spacing: -.1px; }

@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Work (library) — Positiv</title>
+  <title>Results — Positiv</title>
   <script>document.documentElement.classList.add('js')</script>
   <script>try{if(!sessionStorage.getItem('positivIntro')&&!matchMedia('(prefers-reduced-motion: reduce)').matches){document.documentElement.classList.add('intro-on');setTimeout(function(){document.documentElement.classList.remove('intro-on')},9000)}}catch(e){}</script>
   <link rel="stylesheet" href="css/intro.css?v=1">
@@ -20,10 +20,9 @@
   <link rel="stylesheet" href="css/base.css?v=20261006a">
   <link rel="stylesheet" href="css/menu.css?v=20261020f">
   <link rel="stylesheet" href="css/sections.css?v=20261021a">
-  <link rel="stylesheet" href="css/work5.css?v=4">
-  <script type="importmap">{"imports":{"three":"./js/vendor/three.module.min.js"}}</script>
+  <link rel="stylesheet" href="css/results.css?v=31">
 </head>
-<body class="is-about is-work5">
+<body class="is-about is-work2">
 
 <!-- ======================= SVG SPRITE (icons) ======================= -->
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
@@ -356,45 +355,90 @@
 </svg>
 </div></div></div></div></div></div></section>
 
-<main id="main" class="work5-page">
+<main id="main" class="work2-page">
 
-<section class="lib" id="lib" data-section="work5" data-mode="start" aria-label="Walkable 3D library of our work">
-  <div class="lib__canvas" id="lib-canvas"></div>
-  <a href="index.html#view-all" class="back-projects"><span class="back-projects__arrow"><svg width="22" height="14" viewBox="0 0 22 14" fill="none" aria-hidden="true"><path d="M1 7h19m0 0L14.5 1.5M20 7l-5.5 5.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span> Back to projects</a>
-
-  <button type="button" class="lib__sound" id="lib-sound" aria-pressed="true" aria-label="Toggle sound"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9.5v5h3.5L12 18.5v-13L7.5 9.5H4z"/><path d="M15.5 9a4.2 4.2 0 0 1 0 6M18 6.5a8 8 0 0 1 0 11" class="lib__waves"/></svg><span>Sound on</span></button>
-  <div class="lib__cross" aria-hidden="true"></div>
-  <div class="lib__label" id="lib-label" aria-live="polite"><span id="lib-label-cat">Brand</span><strong id="lib-label-name">Angel East</strong><em id="lib-label-hint">Click to take the book</em></div>
-  <button type="button" class="lib__take" id="lib-take">Take</button>
-  <p class="lib__hint">WASD / arrows to walk · mouse to look · Shift to run · click a book to read it · the lit door leads home · M sound · Esc to pause</p>
-
-  <div class="lib__reader" aria-live="polite">
-    <div class="lib__reader-top"><span id="lib-read-cat">Brand</span><strong id="lib-read-title">Project</strong></div>
-    <button type="button" class="lib__x" id="lib-close" aria-label="Put the book back"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button>
-    <div class="lib__reader-bar">
-      <button type="button" class="lib__rbtn lib__only-hold" id="lib-putback" aria-label="Put the book back on the shelf">Put it back</button>
-      <button type="button" class="lib__rbtn lib__rbtn--primary lib__only-hold" id="lib-openbook">Open the book</button>
-      <button type="button" class="lib__rbtn lib__only-open" id="lib-prev" aria-label="Previous pages">&larr; Prev</button>
-      <span class="lib__pageno lib__only-open" id="lib-page">1 / 4</span>
-      <button type="button" class="lib__rbtn lib__only-open" id="lib-next" aria-label="Next pages">Next &rarr;</button>
-      <button type="button" class="lib__rbtn lib__only-open" id="lib-closebook">Close the book</button>
-      <a class="lib__rbtn lib__rbtn--primary lib__only-open" id="lib-open" href="project.html?p=1">Open the full project</a>
-    </div>
+<section class="section m-hero" data-section="work2">
+  <p class="m-eyebrow">Our work</p>
+  <h1 class="m-title">Work that <em>speaks for itself</em></h1>
+  <p class="m-lead">Twelve years of sales-effective creative brand systems, sales assets, websites, and campaigns for the firms who sell them.</p>
+  <div class="m-filters is-floating" role="group" aria-label="Filter projects">
+    <button type="button" class="m-filter is-active" data-filter="all" aria-pressed="true">All works</button>
+    <button type="button" class="m-filter" data-filter="brand" aria-pressed="false">Brand</button>
+    <button type="button" class="m-filter" data-filter="sales" aria-pressed="false">Sales</button>
+    <button type="button" class="m-filter" data-filter="web" aria-pressed="false">Web</button>
+    <button type="button" class="m-filter" data-filter="campaign" aria-pressed="false">Campaign</button>
   </div>
+</section>
 
-  <div class="lib__start" id="lib-start">
-    <div class="lib__panel">
-      <p class="lib__eyebrow">Our work</p>
-      <h1 class="lib__title">Walk into the <em>library.</em></h1>
-      <p class="lib__lead">Five bookcases: Brand, Web, Sales and Campaign, plus one that is coming soon. Our projects are the pale blue books. Pull one off the shelf, open it, turn the pages, and put it back. The lit door brings you home.</p>
-      <button type="button" class="lib__btn" id="lib-start-btn">Enter the library</button>
-      <div class="lib__keys"><span><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> walk</span><span>Mouse look</span><span><kbd>Shift</kbd> run</span><span>Click take a book</span><span><kbd>Esc</kbd> pause</span></div>
-      <a class="lib__classic" href="work.html">Prefer the classic list?</a>
-    </div>
-  </div>
-  <div class="lib__loading" id="lib-loading">Loading the library…</div>
-  <div class="lib__fallback" id="lib-fallback" hidden><h2>Your browser can't run the 3D library.</h2><p>WebGL is needed for this layout. <a href="work.html">Open the classic work page</a>.</p></div>
-  <div class="lib__fade" aria-hidden="true"></div>
+<section class="m-mosaic" data-section="work2-list" aria-label="Selected projects">
+    <a href="project.html?p=3" data-cursor="View" class="m-tile m-tile--1 m-tile--slides" data-cat="brand sales" aria-label="Caravel Partner — Brand · Sales">
+      <span class="m-tile__slides m-tile__slides--5" aria-hidden="true">
+        <span class="m-tile__slide" style="background-image:url('assets/img/work/caravel-sign.jpg')"></span>
+        <span class="m-tile__slide" style="background-image:url('assets/img/work/caravel-decks.jpg')"></span>
+        <span class="m-tile__slide" style="background-image:url('assets/img/work/caravel-cube.jpg')"></span>
+        <span class="m-tile__slide" style="background-image:url('assets/img/work/caravel-billboard.jpg')"></span>
+        <span class="m-tile__slide" style="background-image:url('assets/img/caravel.jpg');background-position:24% 50%"></span>
+      </span>
+      <span class="m-tile__info"><strong>Caravel Partner</strong><span class="m-tile__teaser">One brand story told the same way by every partner team — 3x faster asset turnaround.</span><span class="m-tile__tags"><span>Brand</span><span>Sales</span></span></span>
+    </a>
+    <a href="project.html?p=2" data-cursor="View" class="m-tile m-tile--2 m-tile--video" data-cat="brand" aria-label="QuickPick — Brand">
+      <video class="m-tile__video" autoplay loop muted playsinline preload="metadata"
+             poster="assets/img/hero-b.jpg" aria-hidden="true">
+        <source src="assets/video/tile-2.mp4" type="video/mp4">
+      </video>
+      <span class="m-tile__info"><strong>QuickPick</strong><span class="m-tile__teaser">A logo built from simple shapes, so the mark is easy to recognise and easy to animate.</span><span class="m-tile__tags"><span>Brand</span></span></span>
+    </a>
+    <a href="project.html?p=1" data-cursor="View" class="m-tile m-tile--3 m-tile--video" data-cat="brand" aria-label="Angel East — Brand">
+      <video class="m-tile__video" autoplay loop muted playsinline preload="metadata"
+             poster="assets/img/portfolio-fig.webp" aria-hidden="true">
+        <source src="assets/video/tile-1.mp4" type="video/mp4">
+      </video>
+      <span class="m-tile__info"><strong>Angel East</strong><span class="m-tile__teaser">A rebrand built for the room, not the award show: clear, confident and easy to apply.</span><span class="m-tile__tags"><span>Brand</span></span></span>
+    </a>
+    <a href="project.html?p=4" data-cursor="View" class="m-tile m-tile--4 m-tile--video" data-cat="brand" aria-label="Light Node Ventures — Brand">
+      <video class="m-tile__video" autoplay loop muted playsinline preload="metadata"
+             poster="assets/img/light-node-poster-v2.jpg" aria-hidden="true">
+        <source src="assets/video/light-node-v2.mp4" type="video/mp4">
+      </video>
+      <span class="m-tile__info"><strong>Light Node Ventures</strong><span class="m-tile__teaser">Brand identity for a Web3 growth advisory firm and venture studio, built around one bold mark.</span><span class="m-tile__tags"><span>Brand</span></span></span>
+    </a>
+    <a href="project.html?p=5" data-cursor="View" class="m-tile m-tile--5" data-cat="brand" style="background-image:url('assets/img/work/work2-tile-5.jpg')" aria-label="Angel East — Brand system">
+      <span class="m-tile__info"><strong>Angel East</strong><span class="m-tile__teaser">A visual system with a small set of rules that anyone can apply without a designer.</span><span class="m-tile__tags"><span>Brand system</span></span></span>
+    </a>
+    <a href="project.html?p=6" data-cursor="View" class="m-tile m-tile--6" data-cat="sales" style="background-image:url('assets/img/work/work2-tile-6.jpg')" aria-label="Angel East — Sales assets">
+      <span class="m-tile__info"><strong>Angel East</strong><span class="m-tile__teaser">The sales deck reps actually open: 40% more meetings booked in the first quarter.</span><span class="m-tile__tags"><span>Sales assets</span></span></span>
+    </a>
+    <a href="project.html?p=7" data-cursor="View" class="m-tile m-tile--7" data-cat="brand" style="background-image:url('assets/img/work/work2-tile-7.jpg')" aria-label="Angel East — Brand">
+      <span class="m-tile__info"><strong>Angel East</strong><span class="m-tile__teaser">Positioning with teeth: one sharp story, from the website to the first call.</span><span class="m-tile__tags"><span>Brand</span></span></span>
+    </a>
+    <a href="project.html?p=8" data-cursor="View" class="m-tile m-tile--8" data-cat="campaign" style="background-image:url('assets/img/work/work2-tile-8.jpg')" aria-label="Angel East — Campaign">
+      <span class="m-tile__info"><strong>Angel East</strong><span class="m-tile__teaser">A campaign that kept the pipeline fed for six months straight.</span><span class="m-tile__tags"><span>Campaign</span></span></span>
+    </a>
+    <a href="project.html?p=9" data-cursor="View" class="m-tile m-tile--9" data-cat="sales" style="background-image:url('assets/img/work/work2-tile-9.jpg')" aria-label="Angel East — Sales">
+      <span class="m-tile__info"><strong>Angel East</strong><span class="m-tile__teaser">Battle cards and one-pagers reps reach for, built from real deal conversations.</span><span class="m-tile__tags"><span>Sales</span></span></span>
+    </a>
+    <a href="project.html?p=10" data-cursor="View" class="m-tile m-tile--10" data-cat="web" style="background-image:url('assets/img/work/work2-tile-10.jpg')" aria-label="Angel East — Web">
+      <span class="m-tile__info"><strong>Angel East</strong><span class="m-tile__teaser">A site that sells: clearer path, faster pages, more qualified enquiries.</span><span class="m-tile__tags"><span>Web</span></span></span>
+    </a>
+    <a href="project.html?p=11" data-cursor="View" class="m-tile m-tile--11" data-cat="campaign" style="background-image:url('assets/img/work/work2-tile-11.jpg')" aria-label="Angel East — Marketing">
+      <span class="m-tile__info"><strong>Angel East</strong><span class="m-tile__teaser">Landing pages and campaign hubs for partner launches, shipped fast and kept current.</span><span class="m-tile__tags"><span>Marketing</span></span></span>
+    </a>
+    <a href="project.html?p=12" data-cursor="View" class="m-tile m-tile--12" data-cat="brand" style="background-image:url('assets/img/work/work2-tile-12.jpg')" aria-label="Angel East — Brand">
+      <span class="m-tile__info"><strong>Angel East</strong><span class="m-tile__teaser">Co-branding guidelines that keep every partner on-message without slowing them down.</span><span class="m-tile__tags"><span>Brand</span></span></span>
+    </a>
+    <a href="project.html?p=13" data-cursor="View" class="m-tile m-tile--13" data-cat="sales" style="background-image:url('assets/img/work/work2-tile-13.jpg')" aria-label="Angel East — Sales assets">
+      <span class="m-tile__info"><strong>Angel East</strong><span class="m-tile__teaser">Pitch and proposal templates that close, refreshed every quarter.</span><span class="m-tile__tags"><span>Sales assets</span></span></span>
+    </a>
+    <a href="project.html?p=14" data-cursor="View" class="m-tile m-tile--14" data-cat="web" style="background-image:url('assets/img/work/work2-tile-14.jpg')" aria-label="Angel East — Web">
+      <span class="m-tile__info"><strong>Angel East</strong><span class="m-tile__teaser">A partner portal that puts the right asset in the right hands in two clicks.</span><span class="m-tile__tags"><span>Web</span></span></span>
+    </a>
+</section>
+
+<section class="m-outro" data-section="work2-outro">
+  <p class="m-outro__eyebrow">Your project next</p>
+  <h2 class="m-outro__title">Have something <em>worth building?</em></h2>
+  <p class="m-outro__lead">Tell us about it and we will show you how we would approach it.</p>
+  <a href="contact.html" class="btn btn--lime m-outro__btn">Get in touch</a>
 </section>
 
 <!-- ========================== CTA + FOOTER ========================== -->
@@ -464,6 +508,7 @@
 <script src="js/vendor/gsap.min.js" defer></script>
 <script src="js/main.js?v=20261020c" defer></script>
 <script src="js/intro.js?v=1" defer></script>
-<script type="module" src="js/work5.js?v=20"></script>
+<script src="js/cursor.js?v=1" defer></script>
+<script src="js/results.js?v=8" defer></script>
 </body>
 </html>

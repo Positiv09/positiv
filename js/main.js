@@ -432,9 +432,9 @@
   let leaveTimer = 0;
   dropdowns.forEach((dd) => {
     const toggle = $('.w-dropdown-toggle', dd);
-    if (!$('.w-dropdown-list', dd)) {                             // "Results" is a plain link: it opens the Work page
+    if (!$('.w-dropdown-list', dd)) {                             // "Results" is a plain link: it opens the Results page
       toggle.setAttribute('role', 'link'); toggle.setAttribute('tabindex', '0'); toggle.style.cursor = 'pointer';
-      const go = () => { if (!inWebflow) location.href = 'work2.html'; };
+      const go = () => { location.href = inWebflow ? '/results' : 'results.html'; };
       toggle.addEventListener('click', go);
       toggle.addEventListener('keydown', (e) => { if (e.key === 'Enter') go(); });
       return;

@@ -1,4 +1,4 @@
-/* Project page: one template, filled from the list below by ?p=<number> (matches the tile order on work2.html).
+/* Project page: one template, filled from the list below by ?p=<number> (matches the tile order on results.html).
    Names, taglines, copy and quotes are placeholders - replace them (and the images) with the real projects. */
 (() => {
   const IMG = ['portfolio-fig.webp', 'hero-b.jpg', 'portfolio-2.webp', 'service-web.jpg', 'hero-g.png', 'portfolio-1.jpg', 'service-brand.webp',

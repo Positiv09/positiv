@@ -27,7 +27,7 @@ http.createServer((req, res) => {
   if (rel.endsWith('/')) rel += 'index.html';
   let file = path.resolve(path.join(root, rel));
   if (!file.startsWith(root + path.sep) && file !== root) return send404(res);          // no escaping the project folder
-  if (!path.extname(file) && fs.existsSync(file + '.html')) file += '.html';              // /work -> work.html
+  if (!path.extname(file) && fs.existsSync(file + '.html')) file += '.html';              // /results -> results.html
   fs.stat(file, (err, st) => {
     if (err || !st.isFile()) return send404(res);
     const type = types[path.extname(file).toLowerCase()] || 'application/octet-stream';

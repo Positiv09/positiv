@@ -895,3 +895,4 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .testimonial-card__person--5 { left: 53.6%; right: auto; width: 34.3%; height: 80.3%; background-size: contain; background-position: 50% 100%; }
 @media (max-width: 991px) { .testimonials-section .testimonial-card__person--5 { left: auto; right: 0; width: 70%; height: 100%; background-size: contain; background-position: 50% 100%; } }
 @media (max-width: 767px) { .testimonials-section .testimonial-card__person--5 { right: 3%; width: 66%; height: 100%; background-size: contain; background-position: 50% 100%; } }
+@media (min-width: 768px) { .svc:not(.is-compact) .svc-panel .svc-panel__text { line-height: 26px; } }   /* services copy: 26px between the lines (not in short windows, where the card is compact) */

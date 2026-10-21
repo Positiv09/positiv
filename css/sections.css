@@ -391,6 +391,7 @@
 .svc-label { margin: 10px 0; color: var(--c-muted-2); font-size: 14px; line-height: 18px; font-weight: 400; text-transform: uppercase; }
 .svc-label--deliv { margin: 0 0 10px; }
 .svc-panel__text { color: var(--c-paper); font-size: 16px; line-height: 20px; }
+@media (min-width: 768px) { .svc:not(.is-compact) .svc-panel .svc-panel__text { line-height: 26px; } }   /* services copy: 26px between the lines (not in short windows, where the card is compact) */
 .svc-panel__pills { display: flex; flex-wrap: wrap; gap: 16px; width: 80%; }
 /* deliverable tags: same pill look and hover as before, but not clickable (spans) */
 .svc-pill { display: flex; align-items: center; height: 40px; padding: 0 10px; border: .5px solid var(--c-paper); border-radius: 20px; color: var(--c-paper); font-size: 12px; line-height: 20px; cursor: default; transition: background-color .25s, color .25s; }

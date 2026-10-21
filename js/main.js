@@ -129,9 +129,7 @@
 
   /* ---------- Hero image columns ----------
      Each column is its own scroller: it auto-drifts (cols 1 & 3 up, col 2 down), slows to 25% while hovered,
-     scrolls on its own with the mouse wheel / mouse-drag (momentum), and each tile has an expand button that
-     opens the image in a lightbox. One rAF loop drives all three columns; everything is a function of `pos`. */
-  let openLightbox = null;                          // set by the hero block below; reused by the service-card tiles
+     scrolls on its own with the mouse wheel / mouse-drag (momentum). The pictures are not clickable. One rAF loop drives all three columns; everything is a function of `pos`. */
   const heroMedia = $('[data-hero-media]');
   const heroState = [];
   let heroPaused = false;
@@ -203,43 +201,6 @@
     }
     raf = requestAnimationFrame(tick);
 
-    // Lightbox
-    const lb = document.createElement('div');
-    lb.className = 'lightbox'; lb.setAttribute('role', 'dialog'); lb.setAttribute('aria-modal', 'true'); lb.setAttribute('aria-label', 'Image preview');
-    lb.innerHTML = '<button class="lightbox__close" type="button" aria-label="Close"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg></button><div class="lightbox__stage"><div class="lightbox__gallery"><img class="lightbox__img" alt=""><img class="lightbox__extra lightbox__extra--a" alt=""><img class="lightbox__extra lightbox__extra--b" alt=""></div><aside class="lightbox__info" aria-live="polite"></aside></div>';
-    document.body.appendChild(lb);
-    const lbImg = $('.lightbox__img', lb);
-    const lbExtrasAll = $$('.lightbox__extra', lb);
-    let opener = null;
-    // Figma exported these JPGs with their rounded corners filled light grey; clip the preview to the same radius (measured: the grey corner arc is ~28px on a 492px-wide export, so 6% of the width)
-    const fitRadius = () => { lbImg.style.borderRadius = '0'; const w = lbImg.getBoundingClientRect().width; lbImg.style.clipPath = `inset(${(w * 0.025).toFixed(1)}px round ${(w * 0.05).toFixed(1)}px)`; };   // trim 2.5% off every edge: removes the whole grey corner arc (it reaches ~1.7% in), then re-round
-    lbImg.addEventListener('load', fitRadius); window.addEventListener('resize', fitRadius);
-    // Click the big picture to bring it in front of the two small ones (they dim and settle back); click a small one to hand the front back.
-    const lbGallery = $('.lightbox__gallery', lb);
-    lbImg.addEventListener('click', () => lbGallery.classList.toggle('is-front'));
-    lbExtrasAll.forEach((im) => im.addEventListener('click', () => lbGallery.classList.remove('is-front')));
-    const lbInfo = $('.lightbox__info', lb);
-    // `panel` (optional): the service-card text panel of that picture, shown beside the image (icon, title, the work, deliverables, number)
-    const lbExtras = lbExtrasAll;
-    const openLb = (src, from, panel, extras) => {
-      lbGallery.classList.remove('is-front');
-      lbExtras.forEach((im, i) => { const u = extras && extras[i]; if (u) im.src = u; im.style.display = u ? '' : 'none'; });
-      lbInfo.textContent = '';
-      if (panel) {
-        const c = panel.cloneNode(true);
-        c.removeAttribute('style'); c.removeAttribute('data-svc-panel'); c.className = 'lightbox__panel';
-        const t = $('.svc-panel__title', c); if (t) t.textContent = t.getAttribute('aria-label') || t.textContent;
-        $$('.svc-pill', c).forEach((a) => { const sp = document.createElement('span'); sp.className = 'svc-pill'; sp.textContent = a.textContent; a.replaceWith(sp); });
-        lbInfo.appendChild(c);
-      }
-      lb.classList.toggle('has-info', !!panel);
-      lbImg.src = src; lb.classList.add('is-open'); heroPaused = true; opener = from; $('.lightbox__close', lb).focus();
-    };
-    openLightbox = openLb;
-    const closeLb = () => { if (!lb.classList.contains('is-open')) return; lb.classList.remove('is-open'); heroPaused = false; opener?.focus?.({ preventScroll: true }); };
-    // (the hero pictures no longer open on click; the lightbox is only used by the service-card pictures)
-    lb.addEventListener('click', (e) => { if (e.target === lb || e.target.closest('.lightbox__close')) closeLb(); });
-    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeLb(); });
   }
 
   /* ---------- CTA background mark: the light starts when the mark scrolls into view ----------
@@ -917,20 +878,6 @@
       spentIdx = -1;
       setHover(t ? tiles.indexOf(t) : -1);
     };
-    // hover: every tile gets an expand button that opens the image in the lightbox
-    tiles.forEach((tile) => {
-      tile.insertAdjacentHTML('beforeend', '<button class="svc-tile__expand" type="button" aria-label="Expand image"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4h6v6M10 20H4v-6M20 4l-7 7M4 20l7-7"/></svg></button>');
-      const open = () => {
-        const m = /url\(["']?([^"')]+)["']?\)/.exec(getComputedStyle(tile).backgroundImage);
-        if (m && openLightbox) openLightbox(m[1], tile.querySelector('.svc-tile__expand'), panels[tiles.indexOf(tile)], (tile.dataset.extra || '').split(',').filter(Boolean));
-      };
-      // the picture in front opens the lightbox; a peeking picture (above / below) glides to its own service
-      tile.addEventListener('click', () => {
-        const i = tiles.indexOf(tile);
-        if (i === mainTile || !mqS.matches) { open(); return; }
-        glideTo(restY(i));
-      });
-    });
     /* ---- Magnetic pictures ("Version Rafik") ----
        One gesture = one picture. Inside the card, the first wheel notch or swipe of a gesture glides the strip to the next
        picture and it lands centred; the rest of that gesture (trackpad momentum, a wheel still spinning) is absorbed so it

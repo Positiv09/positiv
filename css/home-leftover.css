@@ -126,59 +126,6 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .hero__media.is-js .hero__track { animation: none; will-change: transform; }   /* JS drives the columns (drift, wheel, drag) */
 .hero__col.is-dragging .hero__tile { pointer-events: none; }   
 
-.lightbox {
-  position: fixed; inset: 0; z-index: 100000; display: grid; place-items: center; padding: 5vh 5vw;
-  background: rgb(33 29 29 / .88); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
-  opacity: 0; visibility: hidden; transition: opacity .3s ease, visibility .3s;
-}
-.lightbox.is-open { opacity: 1; visibility: visible; }
-.lightbox__stage { display: flex; align-items: center; justify-content: center; gap: clamp(56px, 7vw, 120px); max-width: 100%; }
-.lightbox__img { max-width: min(1200px, 90vw); max-height: 88vh; object-fit: contain; transform: scale(.96); transition: transform .45s var(--ease-out); box-shadow: 0 30px 80px rgb(0 0 0 / .45); }
-.lightbox.is-open .lightbox__img { transform: none; }
-/* with a service: picture on the left, its copy on the right */
-.lightbox__gallery { position: relative; display: flex; flex: none; }
-.lightbox__extra { display: none; position: absolute; z-index: 2; width: 48%; height: auto; cursor: pointer; border-radius: 16px; box-shadow: 0 24px 60px rgb(0 0 0 / .5); border: 3px solid var(--c-ink); }
-.lightbox.has-info .lightbox__extra { display: block; opacity: 0; transition: opacity .6s ease, transform .9s var(--ease-out); }
-.lightbox__extra--a { right: -5%; top: 6%; transform: translate(30px, 20px) rotate(4deg); }
-.lightbox__extra--b { left: -12%; bottom: -6%; transform: translate(-30px, 30px) rotate(-4deg); }
-.lightbox.has-info.is-open .lightbox__extra--a { opacity: 1; transform: rotate(3deg); transition-delay: .35s; }
-.lightbox.has-info.is-open .lightbox__extra--b { opacity: 1; transform: rotate(-3deg); transition-delay: .5s; }
-/* the two small pictures float gently, and on hover rise, grow and straighten */
-@keyframes lb-float { 0%, 100% { translate: 0 0; } 50% { translate: 0 -12px; } }
-.lightbox.has-info.is-open .lightbox__extra { animation: lb-float 5s ease-in-out infinite; transition: opacity .6s ease, transform .9s var(--ease-out), scale .6s var(--ease-out), box-shadow .5s ease, border-color .4s ease, filter .6s ease; }
-.lightbox.has-info.is-open .lightbox__extra--b { animation-delay: -2.5s; }
-.lightbox.has-info.is-open .lightbox__extra:hover { scale: 1.08; z-index: 4; box-shadow: 0 34px 80px rgb(0 0 0 / .65); border-color: var(--c-lime); animation-play-state: paused; transition-delay: 0s; scale: 1.06; }
-@media (prefers-reduced-motion: reduce) { .lightbox.has-info.is-open .lightbox__extra { animation: none; } }
-.lightbox.has-info .lightbox__img { max-width: min(540px, 40vw); max-height: 80vh; border-radius: 20px; }
-.lightbox__info { display: none; }
-.lightbox.has-info .lightbox__info {
-  display: block; flex: 0 1 520px; min-width: 0; max-height: 84vh; overflow-y: auto; color: var(--c-paper);
-  opacity: 0; transform: translateX(28px); transition: opacity .6s ease .18s, transform .8s var(--ease-out) .18s;
-}
-.lightbox.has-info.is-open .lightbox__info { opacity: 1; transform: none; }
-.lightbox__panel { display: grid; grid-template-columns: auto 1fr; column-gap: 16px; align-items: center; justify-items: start; }
-.lightbox__panel .svc-panel__icon { grid-area: 1 / 1; margin: 0; }
-.lightbox__panel .svc-panel__num { display: none; }
-.lightbox__panel .svc-panel__title { grid-column: 1 / -1; margin: 32px 0 28px; font-size: clamp(40px, 4.4vw, 64px); line-height: 1.04; }
-.lightbox__panel .svc-panel__work { grid-column: 1 / -1; width: 100%; margin: 0; padding: 26px 0; border-top: 1px solid rgb(239 239 235 / .16); }
-.lightbox__panel .svc-label { margin: 0 0 12px; letter-spacing: .12em; font-size: 12px; color: #b2b2b2; }
-.lightbox__panel .svc-panel__text { font-size: 20px; line-height: 30px; color: #fff; }
-.lightbox__panel .svc-label--deliv { grid-column: 1 / -1; width: 100%; margin: 0; padding: 26px 0 14px; border-top: 1px solid rgb(239 239 235 / .16); }
-.lightbox__panel .svc-panel__pills { grid-column: 1 / -1; width: 100%; gap: 12px; margin: 0; }
-.lightbox__panel .svc-pill { height: 42px; padding: 0 18px; font-size: 14px; border-color: rgb(239 239 235 / .45); background: rgb(255 255 255 / .04); }
-/* the big picture comes to the front when clicked (class set by JS): it lifts, the small ones dim and ease back */
-.lightbox.has-info .lightbox__img { position: relative; z-index: 1; cursor: pointer; transition: transform .7s var(--ease-out), box-shadow .6s ease; }
-.lightbox__gallery.is-front .lightbox__img { z-index: 5; transform: scale(1.03); box-shadow: 0 40px 90px rgb(0 0 0 / .6); }
-.lightbox.has-info .lightbox__extra { filter: brightness(1); }
-.lightbox.has-info.is-open .lightbox__gallery.is-front .lightbox__extra { filter: brightness(.55); scale: .96; animation-play-state: paused; }
-@media (max-width: 900px) {
-  .lightbox.has-info .lightbox__stage { flex-direction: column; gap: 20px; }
-  .lightbox__extra { width: 38%; }
-  .lightbox.has-info .lightbox__img { max-width: 80vw; max-height: 38vh; }
-  .lightbox.has-info .lightbox__info { max-height: 46vh; }
-}
-.lightbox__close { position: absolute; top: 24px; right: 24px; width: 48px; height: 48px; border-radius: 50%; display: grid; place-items: center; background: var(--c-lime); color: var(--c-ink); cursor: pointer; transition: transform .25s var(--ease-out); }
-.lightbox__close:hover { transform: rotate(90deg); }
 @keyframes marquee-y { to { transform: translateY(calc(-50% - 8px)); } }
 @keyframes marquee-x { to { transform: translateX(var(--shift, -50%)); } }  /* --shift = one set width, set by main.js */
 
@@ -377,7 +324,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .svc-panel__num { bottom: max(40px, 7.4vh); left: 64px; border: .5px solid var(--c-paper); border-radius: 30px; }
 .svc-tile { left: 40px; top: 0; background-size: cover; background-position: 50%;
 }
-/* hover: the picture zooms inside its frame, a soft shade appears, and the expand button pops in */
+/* hover: the picture zooms inside its frame and a soft shade appears (the pictures are not clickable) */
 .svc-tile::before { background: inherit; background-size: cover; background-position: 50%;
 }
 .svc-tile::after { inset: 0;
@@ -396,14 +343,6 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
   .svc.is-compact .svc-panel__pills { gap: 10px; }
   .svc.is-compact .svc-pill { height: 34px; }
 }
-.svc-tile__expand {
-  position: absolute; right: 16px; bottom: calc(var(--clip, 0px) + 16px); z-index: 2; width: 44px; height: 44px; border-radius: 50%;
-  display: grid; place-items: center; background: var(--c-lime); color: var(--c-ink); cursor: pointer;
-  opacity: 0; transform: scale(.7); transition: opacity .25s ease, transform .35s var(--ease-out), background-color .2s;
-}
-.svc-tile.is-hot.is-front .svc-tile__expand, .svc-tile__expand:focus-visible { opacity: 1; transform: none; }   /* expand button: front picture only */
-.svc-tile__expand:hover { background: #fff; }
-@media (hover: none) { .svc-tile__expand { opacity: .92; transform: none; width: 36px; height: 36px; } }
 
 @media (min-width: 1920px) {
   .svc-panel__title { font-size: 62px; }

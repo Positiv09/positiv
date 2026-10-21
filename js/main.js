@@ -429,7 +429,8 @@
   /* ---------- Header: solid background once scrolled ---------- */
   const header = $('#site-header');
   if (header) {
-    const onHeaderScroll = () => header.classList.toggle('is-scrolled', window.scrollY > 40);
+    let headerOn = null;
+    const onHeaderScroll = () => { const on = window.scrollY > 40; if (on !== headerOn) { headerOn = on; header.classList.toggle('is-scrolled', on); } };
     window.addEventListener('scroll', onHeaderScroll, { passive: true });
     onHeaderScroll();
   }
@@ -1256,5 +1257,46 @@
     window.addEventListener('resize', measureT);
     window.addEventListener('load', measureT);
     measureT();
+  }
+
+  /* ---------- Smooth scrolling: warm the pictures up before they scroll in ----------
+     Lazy <img>s and CSS background pictures are fetched and decoded the moment they come into view, which shows up as a
+     single frame that takes 100-200 ms while scrolling (features, services, testimonials...). Once the page has loaded
+     and the browser is idle, they are fetched and decoded one at a time in the background, nearest first, so by the time
+     they scroll in they are already ready. Skipped on phones, low-memory devices and data-saver mode. */
+  {
+    const lowEnd = matchMedia('(max-width: 767px)').matches || (navigator.deviceMemory && navigator.deviceMemory < 4) || (navigator.connection && navigator.connection.saveData);
+    if (!lowEnd) {
+      const idle = window.requestIdleCallback ? (fn) => requestIdleCallback(fn, { timeout: 1500 }) : (fn) => setTimeout(fn, 120);
+      const jobs = [], seen = new Set();
+      const urlOf = (v) => { const m = /url\((['"]?)(.+?)\1\)/.exec(v || ''); return m && !/^data:/.test(m[2]) ? m[2] : ''; };
+      const queue = (key, y, run) => { if (key && !seen.has(key)) { seen.add(key); jobs.push({ y, run }); } };
+      const scan = () => {
+        const all = [...document.querySelectorAll('img[loading="lazy"], body *')];
+        let i = 0;
+        const chunk = () => {
+          for (const end = Math.min(i + 150, all.length); i < end; i++) {
+            const el = all[i];
+            if (el.tagName === 'IMG') {
+              if (el.loading === 'lazy' && !el.complete) { const y = el.getBoundingClientRect().top + scrollY; queue(el.currentSrc || el.src, y, () => { el.loading = 'eager'; return el.decode(); }); }
+              continue;
+            }
+            const bg = urlOf(getComputedStyle(el).backgroundImage);
+            const pseudo = typeof el.className === 'string' && /media/.test(el.className) ? urlOf(getComputedStyle(el, '::before').backgroundImage) : '';
+            [bg, pseudo].forEach((u) => { if (u) queue(u, el.getBoundingClientRect().top + scrollY, () => { const im = new Image(); im.decoding = 'async'; im.src = u; return im.decode(); }); });
+          }
+          if (i < all.length) idle(chunk); else { jobs.sort((a, b) => a.y - b.y); run(); }
+        };
+        idle(chunk);
+      };
+      const run = () => {
+        const job = jobs.shift();
+        if (!job) return;
+        const next = () => idle(run);
+        try { Promise.resolve(job.run()).then(next, next); } catch (e) { next(); }
+      };
+      const start = () => setTimeout(scan, 1500);
+      if (document.readyState === 'complete') start(); else window.addEventListener('load', start, { once: true });
+    }
   }
 })();

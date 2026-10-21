@@ -45,10 +45,13 @@
   }, { rootMargin: '0px', threshold: 0 });
   // the last lines of a page can never climb above the bottom 8% (there is nothing left to scroll), so at the very end
   // everything already on screen comes in
-  let raf = 0;
+  let raf = 0, pageH = root.scrollHeight;       // the page height is cached (reading it on every scroll frame forces a layout)
+  const measurePage = () => { pageH = root.scrollHeight; };
+  window.addEventListener('resize', measurePage); window.addEventListener('load', measurePage);
+  if ('ResizeObserver' in window) new ResizeObserver(measurePage).observe(document.body);
   const atEnd = () => {
     raf = 0;
-    if (window.scrollY + window.innerHeight < root.scrollHeight - 4) return;
+    if (window.scrollY + window.innerHeight < pageH - 4) return;
     items.forEach((el) => { if (el.classList.contains('is-in')) return; const r = el.getBoundingClientRect(); if (r.width && r.top < window.innerHeight && r.bottom > 0) show(el); });
   };
   const start = () => {

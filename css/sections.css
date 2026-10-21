@@ -152,7 +152,7 @@
   text-align: center; margin-bottom: 28px;
   font-size: 20px; font-weight: 400; line-height: 40px;
 }
-.clients__title em { font-style: normal; font-family: var(--f-display); font-weight: 600; font-size: 24px; color: #5915ff; }
+.clients__title em { font-style: normal; font-family: var(--f-display); font-weight: 600; font-size: 24px; color: inherit; }
 .logo-marquee { position: relative; display: flex; align-items: center; height: 101px; overflow: hidden; }
 /* a short soft fade at both edges only, so the logos in the middle stay fully visible */
 .logo-marquee::after {

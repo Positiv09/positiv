@@ -187,7 +187,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .clients__title {
   font-size: 20px; line-height: 40px;
 }
-.clients__title em { font-style: normal; font-family: var(--f-display); font-weight: 600; font-size: 24px; color: #5915ff; }
+.clients__title em { font-style: normal; font-family: var(--f-display); font-weight: 600; font-size: 24px; color: inherit; }
 /* a short soft fade at both edges only, so the logos in the middle stay fully visible */
 .logo-marquee__track { animation: marquee-x 40s linear infinite; }
 .logo-marquee--reverse .logo-marquee__track { animation-direction: reverse; }  /* row 2 runs the opposite way */

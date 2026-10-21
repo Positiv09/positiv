@@ -472,9 +472,9 @@
 .testimonial-card--lime .testimonial-card__title,
 .testimonial-card--white .testimonial-card__title { color: #2b2b2b; }
 .testimonial-card--peach .testimonial-card__title { color: #fe572a; }   /* Caravel (Figma): orange title */
-.testimonial-card__quote { font-size: 18px; line-height: 24px; }
-.testimonial-card__rule { width: 70%; height: 1px; margin-top: 40px; background: #0b0a0a; opacity: .16; }
-.testimonial-card__name { margin-top: 40px; font-size: 24px; font-weight: 500; line-height: 24px; }
+.testimonial-card__quote { margin-top: 12px; font-size: 18px; line-height: 24px; }   /* air between the title and the paragraph */
+.testimonial-card__rule { width: 70%; height: 1px; margin-top: 32px; background: #0b0a0a; opacity: .16; }
+.testimonial-card__name { margin-top: 32px; font-size: 24px; font-weight: 500; line-height: 24px; }
 .testimonial-card__role { margin-top: 10px; font-size: 16px; }
 .testimonial-card__visual { position: absolute; inset: 0; pointer-events: none; }
 .testimonial-card__shape { position: absolute; z-index: 1; top: 0; right: 0; width: 60%; height: 100%; background-position: 50%; background-repeat: no-repeat; background-size: 450px; }

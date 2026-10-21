@@ -209,6 +209,12 @@
 .feature-card__text { font-size: 16px; line-height: 25px; }
 
 .feature-card--purple .feature-card__heading { font-size: 38px; margin-bottom: 15px; }
+/* feature cards, desktop: more air between the headings and the text, and between the text and the button (not in short windows, where the card is already compact) */
+@media (min-width: 768px) {
+  .features-section:not(.is-compact) .feature-card .feature-card__heading { margin-bottom: 28px; }
+  .features-section:not(.is-compact) .feature-card .feature-card__lead { margin-bottom: 16px; }
+  .features-section:not(.is-compact) .feature-card .feature-card__copy .btn--block { margin-top: 36px; }
+}
 
 /* Desktop stack motion (driven by main.js): the cards behind darken a touch, the picture settles as its card
    arrives, hover effects pause while the page moves, and the copy staggers in once a card lands. */

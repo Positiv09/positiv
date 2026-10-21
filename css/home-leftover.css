@@ -363,6 +363,7 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .testi-tab .portfolio-card__logo { margin-bottom: 0; }
 .testi-tab:hover img, .testi-tab:hover .portfolio-card__logo { opacity: .65; }
 .testi-tab.is-active img, .testi-tab.is-active .portfolio-card__logo { opacity: 1; }
+@media (min-width: 768px) { .testi-tab > img[src*="caravel"] { width: 128px; margin-top: -7px; }   /* Caravel is a taller lock-up (icon + tagline): a touch smaller and nudged up so its wordmark sits on the same line as the other tab logos */ }
 
 .testimonials__viewport { -webkit-user-select: none; }   /* starts at the 10% line: nothing is ever visible in the left part of the screen; clipped at the page's right edge so the next card peeks in */
 .testimonials__viewport img { -webkit-user-drag: none; user-drag: none; }   /* dragging the cards must not start a text selection or a native image drag */   /* ease-out-cubic, ≈1.3s as measured */

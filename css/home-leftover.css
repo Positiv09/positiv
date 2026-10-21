@@ -372,8 +372,8 @@ button { font: inherit; color: inherit; background: none; border: 0; cursor: poi
 .testimonial-card__copy { left: 61px; top: 60px; }
 .testimonial-card__logo img { width: 100%; height: 100%; object-fit: contain; object-position: left; }
 .testimonial-card--lime .testimonial-card__title,
-.testimonial-card--white .testimonial-card__title,
-.testimonial-card--peach .testimonial-card__title { color: #fe572a; }
+.testimonial-card--white .testimonial-card__title { color: #2b2b2b; }
+.testimonial-card--peach .testimonial-card__title { color: #fe572a; }   /* Caravel (Figma): orange title */
 .testimonial-card__shape { top: 0; right: 0; background-position: 50%; background-repeat: no-repeat; background-size: 450px; }
 .testimonial-card__shape--b { background-image: url("https://cdn.jsdelivr.net/gh/Positiv09/positiv@5ea22822d06698a886cf1d1cb3b4bd2379753598/assets/img/shape-intersect-a.webp"); background-size: 500px; }
 .testimonial-card__shape--c { background-image: url("https://cdn.jsdelivr.net/gh/Positiv09/positiv@5ea22822d06698a886cf1d1cb3b4bd2379753598/assets/img/shape-intersect-b.webp"); background-size: 500px; }

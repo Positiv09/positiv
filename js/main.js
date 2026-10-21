@@ -714,7 +714,7 @@
       const s = vSlot.getBoundingClientRect();
       const fw = 0.104 * vw, fh = fw * (840 / 1829);                                    // final (pill) size
       const pinTop = vPin.getBoundingClientRect().top;
-      const a = clamp01((y - (S0 - 0.87 * vh)) / (1.31 * vh));                          // grow: starts as the video enters (≈.87vh below the pin line), done 1.31vh later
+      const a = clamp01((y - (S0 - 0.87 * vh)) / (0.95 * vh));                          // grow: starts as the video enters (≈.87vh below the pin line), done .95vh later (was 1.31vh; the spacer is shorter too)
       const ae = ease(a);                                                               // slow start / slow end, as measured
       const navH = ($('.w-nav')?.offsetHeight || 85), clearance = 28;                        // keep the pinned video clear of the fixed header
       const w = lerp(0.80 * vw, 0.96 * vw, ae), h = Math.min(lerp(0.70 * vh, 0.84 * vh, ae), vh - navH - clearance - 24);
@@ -1087,9 +1087,8 @@
     ['pointerdown', 'touchstart', 'keydown'].forEach((t) => window.addEventListener(t, () => { if (running) stopGlide(); }, { passive: true }));
   }
 
-  /* ---------- Video cursor + modal ---------- */
+  /* ---------- Video modal (the cursor over the video is the shared lime "PLAY VIDEO" ring from js/cursor.js) ---------- */
   const frame = $('[data-video-frame]');
-  const ball = $('#video-cursor');
   const modal = $('#video-modal');
   const modalBox = $('#video-modal-container');
 
@@ -1211,7 +1210,6 @@
     if (!src) return;
     buildPlayer(src);
     modal.classList.add('is-open');
-    ball.classList.remove('is-visible');
     $('#video-modal-close')?.focus({ preventScroll: true });
     if (phoneMq.matches) phoneFullscreen();                  // still inside the click, so the browser allows it
   }
@@ -1226,13 +1224,6 @@
     frame?.focus?.({ preventScroll: true });
   }
 
-  if (frame && matchMedia('(hover:hover)').matches) {
-    frame.addEventListener('mouseenter', () => ball.classList.add('is-visible'));
-    frame.addEventListener('mouseleave', () => ball.classList.remove('is-visible'));
-    window.addEventListener('mousemove', (e) => {
-      ball.style.transform = `translate(${e.clientX}px, ${e.clientY}px) scale(${ball.classList.contains('is-visible') ? 1 : 0})`;
-    });
-  }
   frame?.addEventListener('click', openModal);
   $('#video-modal-close')?.addEventListener('click', closeModal);
   modal?.addEventListener('click', (e) => { if (e.target === modal) closeModal(); });

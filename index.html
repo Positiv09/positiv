@@ -19,7 +19,7 @@
   <link rel="stylesheet" href="css/tokens.css?v=20261019b">
   <link rel="stylesheet" href="css/base.css?v=20261006a">
   <link rel="stylesheet" href="css/menu.css?v=20261020f">
-  <link rel="stylesheet" href="css/sections.css?v=20261021a">
+  <link rel="stylesheet" href="css/sections.css?v=20261021b">
 </head>
 <body>
 
@@ -637,7 +637,7 @@
          with the cards (so the gap to the cards never changes). The video grows → holds → follows [data-video-slot] and lands in it. -->
     <div class="services__stage" data-video-stage>
       <div class="services__pin" data-video-pin>
-        <div class="video-frame play-video-hover" data-video-frame>
+        <div class="video-frame play-video-hover" data-video-frame data-cursor="Play video">
           <video muted loop playsinline autoplay preload="metadata" data-video-src="assets/video/hero-reel.mp4"><source src="assets/video/hero-reel.mp4" type="video/mp4"></video>
         </div>
       </div>
@@ -885,7 +885,6 @@
 </main>
 
 <!-- Video cursor + modal -->
-<div class="video-cursor-ball" id="video-cursor"><span>Play video +</span></div>
 <div class="video-modal" id="video-modal" role="dialog" aria-modal="true" aria-label="Video">
   <div class="video-modal__wrap">
     <button class="video-modal__close" id="video-modal-close" aria-label="Close video">
@@ -901,7 +900,8 @@
 <script src="https://cdn.jsdelivr.net/npm/@studio-freight/lenis@1/dist/lenis.min.js"></script>
 -->
 <script src="js/vendor/gsap.min.js" defer></script>
-<script src="js/main.js?v=20261020c" defer></script>
+<script src="js/main.js?v=20261021a" defer></script>
+<script src="js/cursor.js?v=2" defer></script>
 <script src="js/reveal.js?v=4" defer></script>
 <script src="js/intro.js?v=1" defer></script>
 </body>

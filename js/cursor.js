@@ -1,5 +1,6 @@
-/* Round "View" cursor: over any element with data-cursor="Label" the mouse pointer turns into a lime circle with that label (same idea as the
-   "Play video +" ball on the home page). Mouse only; touch devices and reduced-motion users keep the normal pointer. */
+/* Round lime cursor: over any element with data-cursor="..." the mouse pointer turns into a lime circle with a rotating text ring.
+   data-cursor="View" (project tiles) reads "EXPLORE MORE", data-cursor="Play video" (the home page video) reads "PLAY VIDEO".
+   Mouse only; touch devices and reduced-motion users keep the normal pointer. */
 (() => {
   if (!matchMedia('(hover: hover) and (pointer: fine)').matches) return;
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -21,7 +22,7 @@
     if (e.pointerType !== 'mouse') return;
     x = e.clientX; y = e.clientY;
     const t = e.target.closest && e.target.closest('[data-cursor]');
-    if (t) { if (t.dataset.cursor !== shown) { shown = t.dataset.cursor; label.textContent = 'EXPLORE MORE • '.repeat(2); } if (!on) { cx = x; cy = y; } }
+    if (t) { if (t.dataset.cursor !== shown) { shown = t.dataset.cursor; label.textContent = (/play/i.test(shown) ? 'PLAY VIDEO • ' : 'EXPLORE MORE • ').repeat(2); } if (!on) { cx = x; cy = y; } }
     if (!!t !== on) { on = !!t; ball.classList.toggle('is-on', on); document.documentElement.classList.toggle('cursor-view', on); }
     kick();
   }, { passive: true });

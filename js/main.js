@@ -13,6 +13,12 @@
   const $  = (s, c = document) => c.querySelector(s);
   const $$ = (s, c = document) => [...c.querySelectorAll(s)];
   const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  /* Parts that read the scroll position straight from a scroll event (the services video) must be drawn in the SAME frame
+     as the scroll position they belong to. The event reaches them one frame after the page was moved, so while the smooth
+     wheel moves the page every frame they trailed it by ~15px and shook against the sticky layers. The code that moves the
+     page calls runScrollSync() right after scrollTo. */
+  const scrollSync = [];
+  const runScrollSync = () => { for (let i = 0; i < scrollSync.length; i++) scrollSync[i](); };
   /* Placeholder links (href="#") have no destination yet: clicking them does nothing (no jump to the top of the page, no # in the URL). */
   document.addEventListener('click', (e) => { const a = e.target.closest && e.target.closest('a[href="#"]'); if (a) e.preventDefault(); });
 
@@ -656,9 +662,10 @@
     const lerp = (a, b, t) => a + (b - a) * t;
     const clamp01 = (v) => Math.min(Math.max(v, 0), 1);
     const ease = (t) => t * t * (3 - 2 * t);
-    let S0 = 0, off = 0;
+    let S0 = 0, off = 0, uvKey = '';
     const vWords = $$('.services__lines h4', vHead);
     const measureV = () => {
+      uvKey = '';
       if (!mqV.matches) { vWords.forEach((h) => { h.style.transform = ''; }); vFrame.removeAttribute('style'); stage.style.paddingBottom = stage.style.marginBottom = ''; return; }
       const vh = window.innerHeight;
       stage.style.paddingBottom = stage.style.marginBottom = '';
@@ -673,6 +680,9 @@
     const updateV = () => {
       if (!mqV.matches) return;
       const vw = window.innerWidth, vh = window.innerHeight, y = window.scrollY;
+      const key = `${y}|${vw}|${vh}|${S0}|${off}`;
+      if (key === uvKey) return;                                                         // already drawn for this scroll position (the same-frame sync ran first)
+      uvKey = key;
       const s = vSlot.getBoundingClientRect();
       const fw = 0.104 * vw, fh = fw * (840 / 1829);                                    // final (pill) size
       const pinTop = vPin.getBoundingClientRect().top;
@@ -706,6 +716,7 @@
       }
       vFrame.style.cssText = `left:${r.x}px;top:${r.y - pinTop}px;width:${r.w}px;height:${r.h}px;border-radius:${r.r}px`;
     };
+    scrollSync.push(updateV);
     window.addEventListener('scroll', updateV, { passive: true });
     window.addEventListener('resize', measureV);
     window.addEventListener('load', measureV);
@@ -906,6 +917,7 @@
       const e = 10 * s3 - 15 * s4 + 6 * s5;
       const p = (1 - e) * gl.p0 + (s - 6 * s3 + 8 * s4 - 3 * s5) * gl.T * gl.v0 + e * gl.p1;
       window.scrollTo({ top: p, behavior: 'instant' }); glLastSet = window.scrollY;
+      runScrollSync();
       if (s < 1) glRaf = requestAnimationFrame(glStep); else gl = null;
     };
     const stopGlideS = () => { cancelAnimationFrame(glRaf); glRaf = 0; gl = null; };
@@ -916,7 +928,8 @@
       const p0 = window.scrollY, T = GLIDE_MS * Math.min(Math.max(Math.sqrt(Math.abs(dest - p0) / g.pitch), 0.55), 1.35);
       if (v0 * (dest - p0) < 0) v0 = 0;                                     // moving the other way: start from rest
       v0 = Math.max(-1, Math.min(1, v0 * 0.9)) * Math.min(1, Math.abs(dest - p0) / (T * 0.35) || 0) ;  // never so fast it overshoots
-      gl = { p0, p1: dest, v0, t0: now, T, exit: !!exit };
+      gl = { p0, p1: dest, v0, t0: now - 16, T, exit: !!exit };              // t0 one frame back: the wheel event lands after this frame's rAF timestamp, so the first step would otherwise stand still
+      glLastSet = p0;                                                       // a scroll event still pending from the page's own last move (the smooth wheel) is not "someone else took over"
       if (!glRaf) glRaf = requestAnimationFrame(glStep);
     };
     const headY = () => (gl ? gl.p1 : smoothHead());
@@ -1006,6 +1019,7 @@
       if (Math.abs(target - cur) < 0.3) { cur = target; running = false; }
       window.scrollTo({ top: cur, behavior: 'instant' });
       lastSet = window.scrollY;
+      runScrollSync();
       if (running) raf = requestAnimationFrame(step);
     };
     const canScrollInside = (el, dy) => {

@@ -47,7 +47,7 @@
   const readStored = () => {
     let a = 0, b = 0;
     try { a = +localStorage.getItem(KEY) || 0; } catch (x) { /* storage blocked */ }
-    try { b = +((document.cookie.match(new RegExp('(?:^|; )' + KEY + '=(\d+)')) || [])[1]) || 0; } catch (x) { /* cookies blocked */ }
+    try { b = +((document.cookie.split('; ').find((c) => c.indexOf(KEY + '=') === 0) || '').slice(KEY.length + 1)) || 0; } catch (x) { /* cookies blocked */ }
     return Math.max(a, b);
   };
   const remaining = () => { const t = readStored(), left = t ? t + COOLDOWN - Date.now() : 0; return left > 0 && left <= COOLDOWN + 60000 ? left : 0; };

@@ -80,8 +80,9 @@
 
   const send = async () => {
     const f = form.elements, topics = $$('input[name="topic"]:checked', form).map((i) => i.value).join(', ') || 'Not specified';
+    const ctl = new AbortController(), timer = setTimeout(() => ctl.abort(), 30000);   // a slow mail service must not leave the button on 'Sending...' forever
     const res = await fetch(ENDPOINT, {
-      method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+      signal: ctl.signal, method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
       body: JSON.stringify({
         Name: f.name.value.trim(), Email: f.email.value.trim(), Company: f.company.value.trim() || '-', Role: f.role.value.trim() || '-',
         Needs: topics, Message: f.message.value.trim(), Page: location.href, 'Sent at': new Date().toString(),

@@ -197,3 +197,25 @@
 .m-tile__fact-k { padding-top: 2px; font-size: 11px; line-height: 18px; letter-spacing: .1em; text-transform: uppercase; color: rgb(239 239 235 / .55); }
 .m-tile__fact-v { font-size: 14px; line-height: 20px; color: var(--c-paper-2); }
 @media (max-width: 991px) { .m-tile__facts { display: none; } }
+/* desktop: on tiles with facts, the panel spans the tile; name, teaser and tags sit together in the middle and the facts
+   drop to the bottom under a thin rule, with clear air between them */
+@media (min-width: 992px) {
+  .m-tile__info:has(.m-tile__facts) { top: 32px; bottom: 32px; transform: translateY(16px); }
+  .m-tile:hover .m-tile__info:has(.m-tile__facts), .m-tile:focus-visible .m-tile__info:has(.m-tile__facts) { transform: none; }
+  .m-tile__info:has(.m-tile__facts) > strong { margin-top: auto; }
+  .m-tile__info .m-tile__facts { width: 100%; max-width: 560px; margin: auto 0 0; padding-top: 20px; border-top: .5px solid rgb(239 239 235 / .25); }
+}
+/* narrow tiles on small desktops (the 1-column tiles at 992-1199px): tighter type and the fact labels stacked over their values,
+   so the name, teaser, tags and facts all fit inside the tile */
+@media (min-width: 992px) {
+  .m-tile:has(.m-tile__facts) { container-type: inline-size; }
+  @container (max-width: 300px) {
+    .m-tile__info:has(.m-tile__facts) { left: 20px; right: 20px; top: 22px; bottom: 22px; gap: 10px; }
+    .m-tile__info:has(.m-tile__facts) > strong { font-size: 22px; line-height: 26px; }
+    .m-tile__info:has(.m-tile__facts) .m-tile__teaser { font-size: 13px; line-height: 19px; }
+    .m-tile__info .m-tile__facts { grid-template-columns: 1fr; row-gap: 0; padding-top: 12px; }
+    .m-tile__info .m-tile__fact-k { padding-top: 0; font-size: 10px; line-height: 14px; }
+    .m-tile__info .m-tile__fact + .m-tile__fact .m-tile__fact-k { padding-top: 8px; }
+    .m-tile__info .m-tile__fact-v { font-size: 12.5px; line-height: 17px; }
+  }
+}

@@ -1002,21 +1002,23 @@
   }
 
   /* ---------- Smooth wheel scrolling (site-wide) ----------
-     Each wheel / trackpad step sets a target and the page glides toward it (frame-rate independent ease), so steps never
-     jump and nothing is ever locked: the next input simply moves the target. Registered after every other wheel handler,
+     Each wheel / trackpad step sets a target and the page glides toward it, so steps never jump and nothing is ever locked:
+     the next input simply moves the target. The glide is a critically damped spring (it keeps its speed between steps), not
+     a plain lerp: with a lerp every wheel notch made the speed jump up and decay again, felt as a stutter while scrolling. Registered after every other wheel handler,
      so anything that owns its own gesture (the services video, the portfolio rail, the 3D pages) calls preventDefault
      first and is left alone; so are scroll boxes (menus, modals) and pages with scrolling locked. Scrollbar drags,
      touch, keys and anchor jumps take over at once. */
   if (!reduceMotion) {
-    const LERP = 0.1;
-    let cur = window.scrollY, target = cur, running = false, raf = 0, lastT = 0, lastSet = -1;
+    const OMEGA = 12;                                                                 // spring stiffness (1/s): ~0.4 s to settle
+    let cur = window.scrollY, target = cur, vel = 0, running = false, raf = 0, lastT = 0, lastSet = -1;
     smoothHead = () => (running ? target : window.scrollY);
     const maxY = () => document.documentElement.scrollHeight - window.innerHeight;
-    const stopGlide = () => { cancelAnimationFrame(raf); running = false; cur = target = window.scrollY; };
+    const stopGlide = () => { cancelAnimationFrame(raf); running = false; vel = 0; cur = target = window.scrollY; };
     const step = (now) => {
-      const dt = Math.min(48, now - lastT); lastT = now;
-      cur += (target - cur) * (1 - Math.pow(1 - LERP, dt / 16.667));
-      if (Math.abs(target - cur) < 0.3) { cur = target; running = false; }
+      const dt = Math.min(Math.max((now - lastT) / 1000, 0.001), 0.048); lastT = now;
+      const d = cur - target, e = Math.exp(-OMEGA * dt), t = (vel + OMEGA * d) * dt;      // exact critically damped step
+      cur = target + (d + t) * e; vel = (vel - OMEGA * t) * e;
+      if (Math.abs(cur - target) < 0.3 && Math.abs(vel) < 8) { cur = target; vel = 0; running = false; }
       window.scrollTo({ top: cur, behavior: 'instant' });
       lastSet = window.scrollY;
       runScrollSync();
@@ -1037,10 +1039,10 @@
       if (e.defaultPrevented) { if (running) stopGlide(); return; }                   // another part of the page owns this gesture
       if (e.ctrlKey || Math.abs(e.deltaX) > Math.abs(e.deltaY) || pageLocked() || canScrollInside(e.target, e.deltaY)) return;
       e.preventDefault();
-      if (!running) cur = target = window.scrollY;
+      if (!running) { cur = target = window.scrollY; vel = 0; }
       const d = e.deltaY * (e.deltaMode === 1 ? 40 : e.deltaMode === 2 ? window.innerHeight : 1);
       target = Math.min(Math.max(target + d, 0), maxY());
-      if (!running) { running = true; lastT = performance.now(); raf = requestAnimationFrame(step); }
+      if (!running) { running = true; lastT = performance.now() - 16; raf = requestAnimationFrame(step); }
     }, { passive: false });
     window.addEventListener('scroll', () => {
       if (running && Math.abs(window.scrollY - lastSet) > 2) stopGlide();             // scrollbar, keys or an anchor jump took over

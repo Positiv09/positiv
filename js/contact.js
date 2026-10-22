@@ -88,6 +88,7 @@
         _subject: `New message from ${f.name.value.trim()} - Positiv website`, _replyto: f.email.value.trim(), _template: 'table', _captcha: 'false'
       })
     });
+    clearTimeout(timer);
     const data = await res.json().catch(() => ({}));
     if (!res.ok || String(data.success) === 'false') throw new Error(data.message || `HTTP ${res.status}`);
   };

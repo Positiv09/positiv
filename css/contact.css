@@ -158,3 +158,9 @@ a.c-row:hover .c-row__arrow { opacity: 1; transform: none; }
   .faq__plus { width: 36px; height: 36px; }
   .faq__a p { padding: 0 8px 24px 52px; font-size: 15px; }
 }
+
+/* ---------- Send limit notice (one message per device per hour) ---------- */
+.form-limit { display: flex; flex-direction: column; gap: 3px; padding: 14px 16px; border-radius: 12px; border-left: 3px solid var(--c-purple); background: rgb(33 29 29 / .06); color: var(--c-ink); font-size: 14px; line-height: 21px; }
+.form-limit[hidden] { display: none; }
+.form-limit strong { font-weight: 600; }
+.contact-submit:disabled, .contact-submit.is-limited { opacity: .45; cursor: not-allowed; pointer-events: none; }

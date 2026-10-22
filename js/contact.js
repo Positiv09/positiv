@@ -36,23 +36,88 @@
     return !first;
   };
 
-  /* Replace this with a real request, e.g.
-       return fetch('https://formspree.io/f/XXXX', { method: 'POST', headers: { Accept: 'application/json' }, body: new FormData(form) });
-     It must resolve on success and reject (throw) on failure. */
-  const submit = () => new Promise((resolve) => setTimeout(resolve, 900));
+  /* ---------- Sending (FormSubmit: no account, the message arrives as an email) ----------
+     The first message ever sent through this address makes FormSubmit mail an activation link to it; click it once and every later message is delivered. */
+  const ENDPOINT = 'https://formsubmit.co/ajax/tikarirafik@gmail.com';
+  const COOLDOWN = 60 * 60 * 1000;                                   // one message per device per hour
+  const KEY = 'positivContactSentAt', loadedAt = Date.now();
+
+  /* One-per-hour limit. Remembered in localStorage and in a 1-hour cookie, so clearing only one of them does not lift it.
+     It is a browser-side guard (a visitor who clears all site data or switches browser can send again): a hard limit needs a server. */
+  const readStored = () => {
+    let a = 0, b = 0;
+    try { a = +localStorage.getItem(KEY) || 0; } catch (x) { /* storage blocked */ }
+    try { b = +((document.cookie.match(new RegExp('(?:^|; )' + KEY + '=(\d+)')) || [])[1]) || 0; } catch (x) { /* cookies blocked */ }
+    return Math.max(a, b);
+  };
+  const remaining = () => { const t = readStored(), left = t ? t + COOLDOWN - Date.now() : 0; return left > 0 && left <= COOLDOWN + 60000 ? left : 0; };
+  const remember = () => {
+    const t = Date.now();
+    try { localStorage.setItem(KEY, String(t)); } catch (x) { /* storage blocked */ }
+    try { document.cookie = `${KEY}=${t}; max-age=${COOLDOWN / 1000}; path=/; SameSite=Lax`; } catch (x) { /* cookies blocked */ }
+  };
+  const minutes = (ms) => { const m = Math.ceil(ms / 60000); return m <= 1 ? 'less than a minute' : `${m} minutes`; };
+
+  const limit = document.createElement('div');                        // the "already sent" notice, built here so the markup stays as it is
+  limit.className = 'form-limit'; limit.id = 'form-limit'; limit.setAttribute('role', 'status'); limit.hidden = true;
+  limit.innerHTML = '<strong>Your message has already been sent</strong><span></span>';
+  btn.parentNode.insertBefore(limit, btn);
+  let tick = 0;
+  const applyLimit = () => {
+    clearInterval(tick);
+    const left = remaining();
+    limit.hidden = !left; btn.disabled = !!left; btn.classList.toggle('is-limited', !!left);
+    if (!left) return;
+    $('span', limit).textContent = `Thank you, we have it. To keep our inbox free of spam, one message can be sent per hour from this device. You can write to us again in ${minutes(left)}.`;
+    tick = setInterval(applyLimit, 30000);
+  };
+  applyLimit();
+
+  const honey = document.createElement('input');                      // bot trap: people never see or fill it
+  honey.type = 'text'; honey.name = '_honey'; honey.tabIndex = -1; honey.autocomplete = 'off'; honey.setAttribute('aria-hidden', 'true');
+  honey.style.cssText = 'position:absolute;left:-9999px;width:1px;height:1px;opacity:0;pointer-events:none';
+  form.appendChild(honey);
+
+  const send = async () => {
+    const f = form.elements, topics = $$('input[name="topic"]:checked', form).map((i) => i.value).join(', ') || 'Not specified';
+    const res = await fetch(ENDPOINT, {
+      method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
+      body: JSON.stringify({
+        Name: f.name.value.trim(), Email: f.email.value.trim(), Company: f.company.value.trim() || '-', Role: f.role.value.trim() || '-',
+        Needs: topics, Message: f.message.value.trim(), Page: location.href, 'Sent at': new Date().toString(),
+        _subject: `New message from ${f.name.value.trim()} - Positiv website`, _replyto: f.email.value.trim(), _template: 'table', _captcha: 'false'
+      })
+    });
+    const data = await res.json().catch(() => ({}));
+    if (!res.ok || String(data.success) === 'false') throw new Error(data.message || `HTTP ${res.status}`);
+  };
+
+  const okText = $('p', ok), okOrig = okText.textContent, resetBtn = $('.form-reset', ok), resetOrig = resetBtn?.textContent;
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
+    if (remaining()) { applyLimit(); return; }                         // limit first (also covers a second tab)
     if (!validate()) return;
+    if (honey.value || Date.now() - loadedAt < 1500) { ok.hidden = false; return; }   // bot: looks like success, nothing is sent
     btn.classList.add('is-sending'); label.textContent = 'Sending...';
     try {
-      await submit(new FormData(form));
-      $('[data-first-name]', ok).textContent = form.elements.name.value.trim().split(/\s+/)[0] || 'friend';
-      ok.hidden = false; ok.focus?.();
+      await send();
+      remember();
+      const first = form.elements.name.value.trim().split(/\s+/)[0] || 'friend';
+      $('[data-first-name]', ok).textContent = first;
+      okText.textContent = `Your message has been sent. We will reply to ${form.elements.email.value.trim()} within one business day.`;
+      if (resetBtn) resetBtn.textContent = 'Close';
+      ok.hidden = false; ok.focus?.(); err.hidden = true;
+      applyLimit();
     } catch (x) {
-      err.hidden = false; err.textContent = 'Something went wrong. Please try again or email us directly.';
+      console.warn('contact form:', x);
+      err.hidden = false; err.textContent = 'We could not send your message just now. Please try again in a few minutes.';
     } finally { btn.classList.remove('is-sending'); label.textContent = 'Send message'; }
   });
 
-  $('.form-reset', ok)?.addEventListener('click', () => { form.reset(); ok.hidden = true; err.hidden = true; $$('.is-invalid', form).forEach((f) => f.classList.remove('is-invalid')); form.elements.name.focus(); });
+  resetBtn?.addEventListener('click', () => {
+    form.reset(); ok.hidden = true; err.hidden = true; okText.textContent = okOrig; resetBtn.textContent = resetOrig;
+    $$('.is-invalid', form).forEach((f) => f.classList.remove('is-invalid'));
+    applyLimit(); if (!remaining()) form.elements.name.focus();
+  });
 })();

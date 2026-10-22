@@ -190,3 +190,10 @@
 .m-tile__slides--6 .m-tile__slide:nth-child(6) { animation-delay: 20s; }
 @keyframes m-slide-6 { 0% { opacity: 0; } 3% { opacity: 1; } 16.7% { opacity: 1; } 19.7%, 100% { opacity: 0; } }
 @media (prefers-reduced-motion: reduce) { .m-tile__slides--6 .m-tile__slide { animation: none; } }
+
+/* project facts (Industry / Country / Services offered / Engagement) under the teaser, desktop only like the teaser */
+.m-tile__facts { display: grid; grid-template-columns: max-content 1fr; column-gap: 16px; row-gap: 6px; max-width: 520px; margin: 4px 0 2px; }
+.m-tile__fact { display: contents; }
+.m-tile__fact-k { padding-top: 2px; font-size: 11px; line-height: 18px; letter-spacing: .1em; text-transform: uppercase; color: rgb(239 239 235 / .55); }
+.m-tile__fact-v { font-size: 14px; line-height: 20px; color: var(--c-paper-2); }
+@media (max-width: 991px) { .m-tile__facts { display: none; } }

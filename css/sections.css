@@ -497,6 +497,11 @@
 .testimonial-card__person--4 { background-image: url("../assets/img/testimonial-4.webp"); }
 /* Caravel (Figma): a tight cut-out, 34.3% wide and 80.3% of the card high, its centre at 70.7% of the card width */
 .testimonial-card__person--5 { background-image: url("../assets/img/testimonial-caravel.webp"); left: 53.6%; right: auto; width: 34.3%; height: 80.3%; background-size: contain; background-position: 50% 100%; }
+/* Figma "Home * Desktop" testimonials: new portraits, placed as in the design (card 843x473 there, scaled to the card here) */
+.testimonial-card__person--light-node { background-image: url("../assets/img/testimonial-light-node.webp"); left: 48.4%; right: auto; width: 45.2%; height: 82.5%; background-size: contain; background-position: 50% 100%; }
+.testimonial-card__person--mansour    { background-image: url("../assets/img/testimonial-mansour.webp");    left: 48%; right: auto; width: 50.5%; height: 69%; background-size: contain; background-position: 50% 100%; }
+.testimonial-card__person--nabil      { background-image: url("../assets/img/testimonial-nabil.webp");      left: 47.6%; right: auto; width: 41.3%; height: 81.6%; background-size: contain; background-position: 50% 100%; }
+.testimonial-card--white .testimonial-card__title { color: var(--c-purple); }   /* Figma: the StrangeBee card's title is purple like Light Node's */
 
 /* ---------- 7. COMPARISON TABLE --------------------------------------- */
 .compare-section { display: flex; flex-direction: column; align-items: center; padding: 120px 0; background: var(--c-ink); color: #fff; }
@@ -1234,3 +1239,5 @@
 /* Caravel testimonial picture on tablets and phones (a tight cut-out, so it is contained, not cropped) */
 @media (max-width: 991px) { .testimonials-section .testimonial-card__person--5 { left: auto; right: 0; width: 70%; height: 100%; background-size: contain; background-position: 50% 100%; } }
 @media (max-width: 767px) { .testimonials-section .testimonial-card__person--5 { right: 3%; width: 66%; height: 100%; background-size: contain; background-position: 50% 100%; } }
+@media (max-width: 991px) { .testimonials-section :is(.testimonial-card__person--light-node, .testimonial-card__person--mansour, .testimonial-card__person--nabil) { left: auto; right: 0; width: 70%; height: 100%; background-size: contain; background-position: 50% 100%; } }
+@media (max-width: 767px) { .testimonials-section :is(.testimonial-card__person--light-node, .testimonial-card__person--mansour, .testimonial-card__person--nabil) { right: 3%; width: 66%; height: 100%; background-size: contain; background-position: 50% 100%; } }

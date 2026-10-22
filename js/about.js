@@ -151,16 +151,17 @@
      auto-advances every 6s (paused on hover). Profile data lives in TEAM below. Only Kevin Bruno exists in the design —
      entries 2-5 are PLACEHOLDERS built from existing portraits so the slider can be demonstrated; replace them. */
   const IMG = 'assets/img/about/';
+  const imgUrl = (f) => (window.POSITIV_ABOUT_IMG && window.POSITIV_ABOUT_IMG[f]) || IMG + f;   // Webflow build: the page head maps each file name to its Webflow asset URL
   const TEAM = [
-    { name: 'Kevin Bruno', role: 'Creative Director', photo: IMG + 'team-kevin.png', avatar: IMG + 'team-avatar-1.png', pos: '50% 50%',
+    { name: 'Kevin Bruno', role: 'Creative Director', photo: imgUrl('team-kevin.png'), avatar: imgUrl('team-avatar-1.png'), pos: '50% 50%',
       bio: "I'm a web and UI/UX designer. For [X] years I've designed websites and digital experiences built to convert — not just to look good. I focus on accessible, conversion-focused design: websites," },
-    { name: 'Team Member 02', role: 'Role / Title', photo: IMG + 'collage-04.webp', avatar: IMG + 'collage-04.webp', pos: '55% 40%',
+    { name: 'Team Member 02', role: 'Role / Title', photo: imgUrl('collage-04.webp'), avatar: imgUrl('collage-04.webp'), pos: '55% 40%',
       bio: 'Placeholder profile — replace the photo, name, role and this text in the TEAM array of js/about.js.' },
-    { name: 'Team Member 03', role: 'Role / Title', photo: IMG + 'collage-06.webp', avatar: IMG + 'collage-06.webp', pos: '45% 35%',
+    { name: 'Team Member 03', role: 'Role / Title', photo: imgUrl('collage-06.webp'), avatar: imgUrl('collage-06.webp'), pos: '45% 35%',
       bio: 'Placeholder profile — replace the photo, name, role and this text in the TEAM array of js/about.js.' },
-    { name: 'Team Member 04', role: 'Role / Title', photo: IMG + 'collage-03.webp', avatar: IMG + 'collage-03.webp', pos: '60% 40%',
+    { name: 'Team Member 04', role: 'Role / Title', photo: imgUrl('collage-03.webp'), avatar: imgUrl('collage-03.webp'), pos: '60% 40%',
       bio: 'Placeholder profile — replace the photo, name, role and this text in the TEAM array of js/about.js.' },
-    { name: 'Team Member 05', role: 'Role / Title', photo: IMG + 'collage-02.webp', avatar: IMG + 'collage-02.webp', pos: '45% 60%',
+    { name: 'Team Member 05', role: 'Role / Title', photo: imgUrl('collage-02.webp'), avatar: imgUrl('collage-02.webp'), pos: '45% 60%',
       bio: 'Placeholder profile — replace the photo, name, role and this text in the TEAM array of js/about.js.' }
   ];
   const card = $('[data-team-card]'), bar = $('[data-team-progress]');

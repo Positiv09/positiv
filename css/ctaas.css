@@ -162,7 +162,7 @@
   font-size: 13px; line-height: 1; font-weight: 500; color: rgba(242,242,237,.7); background: var(--c-ink); box-shadow: inset 0 0 0 1px rgba(242,242,237,.28);
   transition: background-color .5s var(--ct-ease), color .5s var(--ct-ease), box-shadow .5s var(--ct-ease); }
 .ct-stop__line { position: absolute; left: 16px; top: 50%; width: calc(100% + 48px); height: 1px; margin-top: -.5px; background: rgba(242,242,237,.14); overflow: hidden; }
-.ct-stop:last-child .ct-stop__line { display: none; }   /* nothing after the last step */
+.ct-stop:last-child .ct-stop__line { width: calc(100% + 8px); }   /* step 4 sits on the line too: it runs on to the right edge of the grid, in line with the panel below */
 .ct-stop__fill { position: absolute; left: 0; top: 0; bottom: 0; width: 0; background: var(--c-lime); }
 .ct-stop__when { margin-top: 28px; font-size: 12px; line-height: 18px; font-weight: 500; letter-spacing: 1.2px; text-transform: uppercase; color: rgba(242,242,237,.45); }
 .ct-stop__title { margin-top: 8px; font-size: 22px; line-height: 30px; color: var(--c-paper); transition: color .5s var(--ct-ease); }
@@ -253,7 +253,6 @@
   .ct-show { height: auto; aspect-ratio: 16 / 10; }
   /* stacked: each line runs from its circle to the edge of its own column, so nothing points at the wrong step */
   .ct-stop__line { width: calc(100% + 8px); }
-  .ct-stop:last-child .ct-stop__line { display: block; }
   .ct-fit { margin-top: 160px; }
   .ct-fit__h2 { min-height: 0; font-size: 44px; line-height: 56px; }
   .ct-fit__h2 .ct-display { font-size: 50px; }

@@ -1098,3 +1098,8 @@
 #site-header .pricing2 .div-block-218.f6.pricingtest { background-image: url("../assets/img/menu/pricing-embed.jpg"); background-size: cover; background-position: 50%; }
 #site-header .pricing2 .div-block-218.p1.pricingtest { background-image: url("../assets/img/menu/pricing-fondation.jpg"); background-size: cover; background-position: 50%; }
 #site-header .div-block-293 .div-block-239 { background-image: url("../assets/img/menu/why-featured.jpg"); background-size: cover; background-position: 50%; }
+
+/* Pricing menu: the "Creative Team as a Service" card opens its pricing page (the whole card is the link target) */
+#site-header .div-block-219.pricingtest { position: relative; }
+#site-header .menu-card-link { color: inherit; text-decoration: none; }
+#site-header .menu-card-link::after { content: ""; position: absolute; inset: 0; z-index: 1; }

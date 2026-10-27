@@ -156,16 +156,18 @@
 .ct-stepper { list-style: none; margin: 80px 0 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px; }
 .ct-stop__btn { display: flex; flex-direction: column; align-items: flex-start; width: 100%; padding: 0 24px 0 0; border: 0; background: none;
   font: inherit; color: inherit; text-align: left; cursor: pointer; }
-.ct-stop__mark { display: flex; align-items: center; width: calc(100% + 48px); height: 40px; }
+/* one line runs through the centres of the circles: each segment starts under its circle and ends under the next one */
+.ct-stop__mark { position: relative; display: flex; align-items: center; width: 100%; height: 40px; }
 .ct-stop__dot { position: relative; z-index: 1; flex: none; width: 32px; height: 32px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center;
   font-size: 13px; line-height: 1; font-weight: 500; color: rgba(242,242,237,.7); background: var(--c-ink); box-shadow: inset 0 0 0 1px rgba(242,242,237,.28);
   transition: background-color .5s var(--ct-ease), color .5s var(--ct-ease), box-shadow .5s var(--ct-ease); }
-.ct-stop__line { position: relative; flex: 1 1 auto; height: 1px; margin-left: 12px; background: rgba(242,242,237,.14); overflow: hidden; }
+.ct-stop__line { position: absolute; left: 16px; top: 50%; width: calc(100% + 48px); height: 1px; margin-top: -.5px; background: rgba(242,242,237,.14); overflow: hidden; }
+.ct-stop:last-child .ct-stop__line { display: none; }   /* nothing after the last step */
 .ct-stop__fill { position: absolute; left: 0; top: 0; bottom: 0; width: 0; background: var(--c-lime); }
 .ct-stop__when { margin-top: 28px; font-size: 12px; line-height: 18px; font-weight: 500; letter-spacing: 1.2px; text-transform: uppercase; color: rgba(242,242,237,.45); }
 .ct-stop__title { margin-top: 8px; font-size: 22px; line-height: 30px; color: var(--c-paper); transition: color .5s var(--ct-ease); }
 .ct-stop__desc { margin-top: 8px; max-width: 280px; font-size: 15px; line-height: 24px; color: rgba(242,242,237,.6); }
-.ct-stop.is-done .ct-stop__dot { color: var(--c-ink); background: rgba(240,248,121,.85); box-shadow: none; }
+.ct-stop.is-done .ct-stop__dot { color: var(--c-ink); background: var(--c-lime); box-shadow: none; }
 .ct-stop.is-done .ct-stop__fill { width: 100%; }
 .ct-stop.is-active .ct-stop__dot { color: var(--c-ink); background: var(--c-lime); box-shadow: 0 0 0 6px rgba(240,248,121,.16); }
 .ct-stop.is-active .ct-stop__title, .ct-stop__btn:hover .ct-stop__title { color: var(--c-lime); }
@@ -249,7 +251,9 @@
   .ct-how__h2 .ct-display { font-size: 48px; }
   .ct-stepper { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 40px; margin-top: 64px; }
   .ct-show { height: auto; aspect-ratio: 16 / 10; }
-  .ct-stop__mark { width: calc(100% + 24px); }   /* the line stops at the column edge instead of running into the page margin */
+  /* stacked: each line runs from its circle to the edge of its own column, so nothing points at the wrong step */
+  .ct-stop__line { width: calc(100% + 8px); }
+  .ct-stop:last-child .ct-stop__line { display: block; }
   .ct-fit { margin-top: 160px; }
   .ct-fit__h2 { min-height: 0; font-size: 44px; line-height: 56px; }
   .ct-fit__h2 .ct-display { font-size: 50px; }

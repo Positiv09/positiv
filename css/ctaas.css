@@ -6,7 +6,9 @@
    ===================================================================== */
 
 .ctaas-page { background: var(--c-paper); }
-.ct-wrap { width: min(1200px, calc(100% - 40px)); margin-inline: auto; }
+/* same side grid as the home and results pages: 10% each side (the header logo line), 20px on tablet/mobile */
+.ct-wrap { margin-inline: var(--gutter, 10%); }
+@media (max-width: 991px) { .ct-wrap { margin-inline: 20px; } }
 .ct-display { font-family: var(--f-display); font-weight: 400; }
 .ct-muted { color: #8e8e8e; }
 .ct-eyebrow { margin: 0; font-size: 16px; line-height: 24px; text-transform: uppercase; color: #393939; }
@@ -100,7 +102,7 @@
 .ct-plan__top { display: flex; flex-direction: column; gap: 16px; }
 .ct-plan__icon { display: block; width: 32px; height: 32px; }
 .ct-plan__head { display: flex; flex-direction: column; gap: 12px; min-height: 134px; }
-.ct-plan__title-row { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; white-space: nowrap; }
+.ct-plan__title-row { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 0 12px; white-space: nowrap; }
 .ct-plan__name { margin: 0; font-family: var(--f-display); font-weight: 400; font-size: 32px; line-height: 1.3; color: var(--c-ink); }
 .ct-plan--featured .ct-plan__name { color: #393939; }
 .ct-plan__hours { font-size: 14px; line-height: 22px; color: var(--muted); }
@@ -129,8 +131,8 @@
 
 /* ================= HOW IT WORKS + FIT (dark) ================= */
 .ct-dark { background: var(--c-ink); color: var(--c-paper); padding: 140px 0; }
-.ct-how__head { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-start; gap: 24px 0; }
-.ct-how__title { flex: 0 1 818px; display: flex; flex-direction: column; gap: 6px; }
+.ct-how__head { display: flex; flex-wrap: nowrap; justify-content: space-between; align-items: flex-start; gap: 24px; }
+.ct-how__title { flex: 0 1 818px; min-width: 0; display: flex; flex-direction: column; gap: 6px; }
 .ct-how__h2 { margin: 0; min-height: 147px; padding-top: 9.5px; font-size: 56px; line-height: 64px; font-weight: 400; color: #fff; }
 .ct-how__h2 .ct-display { font-size: 60px; }
 .ct-how__intro { flex: 0 0 381px; margin-top: 12px; display: flex; flex-direction: column; gap: 24px; }
@@ -162,12 +164,11 @@
 .ct-step__title { margin: 0; font-size: 20px; line-height: 32px; font-weight: 400; color: var(--c-paper); }
 .ct-step__desc { margin: 0; max-width: 360px; font-size: 16px; line-height: 24px; color: rgba(242,242,237,.66); }
 .ct-step__panel {
-  flex: none; width: 584px; height: 329px; display: flex; align-items: center; justify-content: center; overflow: hidden;
+  flex: none; width: 48.67%; aspect-ratio: 584 / 329; display: flex; align-items: center; justify-content: center; overflow: hidden;
   border: .5px solid rgba(242,242,237,.5); border-radius: 24px;
 }
-.ct-step--last .ct-step__panel { width: 583px; }
-.ct-illo { flex: none; width: 516px; height: 290px; }
-.ct-illo--full { width: 616px; height: 347px; }
+.ct-illo { flex: none; width: 88.4%; aspect-ratio: 516 / 290; }
+.ct-illo--full { width: 105.6%; aspect-ratio: 616 / 347; }
 .ct-illo__svg { display: block; width: 100%; height: 100%; }
 
 /* fit: "Built for a specific kind of partner firm." */
@@ -177,7 +178,7 @@
 .ct-fit__h2 .ct-display { font-size: 64px; }
 .ct-fit__cards { display: flex; gap: 24px; align-items: flex-start; margin-top: 56px; }
 .ct-fit__card { display: flex; flex-direction: column; gap: 16px; padding: 40px; border-radius: 18px; }
-.ct-fit__card--yes { flex: 0 0 588px; background: #fbfee0; border: 1px solid #e5e5e5; }
+.ct-fit__card--yes { flex: 1 0 0; min-width: 0; background: #fbfee0; border: 1px solid #e5e5e5; }
 .ct-fit__card--no { flex: 1 0 0; min-width: 0; align-self: stretch; background: rgba(242,242,237,.06); border: .5px solid rgba(242,242,237,.3); }
 .ct-fit__card-title { margin: 0; font-family: var(--f-display); font-weight: 400; font-size: 32px; line-height: 1.3; color: #393939; }
 .ct-fit__card--no .ct-fit__card-title { color: var(--c-paper); }
@@ -238,15 +239,15 @@
 /* =========================== responsive =========================== */
 @media (max-width: 1240px) {
   .ct-step { gap: 32px; }
-  .ct-step__panel, .ct-step--last .ct-step__panel { width: min(584px, 48vw); height: auto; aspect-ratio: 584 / 329; }
-  .ct-illo { width: 88.4%; height: auto; aspect-ratio: 516 / 290; }
-  .ct-illo--full { width: 105.6%; aspect-ratio: 616 / 347; }
-  .ct-fit__card--yes { flex: 1 0 0; }
+}
+/* the heading needs ~720px beside the 381px intro; below that the intro drops under it */
+@media (max-width: 1420px) {
+  .ct-how__head { flex-wrap: wrap; gap: 24px 0; }
+  .ct-how__title { flex-basis: 100%; }
+  .ct-how__intro { flex-basis: 420px; margin-top: 0; }
 }
 @media (max-width: 1100px) {
   .ct-hero { background-size: cover; background-position: 62% center; }
-  .ct-how__title { flex-basis: 100%; }
-  .ct-how__intro { flex-basis: 420px; margin-top: 0; }
 }
 @media (max-width: 991px) {
   .ct-hero { height: auto; min-height: 640px; padding-bottom: 80px; }

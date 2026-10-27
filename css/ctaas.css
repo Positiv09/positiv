@@ -162,9 +162,8 @@
 .ct-step__title { margin: 0; font-size: 20px; line-height: 32px; font-weight: 400; color: var(--c-paper); }
 .ct-step__desc { margin: 0; max-width: 360px; font-size: 16px; line-height: 24px; color: rgba(242,242,237,.66); }
 .ct-step__panel {
-  flex: none; width: 46%; aspect-ratio: 584 / 329; display: flex; align-items: center; justify-content: center; overflow: hidden;
-  border: .5px solid rgba(242,242,237,.5); border-radius: 24px;
-}
+  flex: none; width: 46%; aspect-ratio: 584 / 329; display: flex; align-items: center; justify-content: center;
+}   /* no frame: the illustrations sit straight on the dark section */
 .ct-illo { flex: none; width: 88.4%; aspect-ratio: 516 / 290; }
 .ct-illo--full { width: 105.6%; aspect-ratio: 616 / 347; }
 .ct-illo__svg { display: block; width: 100%; height: 100%; }
@@ -277,7 +276,7 @@
   .ct-how__h2 .ct-display { font-size: 37px; }
   .ct-steps { margin-top: 64px; }
   .ct-step { padding-bottom: 56px; }
-  .ct-step__panel, .ct-step--last .ct-step__panel { width: calc(100% - 52px); border-radius: 18px; }
+  .ct-step__panel, .ct-step--last .ct-step__panel { width: calc(100% - 52px); }
   .ct-fit { margin-top: 120px; }
   .ct-fit__h2 { font-size: 34px; line-height: 44px; }
   .ct-fit__h2 .ct-display { font-size: 39px; }

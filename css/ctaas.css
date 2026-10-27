@@ -86,12 +86,16 @@
   position: relative; flex: 1 0 0; min-width: 300px;
   display: flex; flex-direction: column; gap: 32px; padding: 40px;
   border-radius: 18px; border: .5px solid rgba(178,178,178,.5); background: rgba(255,255,255,.7);
-  --muted: #8e8e8e;
+  --muted: #8e8e8e; --accent: var(--muted);
 }
+/* v2 (Figma "Creative Team as a Service v2"): each tier has its own tint, rising from the top of the card,
+   and an accent on its team label */
+.ct-plan--growth { background: linear-gradient(7.2deg, #fff 64.64%, #dcd5fb 157.57%); --accent: #5915ff; }
+.ct-plan--enterprise { background: linear-gradient(7.2deg, #fff 64.64%, #ffd2c6 157.57%); --accent: #fe572a; }
 .ct-plan--featured {
   border-color: #97a900; box-shadow: 3px 4px 36px rgba(240,248,121,.05);
   background: linear-gradient(181.25deg, #fbfee0 10.582%, rgba(255,255,255,.8) 162.95%);
-  --muted: #777;
+  --muted: #777; --accent: #777;
 }
 .ct-plan__badge {
   position: absolute; left: 50%; top: -17.5px; transform: translateX(-50%);
@@ -100,6 +104,7 @@
   font-size: 12px; line-height: 18px; font-weight: 500; letter-spacing: 1.2px; text-transform: uppercase; white-space: nowrap;
 }
 .ct-plan__top { display: flex; flex-direction: column; gap: 16px; }
+.ct-plan__tile { display: flex; align-items: center; justify-content: center; width: 44px; height: 44px; border-radius: 8px; background: #393939; }
 .ct-plan__icon { display: block; width: 32px; height: 32px; }
 .ct-plan__head { display: flex; flex-direction: column; gap: 12px; min-height: 134px; }
 .ct-plan__title-row { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 0 12px; white-space: nowrap; }
@@ -109,15 +114,24 @@
 .ct-plan__fit { margin: 0; font-size: 14px; line-height: 20px; color: var(--muted); }
 .ct-plan__price { display: flex; flex-direction: column; gap: 8px; }
 .ct-plan__price-row { margin: 0; display: flex; align-items: baseline; gap: 8px; white-space: nowrap; }
-.ct-plan__amount { font-family: var(--f-display); font-size: 32px; line-height: 1; color: var(--c-ink); }
+.ct-plan__amount { font-family: var(--f-display); font-size: 40px; line-height: 1; color: var(--c-ink); }
 .ct-plan__per { font-size: 16px; line-height: 26px; color: var(--muted); }
 .ct-plan__eq { margin: 0; font-size: 14px; line-height: 22px; color: var(--muted); }
+.ct-plan__eq strong { font-weight: 500; color: var(--c-ink); }
 .ct-plan__cta { width: 100%; }
 .ct-plan__team { display: flex; flex-direction: column; gap: 8px; padding-top: 32px; border-top: .5px solid rgba(178,178,178,.5); }
-.ct-plan__team-label { color: var(--muted); }
+.ct-plan__team-label { color: var(--accent); }
 .ct-plan__roles { list-style: none; margin: 0; padding: 0; }
-.ct-plan__role { display: flex; align-items: center; gap: 12px; padding: 10px 0; font-size: 14px; line-height: 22px; color: var(--c-ink); }
-.ct-plan__role img { flex: none; width: 18px; height: 18px; }
+.ct-plan__role { display: flex; align-items: flex-start; gap: 12px; padding: 10px 0; font-size: 14px; line-height: 22px; color: var(--c-ink); }
+.ct-plan__role img { flex: none; width: 18px; height: 18px; margin-top: 2px; }
+.ct-plan__role-text { display: flex; flex-direction: column; }
+.ct-plan__role-desc { font-size: 13px; line-height: 20px; color: var(--muted); }
+/* roles carried over from the tier below: a label and one quiet line of names */
+.ct-plan__from { margin-top: 16px; color: var(--muted); }
+.ct-plan__inherited { margin: 0; font-size: 14px; line-height: 22px; color: var(--c-ink); opacity: .75; }
+.ct-plan__best { margin: auto 0 0; display: flex; flex-direction: column; gap: 6px; padding-top: 24px; border-top: .5px solid rgba(178,178,178,.5);
+  font-size: 14px; line-height: 22px; color: var(--c-ink); }
+.ct-plan__best .ct-label { color: var(--muted); }
 
 .ct-rate {
   display: flex; flex-wrap: wrap; align-items: center; gap: 12px 16px; padding: 24px 32px;

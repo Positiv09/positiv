@@ -365,5 +365,5 @@
 .ct-grow .btn { width: 100%; padding: 0 24px; }   /* the site's own .btn rules would otherwise shrink it to its label */
 @media (max-width: 600px) { .ct-grow .h2 .ct-display { font-size: 39px !important; } }
 /* desktop: the cards (and the terms under them) sit in a narrower centred column, 24px apart, so they read as cards, not a wall */
-@media (min-width: 1101px) { .ct-grow .grid, .ct-grow .terms { max-width: 1104px; margin-inline: auto; gap: 24px; } .ct-grow .tag { min-height: 66px; } }
+@media (min-width: 1101px) { .ct-grow .grid, .ct-grow .terms { max-width: 1128px; margin-inline: auto; gap: 24px; } .ct-grow .tag { min-height: 66px; } }
 /* <<< plans-grow */

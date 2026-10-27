@@ -136,37 +136,40 @@
 .ct-how__h2 { margin: 0; min-height: 147px; padding-top: 9.5px; font-size: 56px; line-height: 64px; font-weight: 400; color: #fff; }
 .ct-how__h2 .ct-display { font-size: 60px; }
 
-/* timeline: rail · copy · illustration panel (Process/Step).
-   A centred 1000px column under the centred title, so copy and illustration read as one pair
-   instead of sitting at opposite edges of the page; the panel takes 46% of it. */
-.ct-steps { list-style: none; max-width: 1000px; margin: 96px auto 0; padding: 0; }
-.ct-step { display: flex; align-items: center; gap: 40px; padding-bottom: 80px; }
-.ct-step--last { padding-bottom: 0; }
-.ct-rail { flex: none; align-self: stretch; width: 48px; display: flex; flex-direction: column; align-items: center; gap: 8px; padding-top: 18px; }
-.ct-rail__dot { flex: none; width: 10px; height: 10px; border-radius: 50%; background: var(--c-paper); }
-.ct-rail__line { position: relative; flex: 1 0 0; width: 2px; background: rgba(242,242,237,.16); overflow: hidden; }
-.ct-rail__beam {
-  position: absolute; left: 0; top: 0; width: 2px; height: 200px; display: none;
-  background: linear-gradient(rgba(240,248,121,0) 0%, rgba(240,248,121,.88) 21%, #f0f879 80%, rgba(240,248,121,0) 100%);
-}
-.ct-step--beam .ct-rail__beam { display: block; transform: translateY(84px); }          /* static state = the design */
-.ct-step__copy { flex: 1 0 0; min-width: 0; display: flex; flex-direction: column; align-items: flex-start; gap: 24px; padding-top: 4px; }
-.ct-chip {
-  display: inline-flex; padding: 5px 12px; border: 1px solid var(--c-paper); border-radius: 8px;
-  font-size: 12px; line-height: 18px; font-weight: 500; letter-spacing: 1.2px; text-transform: uppercase; white-space: nowrap;
-  color: rgba(242,242,237,.66);
-}
-.ct-step__body { display: flex; flex-direction: column; gap: 16px; width: 100%; }
-.ct-step__num { display: block; font-family: var(--f-display); font-size: 40px; line-height: 48px; color: var(--c-paper); }
-.ct-step__text { display: flex; flex-direction: column; gap: 8px; }
-.ct-step__title { margin: 0; font-size: 20px; line-height: 32px; font-weight: 400; color: var(--c-paper); }
-.ct-step__desc { margin: 0; max-width: 360px; font-size: 16px; line-height: 24px; color: rgba(242,242,237,.66); }
-.ct-step__panel {
-  flex: none; width: 46%; aspect-ratio: 584 / 329; display: flex; align-items: center; justify-content: center;
-}   /* no frame: the illustrations sit straight on the dark section */
-.ct-illo { flex: none; width: 88.4%; aspect-ratio: 516 / 290; }
-.ct-illo--full { width: 105.6%; aspect-ratio: 616 / 347; }
-.ct-illo__svg { display: block; width: 100%; height: 100%; }
+/* journey: four steps on one hairline (the current one's segment fills while it plays),
+   and one showcase panel underneath where the current step's illustration fades in.
+   js/ctaas.js plays through them; without JS the first step and its illustration show. */
+.ct-stepper { list-style: none; margin: 80px 0 0; padding: 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px; }
+.ct-stop__btn { display: flex; flex-direction: column; align-items: flex-start; width: 100%; padding: 0 24px 0 0; border: 0; background: none;
+  font: inherit; color: inherit; text-align: left; cursor: pointer; }
+.ct-stop__mark { display: flex; align-items: center; width: calc(100% + 48px); height: 40px; }
+.ct-stop__dot { position: relative; z-index: 1; flex: none; width: 32px; height: 32px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center;
+  font-size: 13px; line-height: 1; font-weight: 500; color: rgba(242,242,237,.7); background: var(--c-ink); box-shadow: inset 0 0 0 1px rgba(242,242,237,.28);
+  transition: background-color .5s var(--ct-ease), color .5s var(--ct-ease), box-shadow .5s var(--ct-ease); }
+.ct-stop__line { position: relative; flex: 1 1 auto; height: 1px; margin-left: 12px; background: rgba(242,242,237,.14); overflow: hidden; }
+.ct-stop__fill { position: absolute; left: 0; top: 0; bottom: 0; width: 0; background: var(--c-lime); }
+.ct-stop__when { margin-top: 28px; font-size: 12px; line-height: 18px; font-weight: 500; letter-spacing: 1.2px; text-transform: uppercase; color: rgba(242,242,237,.45); }
+.ct-stop__title { margin-top: 8px; font-size: 22px; line-height: 30px; color: var(--c-paper); transition: color .5s var(--ct-ease); }
+.ct-stop__desc { margin-top: 8px; max-width: 280px; font-size: 15px; line-height: 24px; color: rgba(242,242,237,.6); }
+.ct-stop.is-done .ct-stop__dot { color: var(--c-ink); background: rgba(240,248,121,.85); box-shadow: none; }
+.ct-stop.is-done .ct-stop__fill { width: 100%; }
+.ct-stop.is-active .ct-stop__dot { color: var(--c-ink); background: var(--c-lime); box-shadow: 0 0 0 6px rgba(240,248,121,.16); }
+.ct-stop.is-active .ct-stop__title, .ct-stop__btn:hover .ct-stop__title { color: var(--c-lime); }
+.ct-stop__btn:focus-visible { outline: 2px solid var(--c-lime); outline-offset: 8px; border-radius: 8px; }
+
+.ct-show { position: relative; margin-top: 64px; height: 560px; border-radius: 24px; overflow: hidden;
+  background-color: #262222; border: .5px solid rgba(242,242,237,.14);
+  background-image: linear-gradient(rgba(242,242,237,.035) 1px, transparent 1px), linear-gradient(90deg, rgba(242,242,237,.035) 1px, transparent 1px);
+  background-size: 40px 40px; background-position: center center; }
+.ct-show::after { content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: radial-gradient(ellipse 60% 55% at 50% 50%, rgba(38,34,34,0) 0%, #262222 100%); opacity: .85; }
+.ct-show__layer { position: absolute; inset: 0; z-index: 1; display: flex; align-items: center; justify-content: center;
+  opacity: 0; visibility: hidden; transform: translate3d(0, 18px, 0) scale(.98);
+  transition: opacity .7s var(--ct-ease), transform 1s var(--ct-ease), visibility 0s linear .7s; }
+.ct-show__layer.is-on { opacity: 1; visibility: visible; transform: none; transition-delay: 0s; }
+.ct-show__layer:not(.is-on) .ct-illo * { animation-play-state: paused !important; }
+.ct-illo { width: min(840px, 92%); }
+.ct-illo__svg { display: block; width: 100%; height: auto; }
 
 /* fit: "Built for a specific kind of partner firm." */
 .ct-fit { margin-top: 240px; }
@@ -186,21 +189,6 @@
 .ct-fit__item--check { font-size: 14px; line-height: 22px; color: #393939; }
 .ct-fit__item--dash { font-size: 15px; line-height: 1.55; color: var(--c-paper); }
 
-/* ============ scroll interaction on the timeline (js/ctaas.js adds .ct-motion) ============
-   Steps fade, rise and un-blur in a soft stagger as they pass ~72% of the viewport; the dot settles in;
-   a lime streak follows the scroll down the rail. Without JS / with reduced motion the design shows as drawn. */
-.ct-motion .ct-reveal {
-  opacity: 0; transform: translate3d(0, 40px, 0); filter: blur(6px);
-  transition: opacity 1.1s var(--ct-ease), transform 1.3s var(--ct-ease), filter 1.1s var(--ct-ease);
-  transition-delay: var(--rd, 0s); will-change: opacity, transform;
-}
-.ct-motion .ct-step.is-in .ct-reveal { opacity: 1; transform: none; filter: none; }
-.ct-motion .ct-step:not(.is-in) .ct-reveal { transition-duration: .45s; transition-delay: 0s; }
-.ct-motion .ct-rail__dot { opacity: .12; transform: scale(.6); transition: opacity .8s var(--ct-ease), transform .9s cubic-bezier(.34,1.56,.64,1), box-shadow .8s var(--ct-ease); }
-.ct-motion .ct-step.is-in .ct-rail__dot { opacity: 1; transform: scale(1); }
-.ct-motion .ct-step.is-now .ct-rail__dot { box-shadow: 0 0 0 6px rgba(240,248,121,.16); }
-.ct-motion .ct-rail__beam { display: block; transform: translate3d(0, var(--beam, -200px), 0); will-change: transform; }
-.ct-motion .ct-step:not(.is-in) .ct-illo * { animation-play-state: paused !important; }
 :root { --ct-ease: cubic-bezier(.16, 1, .3, 1); }
 
 /* illustration motion (same as the approved prototype; connector lines stay solid, as in the design) */
@@ -234,9 +222,6 @@
 }
 
 /* =========================== responsive =========================== */
-@media (max-width: 1240px) {
-  .ct-step { gap: 32px; }
-}
 @media (max-width: 1100px) {
   .ct-hero { background-size: cover; background-position: 62% center; }
 }
@@ -248,11 +233,9 @@
   .ct-pricing__title .ct-display { font-size: 48px; }
   .ct-how__h2 { min-height: 0; font-size: 44px; line-height: 52px; padding-top: 0; }
   .ct-how__h2 .ct-display { font-size: 48px; }
-  .ct-step { flex-wrap: wrap; gap: 24px 20px; }
-  .ct-rail { width: 32px; }
-  .ct-step__copy { flex: 1 0 calc(100% - 52px); }
-  .ct-step__panel, .ct-step--last .ct-step__panel { order: 3; width: calc(100% - 52px); max-width: 600px; margin-left: 52px; }
-  .ct-step { position: relative; }
+  .ct-stepper { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 40px; margin-top: 64px; }
+  .ct-show { height: auto; aspect-ratio: 16 / 10; }
+  .ct-stop__mark { width: calc(100% + 24px); }   /* the line stops at the column edge instead of running into the page margin */
   .ct-fit { margin-top: 160px; }
   .ct-fit__h2 { min-height: 0; font-size: 44px; line-height: 56px; }
   .ct-fit__h2 .ct-display { font-size: 50px; }
@@ -274,9 +257,12 @@
   .ct-dark { padding: 96px 0; }
   .ct-how__h2 { font-size: 34px; line-height: 42px; }
   .ct-how__h2 .ct-display { font-size: 37px; }
-  .ct-steps { margin-top: 64px; }
-  .ct-step { padding-bottom: 56px; }
-  .ct-step__panel, .ct-step--last .ct-step__panel { width: calc(100% - 52px); }
+  /* phone: the illustration panel sits above the list, so the picture is in view while the steps play */
+  .ct-journey { display: flex; flex-direction: column; }
+  .ct-show { order: -1; margin-top: 48px; aspect-ratio: 4 / 3; border-radius: 18px; }
+  .ct-stepper { grid-template-columns: minmax(0, 1fr); row-gap: 28px; margin-top: 40px; }
+  .ct-stop__when { margin-top: 16px; }
+  .ct-stop__desc { max-width: none; }
   .ct-fit { margin-top: 120px; }
   .ct-fit__h2 { font-size: 34px; line-height: 44px; }
   .ct-fit__h2 .ct-display { font-size: 39px; }

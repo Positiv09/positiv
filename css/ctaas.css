@@ -478,7 +478,7 @@
    ===================================================================== */
 .fd-muted { color: #8e8e8e; }
 .fd-link { color: var(--c-lime); text-decoration: underline; text-underline-offset: 3px; }
-.fd-note .fd-link, .fd-fit .fd-link { color: var(--c-ink); }
+.fd-note .fd-link { color: var(--c-ink); }
 
 /* centred section head (same as the plans head on Creative Team) */
 .fd-head { max-width: 1000px; margin: 0 auto 72px; text-align: center; }
@@ -509,29 +509,8 @@
 /* how it works: the shared stepper, static (no showcase panel, nothing to play) */
 
 /* proof: one quote card */
-.fd-proof { margin-top: 140px; }
-.fd-quote { margin: 48px auto 0; max-width: 960px; padding: 64px; display: flex; flex-direction: column; align-items: center; gap: 32px; text-align: center;
-  border: .5px solid var(--c-paper); border-radius: 18px; }
-.fd-quote__logo { display: block; width: 190px; height: auto; }
-.fd-quote__text { margin: 0; padding: 0; border: 0; }
-.fd-quote__text p { margin: 0; font-family: var(--f-display); font-weight: 600; font-size: 34px; line-height: 46px; color: var(--c-paper); }
-.fd-quote__lead { color: var(--c-lime); }
-.fd-quote__who { display: flex; flex-direction: column; align-items: center; gap: 14px; }
-.fd-quote__who strong { font-weight: 500; font-size: 16px; line-height: 26px; color: var(--c-paper); }
-.fd-quote__badge { display: inline-flex; padding: 5px 12px; border: 1px solid rgba(242,242,237,.5); border-radius: 8px;
-  font-size: 12px; line-height: 18px; font-weight: 500; letter-spacing: 1.2px; text-transform: uppercase; color: rgba(242,242,237,.66); }
 
 /* is this the right fit? */
-.fd-fit { background: var(--c-paper); padding: 140px 0 20px; color: var(--c-ink); }
-.fd-fit + .ct-faq { padding-top: 100px; }
-.fd-fit__grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; max-width: 1128px; margin-inline: auto; }
-.fd-fit__card { padding: 40px; border-radius: 18px; border: .5px solid rgb(178 178 178 / .5); }
-.fd-fit__card--yes { background: linear-gradient(181deg, #fbfee0 10%, #fff 160%); border-color: #97a900; }
-.fd-fit__title { margin: 0; font-weight: 400; font-size: 32px; line-height: 42px; color: var(--c-ink); }
-.fd-fit__list { list-style: none; margin: 28px 0 0; padding: 0; display: flex; flex-direction: column; gap: 18px; }
-.fd-fit__item { display: flex; align-items: flex-start; gap: 12px; font-size: 16px; line-height: 26px; color: #393939; }
-.fd-fit__ic { flex: none; display: inline-flex; margin-top: 4px; color: #393939; }
-.fd-fit__ic--no { color: #8e8e8e; }
 
 /* closing CTA: the second line under the button */
 .fd-cta-alt { margin: 24px auto 0; max-width: 90%; text-align: center; font-size: 16px; line-height: 24px; color: rgba(242,242,237,.75); }
@@ -540,22 +519,11 @@
 @media (max-width: 991px) {
   .fd-head__h2 { font-size: 44px; line-height: 56px; }
   .fd-head__h2 .ct-display { font-size: 48px; }
-  .fd-proof { margin-top: 112px; }
-  .fd-quote { padding: 48px 32px; }
-  .fd-quote__text p { font-size: 28px; line-height: 38px; }
-  .fd-fit { padding-top: 120px; }
-  .fd-fit__grid { grid-template-columns: minmax(0, 1fr); max-width: 560px; }
 }
 @media (max-width: 767px) {
   .fd-head { margin-bottom: 48px; }
   .fd-head__h2 { font-size: 34px; line-height: 44px; }
   .fd-head__h2 .ct-display { font-size: 38px; }
   .fd-note { margin-top: 40px; font-size: 16px; line-height: 26px; }
-  .fd-quote { padding: 36px 22px; gap: 24px; }
-  .fd-quote__logo { width: 150px; }
-  .fd-quote__text p { font-size: 22px; line-height: 31px; }
-  .fd-fit { padding-top: 96px; }
-  .fd-fit__card { padding: 28px 22px; }
-  .fd-fit__title { font-size: 28px; line-height: 36px; }
 }
 .ct-hero__title--wide { max-width: 860px; }

@@ -513,8 +513,6 @@
 /* is this the right fit? */
 
 /* closing CTA: the second line under the button */
-.fd-cta-alt { margin: 24px auto 0; max-width: 90%; text-align: center; font-size: 16px; line-height: 24px; color: rgba(242,242,237,.75); }
-.fd-cta-alt a { color: var(--c-lime); text-decoration: underline; text-underline-offset: 3px; }
 
 @media (max-width: 991px) {
   .fd-head__h2 { font-size: 44px; line-height: 56px; }
@@ -527,3 +525,9 @@
   .fd-note { margin-top: 40px; font-size: 16px; line-height: 26px; }
 }
 .ct-hero__title--wide { max-width: 860px; }
+
+/* Foundations page CTA: its own photo (Figma "Fondation" frame, Footer) */
+.cta-section.fd-cta { background: linear-gradient(2.09deg, #211d1d 13%, rgb(33 29 29 / .47) 98.5%), url("../assets/img/cta-bg-foundations.webp"); background-size: auto, 100% auto; background-position: 0 0, 50% 0; background-repeat: no-repeat; }
+.cta-section.fd-cta .cta__text { max-width: 640px; }
+@media (max-width: 991px) { .cta-section.fd-cta { background-size: auto, cover; } }
+@media (max-width: 767px) { .cta-section.fd-cta { background-image: linear-gradient(2.09deg, #211d1d 13%, rgb(33 29 29 / .47) 98.5%), url("../assets/img/cta-bg-foundations-800.webp"); } }

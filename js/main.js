@@ -384,6 +384,14 @@
   const inWebflow = !!window.Webflow;                               // true when this page is published from Webflow (its own nav/dropdown runtime is on the page too)
   const initHeader = () => {
   const dropdowns = $$('.w-dropdown');
+  /* Pricing menu: the repo markup links its "Creative Team as a Service" card; the Webflow component's heading is plain text, so give it the same link */
+  $$('#site-header .pricingtest h5.heading-53').forEach((h) => {
+    const name = h.textContent.trim();
+    if (h.querySelector('a') || name !== 'Creative Team as a Service') return;
+    const a = document.createElement('a');
+    a.className = 'menu-card-link'; a.textContent = name; a.href = inWebflow ? '/creative-team' : 'creative-team.html';
+    h.textContent = ''; h.appendChild(a);
+  });
   const navButton = $('.w-nav-button');
   const navMenu = $('.w-nav-menu');
   const isDesktop = () => matchMedia('(min-width: 992px)').matches;

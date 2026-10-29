@@ -18,7 +18,7 @@
   <link rel="stylesheet" href="css/base.css?v=20261006a">
   <link rel="stylesheet" href="css/menu.css?v=20261029a">
   <link rel="stylesheet" href="css/sections.css?v=20261022u">
-  <link rel="stylesheet" href="css/ctaas.css?v=25">
+  <link rel="stylesheet" href="css/ctaas.css?v=26">
 </head>
 <body class="is-ctaas">
 
@@ -538,38 +538,54 @@
   </div>
 </section>
 
-<!-- ================= HOW IT WORKS + PROOF (dark; Figma "Pricing //Creative Team as a Service v3") ================= -->
+<!-- ================= HOW IT WORKS (dark) ================= -->
 <section class="ct-dark" id="how-it-works" data-section="how-it-works">
   <div class="ct-wrap">
     <div class="ct-how__head">
       <div class="ct-how__title pr-reveal">
-        <p class="ct-eyebrow ct-eyebrow--light">How it works</p>
+        <p class="ct-eyebrow ct-eyebrow--light ct-eyebrow--center">How it works</p>
         <h2 class="ct-how__h2">Meet the team on <br>real work, <span class="ct-display">before you pay.</span></h2>
-      </div>
-      <div class="ct-how__intro pr-reveal" style="--d:.08s">
-        <p>Four steps from the first call to new work every week. The trial is free, and the agreement can end anytime.</p>
-        <div class="ct-how__ctas">
-          <a href="contact.html" class="ct-pill ct-pill--lime">Start your free trial</a>
-          <a href="contact.html" class="ct-pill ct-pill--outline-light">Book a call</a>
-        </div>
       </div>
     </div>
 
-    <ol class="ct-timeline">
-      <li class="ct-step" data-ct-step>
-        <div class="ct-step__rail" aria-hidden="true"><span class="ct-step__dot"></span><span class="ct-step__line"></span></div>
-        <div class="ct-step__copy">
-          <span class="ct-chip">Day one</span>
-          <div class="ct-step__body">
-            <p class="ct-step__num">01</p>
-            <div class="ct-step__text">
-              <h3 class="ct-step__title">Book a call</h3>
-              <p class="ct-step__desc">Walk us through your brand, sales assets and backlog. We recommend a plan.</p>
-            </div>
-          </div>
-        </div>
-        <div class="ct-step__panel">
-          <div class="ct-illo">
+    <div class="ct-journey" data-ct-journey>
+    <ol class="ct-stepper pr-reveal">
+      <li class="ct-stop is-active" data-ct-stop>
+        <button type="button" class="ct-stop__btn" aria-controls="ct-show-0" aria-pressed="true">
+          <span class="ct-stop__mark" aria-hidden="true"><span class="ct-stop__dot">1</span><span class="ct-stop__line"><span class="ct-stop__fill" data-ct-fill></span></span></span>
+          <span class="ct-stop__when">Day one</span>
+          <span class="ct-stop__title">Book a call</span>
+          <span class="ct-stop__desc">Walk us through your brand, sales assets and backlog. We recommend a plan.</span>
+        </button>
+      </li>
+      <li class="ct-stop" data-ct-stop>
+        <button type="button" class="ct-stop__btn" aria-controls="ct-show-1" aria-pressed="false">
+          <span class="ct-stop__mark" aria-hidden="true"><span class="ct-stop__dot">2</span><span class="ct-stop__line"><span class="ct-stop__fill" data-ct-fill></span></span></span>
+          <span class="ct-stop__when">Up to 2 weeks</span>
+          <span class="ct-stop__title">Free trial</span>
+          <span class="ct-stop__desc">One to two weeks on a real brief, at no cost. See how we think, talk and deliver.</span>
+        </button>
+      </li>
+      <li class="ct-stop" data-ct-stop>
+        <button type="button" class="ct-stop__btn" aria-controls="ct-show-2" aria-pressed="false">
+          <span class="ct-stop__mark" aria-hidden="true"><span class="ct-stop__dot">3</span><span class="ct-stop__line"><span class="ct-stop__fill" data-ct-fill></span></span></span>
+          <span class="ct-stop__when">After the trial</span>
+          <span class="ct-stop__title">Start your membership</span>
+          <span class="ct-stop__desc">Choose your plan and sign the 6-month agreement. End it anytime.</span>
+        </button>
+      </li>
+      <li class="ct-stop" data-ct-stop>
+        <button type="button" class="ct-stop__btn" aria-controls="ct-show-3" aria-pressed="false">
+          <span class="ct-stop__mark" aria-hidden="true"><span class="ct-stop__dot">4</span><span class="ct-stop__line"><span class="ct-stop__fill" data-ct-fill></span></span></span>
+          <span class="ct-stop__when">Every week</span>
+          <span class="ct-stop__title">Ship every week</span>
+          <span class="ct-stop__desc">Your team works from the shared board, and new work lands every week.</span>
+        </button>
+      </li>
+    </ol>
+    <div class="ct-show pr-reveal" style="--d:.1s">
+      <div class="ct-show__layer is-on" id="ct-show-0" data-ct-layer>
+        <div class="ct-illo">
           <svg viewBox="0 0 640 360" class="ct-illo__svg" role="img" aria-label="Your brand, sales assets and backlog feed into an intro call, which produces your plan">
             <defs><filter id="ga" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="6"></feGaussianBlur></filter></defs>
             <g transform="translate(320 170) matrix(0.866 0.5 -0.866 0.5 0 0)" font-family="Poppins, sans-serif">
@@ -608,22 +624,9 @@
             </g>
           </svg>
         </div>
-        </div>
-      </li>
-      <li class="ct-step" data-ct-step>
-        <div class="ct-step__rail" aria-hidden="true"><span class="ct-step__dot"></span><span class="ct-step__line"><span class="ct-step__beam" data-ct-beam></span></span></div>
-        <div class="ct-step__copy">
-          <span class="ct-chip">Up to 2 weeks</span>
-          <div class="ct-step__body">
-            <p class="ct-step__num">02</p>
-            <div class="ct-step__text">
-              <h3 class="ct-step__title">Free trial</h3>
-              <p class="ct-step__desc">One to two weeks on a real brief, at no cost. See how we think, talk and deliver.</p>
-            </div>
-          </div>
-        </div>
-        <div class="ct-step__panel">
-          <div class="ct-illo">
+      </div>
+      <div class="ct-show__layer" id="ct-show-1" data-ct-layer>
+        <div class="ct-illo">
           <svg viewBox="0 0 640 360" class="ct-illo__svg" role="img" aria-label="A real brief goes into a free trial of up to two weeks, which returns concepts and delivered work">
             <defs><filter id="gb" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="6"></feGaussianBlur></filter></defs>
             <g transform="translate(320 170) matrix(0.866 0.5 -0.866 0.5 0 0)" font-family="Poppins, sans-serif">
@@ -674,22 +677,9 @@
             </g>
           </svg>
         </div>
-        </div>
-      </li>
-      <li class="ct-step" data-ct-step>
-        <div class="ct-step__rail" aria-hidden="true"><span class="ct-step__dot"></span><span class="ct-step__line"></span></div>
-        <div class="ct-step__copy">
-          <span class="ct-chip">After the trial</span>
-          <div class="ct-step__body">
-            <p class="ct-step__num">03</p>
-            <div class="ct-step__text">
-              <h3 class="ct-step__title">Start your membership</h3>
-              <p class="ct-step__desc">Choose your plan and sign the 6-month agreement. End it anytime.</p>
-            </div>
-          </div>
-        </div>
-        <div class="ct-step__panel">
-          <div class="ct-illo">
+      </div>
+      <div class="ct-show__layer" id="ct-show-2" data-ct-layer>
+        <div class="ct-illo">
           <svg viewBox="0 0 640 360" class="ct-illo__svg" role="img" aria-label="Three plans, Growth, Scale and Enterprise, with Scale chosen and linked to a 6-month agreement you can cancel anytime">
             <defs><filter id="gc" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="6"></feGaussianBlur></filter></defs>
             <g transform="translate(320 170) matrix(0.866 0.5 -0.866 0.5 0 0)" font-family="Poppins, sans-serif">
@@ -725,22 +715,9 @@
             </g>
           </svg>
         </div>
-        </div>
-      </li>
-      <li class="ct-step ct-step--last" data-ct-step>
-        <div class="ct-step__rail" aria-hidden="true"><span class="ct-step__dot"></span></div>
-        <div class="ct-step__copy">
-          <span class="ct-chip">Every week</span>
-          <div class="ct-step__body">
-            <p class="ct-step__num">04</p>
-            <div class="ct-step__text">
-              <h3 class="ct-step__title">Ship every week</h3>
-              <p class="ct-step__desc">Your team works from the shared board, and new work lands every week.</p>
-            </div>
-          </div>
-        </div>
-        <div class="ct-step__panel">
-          <div class="ct-illo">
+      </div>
+      <div class="ct-show__layer" id="ct-show-3" data-ct-layer>
+        <div class="ct-illo">
           <svg viewBox="0 0 640 360" class="ct-illo__svg" role="img" aria-label="A shared board where work moves from to-do to shipped, with new work landing in week one through week four">
             <defs><filter id="gd" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="6"></feGaussianBlur></filter></defs>
             <g transform="translate(320 170) matrix(0.866 0.5 -0.866 0.5 0 0)" font-family="Poppins, sans-serif">
@@ -771,11 +748,11 @@
             </g>
           </svg>
         </div>
-        </div>
-      </li>
-    </ol>
+      </div>
+    </div>
+    </div>
 
-    <!-- Proof -->
+    <!-- Proof (Figma v4 frame, node 1849:13939) -->
     <div class="ct-proof">
       <div class="ct-proof__head">
         <div class="ct-proof__title pr-reveal">
@@ -786,25 +763,61 @@
       </div>
       <figure class="ct-proof__card pr-reveal" style="--d:.1s">
         <div class="ct-proof__testimonial">
-          <blockquote class="ct-proof__quote">
-            <p><span class="ct-proof__quote-lead">After nine months embedded,</span> our decks, datasheets and sales assets look nothing like the other NetSuite and Salesforce partners we compete with.</p>
-          </blockquote>
-          <div class="ct-proof__bottom">
-            <dl class="ct-proof__stats">
-              <div class="ct-proof__stat"><dt class="ct-proof__num">100+</dt><dd class="ct-proof__label"><span>Clients, from Fortune 500</span><span>to channel partners</span></dd></div>
-              <div class="ct-proof__stat"><dt class="ct-proof__num">12 yrs</dt><dd class="ct-proof__label"><span>Of B2B sales-asset craft</span><span>behind every membership</span></dd></div>
-            </dl>
-            <a href="results.html" class="ct-pill ct-pill--outline-light ct-proof__cta">Read the case study</a>
+          <img class="ct-proof__logo" src="assets/logos/clients/caravel-wordmark-paper.svg" alt="Caravel, BPM Technology Solutions" width="190" height="39" loading="lazy" decoding="async">
+          <div class="ct-proof__say">
+            <blockquote class="ct-proof__quote">
+              <img class="ct-proof__mark" src="assets/icons/quote-mark-lime.svg" alt="" width="64" height="44" loading="lazy" decoding="async">
+              <p><span class="ct-proof__quote-lead">After nine months embedded,</span> our decks, datasheets and sales assets look nothing like the other NetSuite and Salesforce partners we compete with.</p>
+            </blockquote>
+            <figcaption class="ct-proof__person"><strong>Stephanie Madrid</strong><span>Director Of Marketing Strategy, Caravel Partners</span></figcaption>
           </div>
+          <a href="results.html" class="ct-proof__link">Read the case study <img src="assets/icons/arrow-right-paper.svg" alt="" width="16" height="11"></a>
         </div>
         <div class="ct-proof__showcase">
-          <figcaption class="ct-proof__clients">
-            <div class="ct-proof__person"><strong>Stephanie Madrid</strong><span>Director Of Marketing Strategy, Caravel Partners</span></div>
-            <div class="ct-proof__logo-cell"><img class="ct-proof__logo" src="assets/logos/clients/caravel-wordmark-paper.svg" alt="Caravel, BPM Technology Solutions" width="190" height="39" loading="lazy" decoding="async"></div>
-          </figcaption>
-          <div class="ct-proof__image"><img class="ct-proof__photo" src="assets/img/ctaas/proof-caravel-stephanie.jpg" alt="Stephanie Madrid, Director of Marketing Strategy at Caravel Partners, at her desk" width="1672" height="940" loading="lazy" decoding="async"></div>
+          <img class="ct-proof__photo" src="assets/img/ctaas/proof-caravel-stephanie.jpg" alt="Stephanie Madrid, Director of Marketing Strategy at Caravel Partners, at her desk" width="1672" height="940" loading="lazy" decoding="async">
+          <dl class="ct-proof__stats">
+            <div class="ct-proof__stat"><dt class="ct-proof__num">100+</dt><dd class="ct-proof__label"><span>Clients, from Fortune 500</span><span>to channel partners</span></dd></div>
+            <div class="ct-proof__stat"><dt class="ct-proof__num">12 yrs</dt><dd class="ct-proof__label"><span>Of B2B sales-asset craft</span><span>behind every membership</span></dd></div>
+          </dl>
         </div>
       </figure>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FAQ (Figma v4 frame, section "FAQ") ================= -->
+<section class="ct-faq" id="faq" data-section="faq">
+  <div class="ct-wrap">
+    <div class="ct-faq__head pr-reveal">
+      <p class="ct-eyebrow">FAQ</p>
+      <h2 class="ct-faq__h2">Good to know.</h2>
+      <p class="ct-faq__lead">Anything else is easier answered on the scoping call.</p>
+    </div>
+    <div class="ct-faq__list pr-reveal" style="--d:.08s">
+      <details class="ct-faq__item" name="ct-faq" open>
+        <summary class="ct-faq__q"><span class="ct-faq__num">01</span><span class="ct-faq__question">How long does a Foundation take?</span><span class="ct-faq__toggle"><svg class="ct-faq__plus" width="20" height="20" viewBox="0 0 256 256" aria-hidden="true" focusable="false"><path fill="currentColor" d="M222,128a6,6,0,0,1-6,6H134v82a6,6,0,0,1-12,0V134H40a6,6,0,0,1,0-12h82V40a6,6,0,0,1,12,0v82h82A6,6,0,0,1,222,128Z"/></svg><svg class="ct-faq__minus" width="20" height="20" viewBox="0 0 256 256" aria-hidden="true" focusable="false"><path fill="currentColor" d="M222,128a6,6,0,0,1-6,6H40a6,6,0,0,1,0-12H216A6,6,0,0,1,222,128Z"/></svg></span></summary>
+        <div class="ct-faq__a"><p>Each Foundation runs in defined sprints with a clear finish line. We&#39;ll give you an exact timeline once we scope it on the call — most builds are measured in weeks, not months.</p></div>
+      </details>
+      <details class="ct-faq__item" name="ct-faq">
+        <summary class="ct-faq__q"><span class="ct-faq__num">02</span><span class="ct-faq__question">Do I own everything at the end?</span><span class="ct-faq__toggle"><svg class="ct-faq__plus" width="20" height="20" viewBox="0 0 256 256" aria-hidden="true" focusable="false"><path fill="currentColor" d="M222,128a6,6,0,0,1-6,6H134v82a6,6,0,0,1-12,0V134H40a6,6,0,0,1,0-12h82V40a6,6,0,0,1,12,0v82h82A6,6,0,0,1,222,128Z"/></svg><svg class="ct-faq__minus" width="20" height="20" viewBox="0 0 256 256" aria-hidden="true" focusable="false"><path fill="currentColor" d="M222,128a6,6,0,0,1-6,6H40a6,6,0,0,1,0-12H216A6,6,0,0,1,222,128Z"/></svg></span></summary>
+        <div class="ct-faq__a"><p>Yes. You get the system, the source files, and the guidelines to run it. No lock-in, no licensing games — it&#39;s yours.</p></div>
+      </details>
+      <details class="ct-faq__item" name="ct-faq">
+        <summary class="ct-faq__q"><span class="ct-faq__num">03</span><span class="ct-faq__question">Can I do just one Foundation, or all three?</span><span class="ct-faq__toggle"><svg class="ct-faq__plus" width="20" height="20" viewBox="0 0 256 256" aria-hidden="true" focusable="false"><path fill="currentColor" d="M222,128a6,6,0,0,1-6,6H134v82a6,6,0,0,1-12,0V134H40a6,6,0,0,1,0-12h82V40a6,6,0,0,1,12,0v82h82A6,6,0,0,1,222,128Z"/></svg><svg class="ct-faq__minus" width="20" height="20" viewBox="0 0 256 256" aria-hidden="true" focusable="false"><path fill="currentColor" d="M222,128a6,6,0,0,1-6,6H40a6,6,0,0,1,0-12H216A6,6,0,0,1,222,128Z"/></svg></span></summary>
+        <div class="ct-faq__a"><p>Either. Start with the one where you need it most, or build all three as a complete, connected system. We&#39;ll help you sequence it.</p></div>
+      </details>
+      <details class="ct-faq__item" name="ct-faq">
+        <summary class="ct-faq__q"><span class="ct-faq__num">04</span><span class="ct-faq__question">What happens after the build?</span><span class="ct-faq__toggle"><svg class="ct-faq__plus" width="20" height="20" viewBox="0 0 256 256" aria-hidden="true" focusable="false"><path fill="currentColor" d="M222,128a6,6,0,0,1-6,6H134v82a6,6,0,0,1-12,0V134H40a6,6,0,0,1,0-12h82V40a6,6,0,0,1,12,0v82h82A6,6,0,0,1,222,128Z"/></svg><svg class="ct-faq__minus" width="20" height="20" viewBox="0 0 256 256" aria-hidden="true" focusable="false"><path fill="currentColor" d="M222,128a6,6,0,0,1-6,6H40a6,6,0,0,1,0-12H216A6,6,0,0,1,222,128Z"/></svg></span></summary>
+        <div class="ct-faq__a"><p>Run it in-house yourself, or keep our embedded team on to produce and evolve everything after. <a href="#plans" class="ct-faq__link">See Creative Team as a Service →</a></p></div>
+      </details>
+      <details class="ct-faq__item" name="ct-faq">
+        <summary class="ct-faq__q"><span class="ct-faq__num">05</span><span class="ct-faq__question">How is this different from Creative Team as a Service?</span><span class="ct-faq__toggle"><svg class="ct-faq__plus" width="20" height="20" viewBox="0 0 256 256" aria-hidden="true" focusable="false"><path fill="currentColor" d="M222,128a6,6,0,0,1-6,6H134v82a6,6,0,0,1-12,0V134H40a6,6,0,0,1,0-12h82V40a6,6,0,0,1,12,0v82h82A6,6,0,0,1,222,128Z"/></svg><svg class="ct-faq__minus" width="20" height="20" viewBox="0 0 256 256" aria-hidden="true" focusable="false"><path fill="currentColor" d="M222,128a6,6,0,0,1-6,6H40a6,6,0,0,1,0-12H216A6,6,0,0,1,222,128Z"/></svg></span></summary>
+        <div class="ct-faq__a"><p><strong>Foundations</strong> are one-time builds you own. <strong>Creative Team as a Service</strong> is the ongoing team that keeps them living and produces everything after. Many partners start with a Foundation, then keep us on.</p></div>
+      </details>
+      <details class="ct-faq__item" name="ct-faq">
+        <summary class="ct-faq__q"><span class="ct-faq__num">06</span><span class="ct-faq__question">Why don&#39;t you show prices?</span><span class="ct-faq__toggle"><svg class="ct-faq__plus" width="20" height="20" viewBox="0 0 256 256" aria-hidden="true" focusable="false"><path fill="currentColor" d="M222,128a6,6,0,0,1-6,6H134v82a6,6,0,0,1-12,0V134H40a6,6,0,0,1,0-12h82V40a6,6,0,0,1,12,0v82h82A6,6,0,0,1,222,128Z"/></svg><svg class="ct-faq__minus" width="20" height="20" viewBox="0 0 256 256" aria-hidden="true" focusable="false"><path fill="currentColor" d="M222,128a6,6,0,0,1-6,6H40a6,6,0,0,1,0-12H216A6,6,0,0,1,222,128Z"/></svg></span></summary>
+        <div class="ct-faq__a"><p>Because each build is scoped to what you actually need — a focused Sales Foundation looks different from a full three-part system. Book a call and we&#39;ll price it precisely, no guesswork.</p></div>
+      </details>
     </div>
   </div>
 </section>
@@ -859,6 +872,6 @@
 <script src="js/vendor/gsap.min.js" defer></script>
 <script src="js/main.js?v=20261029c" defer></script>
 <script src="js/reveal.js?v=5" defer></script>
-<script src="js/ctaas.js?v=3" defer></script>
+<script src="js/ctaas.js?v=4" defer></script>
 </body>
 </html>

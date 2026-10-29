@@ -1,34 +1,58 @@
-/* Creative Team as a Service: "How it works" timeline.
-   Each step's illustration only animates while its step is on screen (.is-live), and the lime streak on the
-   second step's rail travels down the line as that step scrolls past. Without JS the pictures simply play
-   and the streak sits where the design shows it; with reduced motion it stays put. */
+/* Creative Team as a Service: "How it works" stepper.
+   Four steps on one hairline and one showcase panel. The current step's segment fills while it plays
+   (6s each, only while the section is on screen); then the next step and its illustration take over.
+   Hovering or focusing the steps holds it; clicking a step jumps to it.
+   Without JS the first step and its illustration show; with reduced motion it never auto-plays. */
 (() => {
   'use strict';
-  const steps = [...document.querySelectorAll('[data-ct-step]')];
-  if (!steps.length) return;
+  const root = document.querySelector('[data-ct-journey]');
+  if (!root) return;
+  const stops = [...root.querySelectorAll('[data-ct-stop]')];
+  const layers = [...root.querySelectorAll('[data-ct-layer]')];
+  const fills = stops.map((s) => s.querySelector('[data-ct-fill]'));
+  if (stops.length !== layers.length || !stops.length) return;
+
+  const DUR = 6000;
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let active = 0, t = 0, last = 0, held = false, inView = false, raf = 0;
+
+  const show = (i) => {
+    active = i; t = 0;
+    stops.forEach((el, k) => {
+      el.classList.toggle('is-active', k === i);
+      el.classList.toggle('is-done', k < i);
+      el.querySelector('button').setAttribute('aria-pressed', k === i ? 'true' : 'false');
+      fills[k].style.width = '';
+    });
+    layers.forEach((el, k) => {
+      el.classList.toggle('is-on', k === i);
+      el.setAttribute('aria-hidden', k === i ? 'false' : 'true');
+    });
+  };
+
+  const tick = (now) => {
+    raf = 0;
+    const dt = last ? Math.min(64, now - last) : 0;
+    last = now;
+    if (!held) t += dt;
+    if (t >= DUR) show((active + 1) % stops.length);
+    fills[active].style.width = (t / DUR * 100).toFixed(2) + '%';
+    if (inView && !reduce) raf = requestAnimationFrame(tick);
+  };
+  const play = () => { if (!raf && inView && !reduce) { last = 0; raf = requestAnimationFrame(tick); } };
+
+  stops.forEach((el, i) => el.querySelector('button').addEventListener('click', () => { show(i); play(); }));
+  root.addEventListener('mouseenter', () => { held = true; });
+  root.addEventListener('mouseleave', () => { held = false; });
+  root.addEventListener('focusin', () => { held = true; });
+  root.addEventListener('focusout', () => { held = false; });
 
   if ('IntersectionObserver' in window) {
-    const io = new IntersectionObserver((es) => {
-      es.forEach((e) => e.target.classList.toggle('is-live', e.isIntersecting));
-    }, { rootMargin: '10% 0px' });
-    steps.forEach((s) => io.observe(s));
-  } else {
-    steps.forEach((s) => s.classList.add('is-live'));
-  }
+    new IntersectionObserver((es) => {
+      inView = es[0].isIntersecting;
+      if (inView) play(); else { cancelAnimationFrame(raf); raf = 0; }
+    }, { threshold: 0.3 }).observe(root);
+  } else { inView = true; play(); }
 
-  const beam = document.querySelector('[data-ct-beam]');
-  if (!beam || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  const step = beam.closest('[data-ct-step]');
-  let raf = 0;
-  const update = () => {
-    raf = 0;
-    const r = step.getBoundingClientRect();
-    const vh = window.innerHeight || 1;
-    const p = Math.min(1, Math.max(0, (vh - r.top) / (vh + r.height)));   // 0 as the step enters at the bottom, 1 as it leaves at the top
-    beam.style.setProperty('--p', p.toFixed(3));
-  };
-  const queue = () => { if (!raf) raf = requestAnimationFrame(update); };
-  addEventListener('scroll', queue, { passive: true });
-  addEventListener('resize', queue);
-  update();
+  show(0);
 })();

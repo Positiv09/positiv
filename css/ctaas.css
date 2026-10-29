@@ -507,10 +507,6 @@
 @media (max-width: 991px) { .fd-head__h2 .fd-muted { font-size: inherit; } .fd-br { display: none; } }
 
 /* how it works: the shared stepper, static (no showcase panel, nothing to play) */
-.ct-stepper--static .ct-stop__btn { cursor: default; }
-.ct-stepper--static .ct-stop__dot { color: var(--c-ink); background: var(--c-lime); box-shadow: none; }
-.ct-stepper--static .ct-stop__title { margin-top: 20px; }
-.ct-stepper--static .ct-stop__btn:hover .ct-stop__title { color: var(--c-paper); }
 
 /* proof: one quote card */
 .fd-proof { margin-top: 140px; }

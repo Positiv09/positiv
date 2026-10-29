@@ -499,6 +499,19 @@
 .ct-grow .amount.fd-price { font-size: 26px; line-height: 1.25; }
 .fd-note { max-width: 760px; margin: 56px auto 0; text-align: center; font-size: 18px; line-height: 28px; color: #5f5a56; }
 
+/* Foundations cards (Figma "Fondation" frame, Pricing/Foundation Card) */
+.fd-head__h2 .fd-strong { color: #393939; }
+.fd-head__h2 .fd-muted { font-size: 56px; }
+.fd-head__lead { margin: 16px auto 0; max-width: 728px; font-size: 18px; line-height: 28px; color: #5f5a56; }
+.ct-grow .fd-from { margin: 24px 0 0; font-size: 11px; line-height: 18px; letter-spacing: 1.1px; }
+.ct-grow .fd-price-row { margin-top: 4px; }
+.ct-grow .fd-timeline .meter__row { justify-content: flex-start; }
+.ct-grow .fd-timeline .meter__val { text-align: left; }
+.ct-grow .fd-scale { display: flex; justify-content: space-between; margin-top: 8px; font-size: 10px; line-height: 14px; color: #8e8e8e; }
+.fd-note--small { margin-top: 40px; font-size: 14px; line-height: 22px; color: #6f6b66; }
+.fd-note--small b { font-weight: 500; color: var(--c-ink); }
+@media (max-width: 991px) { .fd-head__h2 .fd-muted { font-size: inherit; } .fd-br { display: none; } }
+
 /* how it works: the shared stepper, static (no showcase panel, nothing to play) */
 .ct-stepper--static .ct-stop__btn { cursor: default; }
 .ct-stepper--static .ct-stop__dot { color: var(--c-ink); background: var(--c-lime); box-shadow: none; }

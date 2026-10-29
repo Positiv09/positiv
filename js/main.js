@@ -459,6 +459,7 @@
       initHeader();
     };
     if (document.readyState === 'complete') swapHeader();
+    else if (document.readyState === 'interactive') setTimeout(swapHeader, 300);   // DOM-ready already fired (script injected late, e.g. the Creative Team page): the DOMContentLoaded listener below would never run
     else document.addEventListener('DOMContentLoaded', () => setTimeout(swapHeader, 300));   // after Webflow's own DOM-ready init, well before window load
   }
 

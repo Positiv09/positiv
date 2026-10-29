@@ -801,9 +801,9 @@
   #site-header .pricing2 .div-block-218.pricingtest { width: 100%; height: 300px !important; border-radius: 12px; background-size: cover; background-position: 50%; }
   #site-header .pricing2 .div-block-218.f6.pricingtest { background-size: 100% 185.4%; background-position: 0 81.1%; }   /* Figma's crop: the photo at 185% height, 69% up */
   #site-header .pricing2 .text-block-52.pricingtest { margin: 0; color: #8e8e8e; font-size: 12px; line-height: 1.5; }
-  #site-header .pricing2 .div-block-220.pricingtest { display: flex; align-items: center; gap: 8px; margin: -4px 0 0; transition: gap .3s var(--mm-ease), transform .3s var(--mm-ease); }
+  #site-header .pricing2 .div-block-220.pricingtest { display: flex; align-items: center; gap: 8px; margin: -4px 0 0; transition: gap .3s var(--mm-ease), margin-left .3s var(--mm-ease); }
   #site-header .pricing2 .heading-53 { margin: 0; color: #211d1d; font-size: 18px; line-height: normal; font-weight: 400; }
-  #site-header .pricing2 .div-block-219.pricingtest:hover .div-block-220.pricingtest { gap: 12px; transform: translateX(4px); }
+  #site-header .pricing2 .div-block-219.pricingtest:hover .div-block-220.pricingtest { gap: 12px; margin-left: 4px; }   /* margin, not transform: a transform would become the containing block of the card-wide link overlay and shrink it to this row */
   #site-header .pricing2 .wbs-dropdown-item-2.cta.new.pricingtest.ps { display: flex; flex-direction: row; align-items: stretch; gap: 0; margin: 0; }
   #site-header .pricing2 .div-block-227 { flex: none; width: 1px; height: auto; margin: 0 47px 0 0; background-color: var(--mm-line); opacity: 1; }
   #site-header .pricing2 .div-block-295.ps { display: flex; flex-direction: column; gap: 16px; flex: 1 1 auto; width: auto; height: auto; }
@@ -1102,4 +1102,4 @@
 /* Pricing menu: the "Creative Team as a Service" card opens its pricing page (the whole card is the link target) */
 #site-header .div-block-219.pricingtest { position: relative; }
 #site-header .menu-card-link { color: inherit; text-decoration: none; }
-#site-header .menu-card-link::after { content: ""; position: absolute; inset: 0; z-index: 1; }
+#site-header .menu-card-link::after { content: ""; position: absolute; inset: 0; z-index: 5; }   /* above the picture (it is position:relative too) so the whole card is the link */

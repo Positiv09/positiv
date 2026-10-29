@@ -384,12 +384,13 @@
   const inWebflow = !!window.Webflow;                               // true when this page is published from Webflow (its own nav/dropdown runtime is on the page too)
   const initHeader = () => {
   const dropdowns = $$('.w-dropdown');
-  /* Pricing menu: the repo markup links its "Creative Team as a Service" card; the Webflow component's heading is plain text, so give it the same link */
+  /* Pricing menu: the repo markup links both cards; the Webflow component's headings are plain text, so give them the same links */
   $$('#site-header .pricingtest h5.heading-53').forEach((h) => {
     const name = h.textContent.trim();
-    if (h.querySelector('a') || name !== 'Creative Team as a Service') return;
+    const to = { 'Creative Team as a Service': 'creative-team', 'Fondation': 'fondation' }[name];
+    if (h.querySelector('a') || !to) return;
     const a = document.createElement('a');
-    a.className = 'menu-card-link'; a.textContent = name; a.href = inWebflow ? '/creative-team' : 'creative-team.html';
+    a.className = 'menu-card-link'; a.textContent = name; a.href = inWebflow ? '/' + to : to + '.html';
     h.textContent = ''; h.appendChild(a);
   });
   const navButton = $('.w-nav-button');

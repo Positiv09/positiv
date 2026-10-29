@@ -286,7 +286,8 @@
 .ct-proof__logo-cell { flex: none; width: 281px; display: flex; align-items: center; justify-content: center; padding: 0 40px; border-left: 1px solid rgba(242,242,237,.16); }
 .ct-proof__logo { display: block; width: 189.8px; height: 39px; }
 .ct-proof__image { position: relative; flex: 1 0 0; min-height: 574px; overflow: hidden; }
-.ct-proof__photo { position: absolute; top: 0; left: -33.49%; width: 148.4%; height: 100%; max-width: none; }
+/* Figma crops the 16:9 photo by 148.4% width / -33.49% left inside 688 x 574, i.e. cover with x at 69%; cover keeps it undistorted at any width */
+.ct-proof__photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 69% 50%; }
 @media (max-width: 1100px) {
   .ct-proof__body { width: 360px; }
   .ct-proof__card { grid-template-columns: 1fr; min-height: 0; }

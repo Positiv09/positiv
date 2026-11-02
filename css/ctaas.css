@@ -67,7 +67,7 @@
 }
 .ct-hero::before {
   content: ""; position: absolute; left: 0; top: 0; width: 100%; height: 780px; pointer-events: none;
-  background: linear-gradient(90.47deg, rgba(33,29,29,.56) 18.907%, rgba(33,29,29,.491) 2.3269%, rgba(33,29,29,.35) 14.821%, rgba(33,29,29,.353) 18.34%, rgba(33,29,29,0) 90.23%);
+  background: linear-gradient(90.47deg, rgb(33 29 29 / .56) -18.91%, rgb(33 29 29 / .491) -2.32%, rgb(33 29 29 / .35) 14.82%, rgb(33 29 29 / .353) 18.34%, rgb(33 29 29 / 0) 90.23%);
 }
 .ct-hero__inner { position: relative; z-index: 1; padding-top: 230px; }
 .ct-hero__eyebrow { margin: 0 0 0 3px; font-size: 14px; line-height: 21px; text-transform: uppercase; color: var(--c-paper); }
@@ -222,6 +222,12 @@
   .ct-illo .wk1, .ct-illo .wk2 { fill: #f0f879; }
   .ct-illo .move { transform: translate(70px, 0); fill: rgba(242,242,237,.85); }
 }
+
+/* Creative Team hero, Figma "v5": new photo with its progressive blur exported as-is, and the v5 overlay */
+.ct-hero--v5 { background-image: url("../assets/img/ctaas/hero-v5.jpg"); background-image: image-set(url("../assets/img/ctaas/hero-v5.webp") 1x, url("../assets/img/ctaas/hero-v5@2x.webp") 2x); }
+.ct-hero--v5::before { background: linear-gradient(90.26deg, rgb(33 29 29 / .56) -9.62%, rgb(33 29 29 / .35) 15.98%, rgb(33 29 29 / .353) 18.65%, rgb(33 29 29 / .491) 40.63%, rgb(33 29 29 / 0) 73.2%); }
+@media (max-width: 1100px) { .ct-hero--v5 { background-position: 82% 0; } }
+@media (max-width: 767px) { .ct-hero--v5 { background-position: 100% 0; } }
 
 /* =========================== responsive =========================== */
 @media (max-width: 1100px) {

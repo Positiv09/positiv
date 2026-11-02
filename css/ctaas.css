@@ -223,12 +223,12 @@
   .ct-illo .move { transform: translate(70px, 0); fill: rgba(242,242,237,.85); }
 }
 
-@media (min-width: 992px) { .ct-hero--v5 { height: 776px; } .ct-hero--v5 + .ct-clients { padding-top: 112px; } }
-/* Creative Team hero, Figma "v5": new photo with its progressive blur exported as-is, and the v5 overlay */
-.ct-hero--v5 { background-image: url("../assets/img/ctaas/hero-v5.jpg"); background-image: image-set(url("../assets/img/ctaas/hero-v5.webp") 1x, url("../assets/img/ctaas/hero-v5@2x.webp") 2x); }
-.ct-hero--v5::before { height: 800px; background: linear-gradient(90.26deg, rgb(33 29 29 / .56) -9.62%, rgb(33 29 29 / .35) 15.98%, rgb(33 29 29 / .353) 18.65%, rgb(33 29 29 / .491) 40.63%, rgb(33 29 29 / 0) 73.2%); }
-@media (max-width: 1100px) { .ct-hero--v5 { background-position: 82% 0; } }
-@media (max-width: 767px) { .ct-hero--v5 { background-position: 100% 0; } }
+/* Creative Team hero, Figma "v5": photo (crop + progressive blur) and the overlay layer exported from Figma and
+   baked into one image, so photo and shade always move together. The image keeps the Figma scale and stays pinned
+   to the right edge at every width; above 1440px the hero grows with the width so the framing never changes. */
+.ct-hero--v5 { background-image: url("../assets/img/ctaas/hero-v5.jpg"); background-image: image-set(url("../assets/img/ctaas/hero-v5.webp") 1x, url("../assets/img/ctaas/hero-v5@2x.webp") 2x); background-size: cover; background-position: 100% 0; }
+.ct-hero--v5::before { content: none; }
+@media (min-width: 992px) { .ct-hero--v5 { height: max(776px, 53.8889vw); } .ct-hero--v5 .ct-hero__inner { padding-top: max(230px, 15.9722vw); } .ct-hero--v5 + .ct-clients { padding-top: 112px; } }
 
 /* =========================== responsive =========================== */
 @media (max-width: 1100px) {

@@ -33,6 +33,14 @@
             <option value="" disabled selected>Company size</option>
             <option>1–10 employees</option><option>11–50 employees</option><option>51–200 employees</option><option>201–500 employees</option><option>500+ employees</option>
           </select>${chev}</label>
+        <label class="cm__field"><span class="cm__sr">Industry</span>
+          <select class="cm__line cm__select" name="industry" required>
+            <option value="" disabled selected>Industry</option>
+            <option data-desc="Salesforce, NetSuite, HubSpot, ServiceNow">Channel partner</option>
+            <option data-desc="Security, AI, FinTech, SaaS &amp; dev tools">Technology</option>
+            <option data-desc="Consulting, advisory and financial services firms">Finance &amp; Consulting</option>
+            <option>Other</option>
+          </select>${chev}</label>
         <label class="cm__field"><span class="cm__sr">What do you need?</span>
           <select class="cm__line cm__select" name="need" required>
             <option value="" disabled selected>What do you need?</option>
@@ -120,13 +128,17 @@
     list.className = 'cm__list'; list.id = id; list.setAttribute('role', 'listbox'); list.setAttribute('aria-label', ph); list.tabIndex = -1;
     const opts = [...sel.options].slice(1).map((o, i) => {
       const li = document.createElement('li');
-      li.className = 'cm__opt'; li.id = `${id}-${i}`; li.setAttribute('role', 'option'); li.setAttribute('aria-selected', 'false'); li.textContent = o.text;
+      li.className = 'cm__opt'; li.id = `${id}-${i}`; li.setAttribute('role', 'option'); li.setAttribute('aria-selected', 'false'); li.dataset.title = o.text;
+      const t = document.createElement('span'); t.className = 'cm__opt-title'; t.textContent = o.text; li.appendChild(t);
+      if (o.dataset.desc) { const d = document.createElement('span'); d.className = 'cm__opt-desc'; d.textContent = o.dataset.desc; li.appendChild(d); }
+      li.insertAdjacentHTML('beforeend', '<svg class="cm__opt-check" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>');
       li.addEventListener('mousedown', (e) => e.preventDefault());
       li.addEventListener('click', () => { choose(i); hide(); btn.focus(); });
       li.addEventListener('mousemove', () => setActive(i));
       list.appendChild(li); return li;
     });
-    sel.before(btn); field.appendChild(list);
+    const flabel = document.createElement('span'); flabel.className = 'cm__flabel'; flabel.textContent = ph; flabel.setAttribute('aria-hidden', 'true');
+    sel.before(btn); btn.before(flabel); field.appendChild(list);
     list.addEventListener('click', (e) => e.preventDefault());   // the field is a <label>: without this, a click in the list re-activates the trigger
     let active = -1;
     const isOpen = () => field.classList.contains('is-open');
@@ -140,9 +152,10 @@
     };
     const sync = () => {
       const i = sel.selectedIndex - 1;
-      btn.textContent = i >= 0 ? opts[i].textContent : ph;
+      btn.textContent = i >= 0 ? opts[i].dataset.title : ph;
       btn.classList.toggle('is-empty', i < 0);
-      btn.setAttribute('aria-label', `${ph} ${i >= 0 ? opts[i].textContent : 'not selected'}`);
+      field.classList.toggle('has-value', i >= 0);
+      btn.setAttribute('aria-label', `${ph} ${i >= 0 ? opts[i].dataset.title : 'not selected'}`);
       opts.forEach((li, n) => li.setAttribute('aria-selected', String(n === i)));
     };
     const choose = (i) => { sel.selectedIndex = i + 1; sel.dispatchEvent(new Event('change', { bubbles: true })); sync(); };
@@ -162,7 +175,7 @@
       else if (k === 'Escape' && isOpen()) { e.preventDefault(); e.stopPropagation(); hide(); }
       else if (k === 'Tab' && isOpen()) hide();
       else if (k.length === 1 && /\S/.test(k)) {
-        const n = opts.findIndex((li) => li.textContent.trim().toLowerCase().startsWith(k.toLowerCase()));
+        const n = opts.findIndex((li) => li.dataset.title.toLowerCase().startsWith(k.toLowerCase()));
         if (n >= 0) { if (isOpen()) setActive(n); else choose(n); }
       }
     });
@@ -204,7 +217,7 @@
       const res = await fetch(ENDPOINT, {
         signal: ctl.signal, method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
         body: JSON.stringify({
-          Name: f.name.value.trim(), Email: f.email.value.trim(), Company: f.company.value.trim() || '-', 'Company size': f.size.value,
+          Name: f.name.value.trim(), Email: f.email.value.trim(), Company: f.company.value.trim() || '-', 'Company size': f.size.value, Industry: f.industry.value,
           Needs: f.need.value, Message: f.message.value.trim() || '-', Page: location.href, 'Sent at': new Date().toString(),
           _subject: `New message from ${f.name.value.trim()} - Positiv website`, _replyto: f.email.value.trim(), _template: 'table', _captcha: 'false'
         })

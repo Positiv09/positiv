@@ -190,6 +190,11 @@
     const show = () => {
       $$('.cm__field.is-open', form).forEach((f) => f !== field && f.__cmHide && f.__cmHide());
       field.classList.add('is-open'); btn.setAttribute('aria-expanded', 'true');
+      // bring the whole list into view: the pop-up scrolls so the last option is not hidden below the window
+      requestAnimationFrame(() => {
+        const r = list.getBoundingClientRect(), over = r.bottom - (window.innerHeight - 16);
+        if (over > 0) root.scrollBy({ top: over, behavior: 'smooth' });
+      });
       const on = picked(); setActive(on.length ? on[0] : 0);
     };
     const hide = () => {

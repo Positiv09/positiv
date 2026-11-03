@@ -463,13 +463,8 @@
 .ct-grow .fit { margin: auto 0 0; display: flex; flex-direction: column; gap: 6px; padding-top: 20px; border-top: .5px solid rgb(178 178 178 / .5); font-size: 14px; line-height: 22px; }
 .ct-grow .fit .label { font-size: 12px; line-height: 18px; }
 .ct-grow .grow { position: absolute; top: 236px; z-index: 2; width: 32px; height: 32px; margin-left: -16px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: #f2f2ed; border: .5px solid rgb(178 178 178 / .7); color: #211d1d; }
-.ct-grow .terms { margin-top: 24px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
-.ct-grow .term { display: flex; gap: 14px; align-items: flex-start; padding: 22px 24px; border-radius: 14px; border: .5px solid rgb(178 178 178 / .5); }
-.ct-grow .term svg { flex: none; margin-top: 2px; }
-.ct-grow .term p { margin: 0; font-size: 14px; line-height: 22px; color: #6f6b66; }
-.ct-grow .term b { display: block; font-weight: 500; color: #211d1d; }
 @media (max-width: 1100px) {
-  .ct-grow .grid, .ct-grow .terms { grid-template-columns: minmax(0, 1fr); max-width: 560px; margin-inline: auto; }
+  .ct-grow .grid { grid-template-columns: minmax(0, 1fr); max-width: 560px; margin-inline: auto; }
   .ct-grow .grow { display: none; }
   .ct-grow .tag { min-height: 0; }
 }
@@ -482,7 +477,7 @@
 .ct-grow .btn { width: 100%; padding: 0 24px; }   /* the site's own .btn rules would otherwise shrink it to its label */
 @media (max-width: 600px) { .ct-grow .h2 .ct-display { font-size: 39px !important; } }
 /* desktop: the cards (and the terms under them) sit in a narrower centred column, 24px apart, so they read as cards, not a wall */
-@media (min-width: 1101px) { .ct-grow .grid, .ct-grow .terms { max-width: 1128px; margin-inline: auto; gap: 24px; } .ct-grow .tag { min-height: 66px; } }
+@media (min-width: 1101px) { .ct-grow .grid { max-width: 1128px; margin-inline: auto; gap: 24px; } .ct-grow .tag { min-height: 66px; } }
 /* <<< plans-grow */
 
 /* =====================================================================

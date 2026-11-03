@@ -48,7 +48,6 @@
         <p class="cm__error" role="alert" hidden></p>
         <div class="cm__actions">
           <button type="submit" class="cm__send"><span>Send message</span></button>
-          <p class="cm__note">By sending this you agree to be contacted about your request.</p>
         </div>
       </form>
     </div>

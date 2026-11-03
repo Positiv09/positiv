@@ -21,11 +21,12 @@
         <h2 class="cm__title" id="cm-title">Get in touch</h2>
         <a class="cm__mail" href="mailto:hello@positiv.studio">hello@positiv.studio</a>
       </div>
+      <div class="cm__banner" data-cm-banner hidden><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10.5l4 4 8-9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>We've filled in your answers from the fit quiz. Check them, add your details and send.</span></div>
       <form class="cm__form" novalidate>
         <label class="cm__field" data-error="Add your name so we know who to reply to."><span class="cm__sr">Full name</span><input class="cm__line" name="name" type="text" autocomplete="name" placeholder="Full name" required></label>
-        <label class="cm__field" data-error="Add your work email so we can reply." data-error-format="Check your email address, it looks incomplete."><span class="cm__sr">Work email</span><input class="cm__line" name="email" type="email" autocomplete="email" placeholder="Work email" required></label>
+        <label class="cm__field" data-error="Add your work email so we can reply." data-error-format="That email doesn't look right. Check it and try again."><span class="cm__sr">Work email</span><input class="cm__line" name="email" type="email" autocomplete="email" placeholder="Work email" required></label>
         <label class="cm__field" data-error="Add your company name."><span class="cm__sr">Company name</span><input class="cm__line" name="company" type="text" autocomplete="organization" placeholder="Company name" required></label>
-        <label class="cm__field" data-error="Choose your industry."><span class="cm__sr">Industry</span>
+        <label class="cm__field" data-error="Pick the industry closest to yours."><span class="cm__sr">Industry</span>
           <select class="cm__line cm__select" name="industry" required>
             <option value="" disabled selected>Industry</option>
             <option data-desc="Salesforce, NetSuite, HubSpot, ServiceNow">Channel partner</option>
@@ -33,12 +34,12 @@
             <option data-desc="Consulting, advisory and financial services firms">Finance &amp; Consulting</option>
             <option>Other</option>
           </select>${chev}</label>
-        <label class="cm__field" data-error="Choose your company size."><span class="cm__sr">Company size</span>
+        <label class="cm__field" data-error="Pick your company size."><span class="cm__sr">Company size</span>
           <select class="cm__line cm__select" name="size" required>
             <option value="" disabled selected>Company size</option>
-            <option>1–10</option><option>11–50</option><option>51–199</option><option>200–500</option><option>500+</option>
+            <option>Under 50</option><option>50–200</option><option>200–500</option><option>500+</option>
           </select>${chev}</label>
-        <label class="cm__field" data-error="Choose what you need."><span class="cm__sr">What do you need?</span>
+        <label class="cm__field" data-error="Pick at least one, or &quot;I'm not sure yet&quot;."><span class="cm__sr">What do you need?</span>
           <select class="cm__line cm__select" name="need" multiple required data-max="3" data-hint="Pick up to 3.">
             <option value="" disabled>What do you need?</option>
             <option data-desc="It doesn't reflect how good we actually are">Brand</option>
@@ -56,14 +57,15 @@
       </form>
     </div>
     <div class="cm__thanks" data-cm-thanks hidden>
-      <h2 class="cm__title" tabindex="-1">Thanks, <span data-cm-first>there</span>.</h2>
-      <p class="cm__lead" data-cm-thanks-text>We have your message. A member of the team will reply within one business day.</p>
-      <button type="button" class="cm__send" data-cm-close><span>Close</span></button>
+      <span class="cm__done-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M5 12.5l4.5 4.5L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+      <h2 class="cm__done-title" tabindex="-1">Thanks, <span data-cm-first>there</span>.</h2>
+      <p class="cm__done-text">We've got your request and we'll reply within one business day.</p>
+      <button type="button" class="cm__ghost" data-cm-again>Send another request</button>
     </div>
   </div>
 </div>`;
 
-  let root, card, form, err, sendBtn, opener = null, openedAt = 0;
+  let root, card, form, err, sendBtn, opener = null, openedAt = 0, fromQuiz = false;
   const $ = (s, c) => (c || root).querySelector(s);
   const $$ = (s, c) => [...(c || root).querySelectorAll(s)];
 
@@ -111,6 +113,9 @@
       else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
     });
     $$('input, select', form).forEach((i) => i.addEventListener(i.tagName === 'SELECT' ? 'change' : 'input', () => setFieldError(i, '')));
+    // leaving a required field empty (or with an email that looks wrong) turns it red straight away
+    $$('input[required]', form).forEach((i) => i.addEventListener('blur', () => { if (root.classList.contains('is-open')) setFieldError(i, fieldMessage(i)); }));
+    $('[data-cm-again]').addEventListener('click', () => { resetForm(); $('[data-cm-form-view]').hidden = false; $('[data-cm-thanks]').hidden = true; $('input[name=name]', form).focus(); });
     form.addEventListener('submit', onSubmit);
     $$('select', form).forEach(enhance);
   };
@@ -137,12 +142,11 @@
       if (o.dataset.desc) { const d = document.createElement('span'); d.className = 'cm__opt-desc'; d.textContent = o.dataset.desc; li.appendChild(d); }
       li.insertAdjacentHTML('beforeend', '<svg class="cm__opt-check" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>');
       li.addEventListener('mousedown', (e) => e.preventDefault());
-      li.addEventListener('click', () => { choose(i); if (!multi) hide(); btn.focus(); });
+      li.addEventListener('click', () => { if (choose(i)) hide(); btn.focus(); });
       li.addEventListener('mousemove', () => setActive(i));
       list.appendChild(li); return li;
     });
-    const flabel = document.createElement('span'); flabel.className = 'cm__flabel'; flabel.textContent = ph; flabel.setAttribute('aria-hidden', 'true');
-    sel.before(btn); btn.before(flabel); field.appendChild(list);
+    sel.before(btn); field.appendChild(list);
     list.addEventListener('click', (e) => e.preventDefault());   // the field is a <label>: without this, a click in the list re-activates the trigger
     let active = -1;
     const isOpen = () => field.classList.contains('is-open');
@@ -157,43 +161,50 @@
     const picked = () => [...sel.options].slice(1).map((o, n) => (o.selected ? n : -1)).filter((n) => n >= 0);
     const sync = () => {
       const on = picked(), names = on.map((n) => opts[n].dataset.title).join(', ');
-      btn.textContent = on.length ? names : ph;
+      btn.innerHTML = '';
+      if (on.length) { const l = document.createElement('span'); l.className = 'cm__tl'; l.textContent = ph; btn.appendChild(l); }
+      const v = document.createElement('span'); v.className = 'cm__tv'; v.textContent = on.length ? names : ph; btn.appendChild(v);
       btn.classList.toggle('is-empty', !on.length);
       field.classList.toggle('has-value', !!on.length);
       btn.setAttribute('aria-label', `${ph} ${on.length ? names : 'not selected'}`);
       opts.forEach((li, n) => li.setAttribute('aria-selected', String(on.includes(n))));
       if (multi) {
-        const full = on.length >= max;
-        opts.forEach((li, n) => li.classList.toggle('is-disabled', full && !on.includes(n) && !sel.options[n + 1].hasAttribute('data-exclusive')));
+        const full = on.length >= max, hasEx = on.some((n) => sel.options[n + 1].hasAttribute('data-exclusive'));
+        opts.forEach((li, n) => {
+          const ex = sel.options[n + 1].hasAttribute('data-exclusive'), dis = !on.includes(n) && !ex && (hasEx || full);
+          li.classList.toggle('is-disabled', dis); li.setAttribute('aria-disabled', String(dis));
+        });
       }
     };
+    // returns true when the list should close: a single pick, "not sure", or the third pick
     const choose = (i) => {
       const o = sel.options[i + 1];
-      if (!multi) sel.selectedIndex = i + 1;
-      else if (o.selected) o.selected = false;
-      else {
-        if (o.hasAttribute('data-exclusive')) [...sel.options].forEach((x) => { x.selected = false; });
-        else {
-          [...sel.options].forEach((x) => { if (x.hasAttribute('data-exclusive')) x.selected = false; });
-          if (picked().length >= max) return;   // already 3
-        }
-        o.selected = true;
-      }
+      if (!multi) { sel.selectedIndex = i + 1; sel.dispatchEvent(new Event('change', { bubbles: true })); sync(); return true; }
+      if (opts[i].classList.contains('is-disabled')) return false;
+      let closeIt = false;
+      if (o.selected) o.selected = false;
+      else if (o.hasAttribute('data-exclusive')) { [...sel.options].forEach((x) => { x.selected = false; }); o.selected = true; closeIt = true; }
+      else { o.selected = true; closeIt = picked().length >= max; }
       sel.dispatchEvent(new Event('change', { bubbles: true })); sync();
+      return closeIt;
     };
     const show = () => {
       $$('.cm__field.is-open', form).forEach((f) => f !== field && f.__cmHide && f.__cmHide());
       field.classList.add('is-open'); btn.setAttribute('aria-expanded', 'true');
       const on = picked(); setActive(on.length ? on[0] : 0);
     };
-    const hide = () => { field.classList.remove('is-open'); btn.setAttribute('aria-expanded', 'false'); btn.removeAttribute('aria-activedescendant'); };
-    field.__cmHide = hide;
+    const hide = () => {
+      if (!isOpen()) return;
+      field.classList.remove('is-open'); btn.setAttribute('aria-expanded', 'false'); btn.removeAttribute('aria-activedescendant');
+      if (!picked().length) setFieldError(sel, field.dataset.error);
+    };
+    field.__cmHide = hide; field.__cmSync = sync;
     btn.addEventListener('click', (e) => { e.preventDefault(); isOpen() ? hide() : show(); });
     btn.addEventListener('keydown', (e) => {
       const k = e.key;
       if (k === 'ArrowDown' || k === 'ArrowUp') { e.preventDefault(); if (!isOpen()) show(); else setActive(active + (k === 'ArrowDown' ? 1 : -1)); }
       else if (k === 'Home' || k === 'End') { if (isOpen()) { e.preventDefault(); setActive(k === 'Home' ? 0 : opts.length - 1); } }
-      else if (k === 'Enter' || k === ' ') { e.preventDefault(); if (isOpen()) { choose(active); if (!multi) hide(); } else show(); }
+      else if (k === 'Enter' || k === ' ') { e.preventDefault(); if (isOpen()) { if (choose(active)) hide(); } else show(); }
       else if (k === 'Escape' && isOpen()) { e.preventDefault(); e.stopPropagation(); hide(); }
       else if (k === 'Tab' && isOpen()) hide();
       else if (k.length === 1 && /\S/.test(k)) {
@@ -220,12 +231,22 @@
     else { target.removeAttribute('aria-invalid'); target.removeAttribute('aria-describedby'); }
   }
 
+  function fieldMessage(i) {
+    const v = i.value.trim(), field = i.closest('.cm__field');
+    return (!v ? field.dataset.error : (i.type === 'email' && !emailRe.test(v) ? field.dataset.errorFormat : '')) || '';
+  }
+
+  function resetForm() {
+    form.reset();
+    $$('[required]', form).forEach((i) => setFieldError(i, ''));
+    $('[data-cm-banner]').hidden = true; fromQuiz = false;
+  }
+
   const validate = () => {
     let first = null;
     $$('[required]', form).forEach((i) => {
-      const v = i.value.trim(), field = i.closest('.cm__field');
-      const msg = !v ? field.dataset.error : (i.type === 'email' && !emailRe.test(v) ? field.dataset.errorFormat : '');
-      setFieldError(i, msg || '');
+      const msg = fieldMessage(i);
+      setFieldError(i, msg);
       if (msg && !first) first = i;
     });
     showError('');
@@ -239,12 +260,11 @@
     if (!validate()) return;
     const f = form.elements;
     const first = f.name.value.trim().split(/\s+/)[0] || 'there';
-    const done = (text) => {
+    const done = () => {
       $('[data-cm-first]').textContent = first;
-      if (text) $('[data-cm-thanks-text]').textContent = text;
       $('[data-cm-form-view]').hidden = true;
       $('[data-cm-thanks]').hidden = false;
-      $('[data-cm-thanks] .cm__title').focus();
+      $('[data-cm-thanks] .cm__done-title').focus();
     };
     if (f._honey.value || Date.now() - openedAt < 1500) { done(); return; }   // bot: looks like success, nothing is sent
     sendBtn.classList.add('is-sending'); sendBtn.disabled = true; sendBtn.querySelector('span').textContent = 'Sending...';
@@ -254,7 +274,9 @@
         signal: ctl.signal, method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
         body: JSON.stringify({
           Name: f.name.value.trim(), Email: f.email.value.trim(), Company: f.company.value.trim(), 'Company size': f.size.value, Industry: f.industry.value,
-          Needs: [...f.need.selectedOptions].map((o) => o.value).join(', '), Message: f.message.value.trim() || '-', Page: location.href, 'Sent at': new Date().toString(),
+          Needs: [...f.need.selectedOptions].map((o) => o.value).join(', '), Message: f.message.value.trim() || '-',
+          Source: fromQuiz ? 'Fit quiz' : 'Contact form', 'Needs review': f.size.value === 'Under 50' || f.size.value === '500+' ? 'Yes (size outside 50–500)' : 'No',
+          Page: location.href, 'Sent at': new Date().toString(),
           _subject: `New message from ${f.name.value.trim()} - Positiv website`, _replyto: f.email.value.trim(), _template: 'table', _captcha: 'false'
         })
       });
@@ -262,7 +284,7 @@
       const data = await res.json().catch(() => ({}));
       if (!res.ok || String(data.success) === 'false') throw new Error(data.message || `HTTP ${res.status}`);
       remember();
-      done(`We have your message. We will reply to ${f.email.value.trim()} within one business day.`);
+      done();
     } catch (x) {
       console.warn('contact pop-up:', x);
       showError('We could not send your message just now. Please try again in a few minutes, or write to hello@positiv.studio.');
@@ -271,11 +293,26 @@
     }
   }
 
+  /* answers = { industry, size, need } using the option names, e.g. { industry: 'Channel partner', size: '50–200', need: ['Sales assets', 'Brand'] } */
+  function prefill(answers) {
+    resetForm();
+    ['industry', 'size', 'need'].forEach((name) => {
+      const sel = form.elements[name], want = [].concat(answers[name] || []);
+      if (!sel || !want.length) return;
+      [...sel.options].forEach((o, n) => { if (n > 0) o.selected = want.includes(o.value); });
+      sel.closest('.cm__field').__cmSync();
+    });
+    fromQuiz = true; $('[data-cm-banner]').hidden = false;
+  }
+
   function open(from) {
     build();
-    opener = from || document.activeElement;
+    const answers = from && !(from instanceof Element) ? from : null;
+    opener = (answers ? null : from) || document.activeElement;
     openedAt = Date.now();
-    if (!$('[data-cm-thanks]').hidden) { form.reset(); $$('[required]', form).forEach((i) => setFieldError(i, '')); $('[data-cm-thanks]').hidden = true; $('[data-cm-form-view]').hidden = false; }
+    if (!$('[data-cm-thanks]').hidden) { resetForm(); $('[data-cm-thanks]').hidden = true; $('[data-cm-form-view]').hidden = false; }
+    else $$('[required]', form).forEach((i) => setFieldError(i, ''));   // start clean (errors from closing with empty fields)
+    if (answers) prefill(answers);
     showError(''); sendBtn.disabled = false; applyLimit();
     document.documentElement.classList.add('cm-lock');
     root.setAttribute('aria-hidden', 'false');
@@ -304,7 +341,7 @@
     open(a);
   }, true);
 
-  window.PositivContact = { open: () => open(), close };
+  window.PositivContact = { open: (answers) => open(answers || null), close };
   if (location.hash === '#contact') {
     if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', () => open()); else open();
   }

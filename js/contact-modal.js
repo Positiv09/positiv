@@ -87,7 +87,6 @@
   const showError = (msg) => { err.textContent = msg || ''; err.hidden = !msg; };
   const applyLimit = () => {
     const left = remaining();
-    sendBtn.disabled = !!left;
     if (left) showError(`Your message has already been sent. To keep our inbox free of spam, one message can be sent per hour from this device. You can write to us again in ${minutes(left)}.`);
     return left;
   };
@@ -256,8 +255,8 @@
 
   async function onSubmit(e) {
     e.preventDefault();
+    if (!validate()) return;   // missing fields always turn red on Send, before anything else
     if (applyLimit()) return;
-    if (!validate()) return;
     const f = form.elements;
     const first = f.name.value.trim().split(/\s+/)[0] || 'there';
     const done = () => {
@@ -313,7 +312,7 @@
     if (!$('[data-cm-thanks]').hidden) { resetForm(); $('[data-cm-thanks]').hidden = true; $('[data-cm-form-view]').hidden = false; }
     else $$('[required]', form).forEach((i) => setFieldError(i, ''));   // start clean (errors from closing with empty fields)
     if (answers) prefill(answers);
-    showError(''); sendBtn.disabled = false; applyLimit();
+    showError(''); sendBtn.disabled = false;   // the hourly note shows only when someone presses Send
     document.documentElement.classList.add('cm-lock');
     root.setAttribute('aria-hidden', 'false');
     root.scrollTop = 0;

@@ -1,6 +1,6 @@
 /* 404 page, after the Duna reference (Mobbin): a full-bleed brand-colour page with a huge faint "404" filling the background,
    and a centred stack on top of it: brand mark, "Page not found." headline, two lines of copy, a pill button home.
-   Positiv branding: ink background, lime bolt mark, Optima Nova headline, Poppins copy, lime pill.
+   Positiv branding: ink background, lime bolt mark, Optima Nova headline, Poppins copy, lime pill. Matched to the Figma frame "404 — Page not found" (1440 x 900).
    Sizes are taken from the 1920px reference and scale with the viewport. */
 .is-error { background: #211d1d; }
 .e4 {
@@ -10,15 +10,13 @@
 }
 
 /* the background "404": wider than the window and cropped at both sides, sitting slightly above centre */
-.e4__bg { position: absolute; left: 50%; top: 55.5%; z-index: -1; transform: translate(-50%, -50%);
+.e4__bg { position: absolute; left: 50%; top: 61%; z-index: -1; transform: translate(-50%, -50%);
   font-family: var(--f-display, "Optima Nova", Optima, serif); font-weight: 400; font-size: 60vw; line-height: .78; letter-spacing: -.02em;
   white-space: nowrap; user-select: none; pointer-events: none; }
-/* faint digits cut into horizontal bands of two tones, as in the reference */
+/* faint digits: one soft paper-tone gradient, strongest at the top and bottom, nearly gone through the middle (Figma fill) */
 .e4__digits { padding: .16em 0; }   /* room above and below the line box: background-clip text only paints inside the box */
-.e4__digits { display: block; color: transparent; -webkit-text-fill-color: transparent; -webkit-background-clip: text; background-clip: text;
-  background: linear-gradient(to bottom,
-    rgb(255 255 255 / .045) 0 13%, rgb(255 255 255 / .065) 13% 41%, rgb(255 255 255 / .045) 41% 58%,
-    rgb(255 255 255 / .07) 58% 69%, rgb(255 255 255 / .05) 69% 80%, rgb(255 255 255 / .065) 80% 86%, rgb(255 255 255 / .045) 86% 100%);
+.e4__digits { display: block; color: transparent; -webkit-text-fill-color: transparent;
+  background: linear-gradient(to bottom, rgb(242 242 237 / .04) -5%, rgb(242 242 237 / .01) 32.3%, rgb(242 242 237 / .01) 43.4%, rgb(242 242 237 / .04) 96.8%);
   -webkit-background-clip: text; background-clip: text; }
 
 
@@ -32,9 +30,9 @@
 
 /* lime pill; Positiv hover: a paper fill grows from the bottom */
 .e4__btn { position: relative; display: inline-flex; align-items: center; justify-content: center; overflow: hidden; isolation: isolate;
-  height: clamp(48px, 2.92vw, 56px); margin-top: clamp(32px, 2.9vw, 56px); padding: 0 clamp(24px, 1.6vw, 31px); border-radius: 999px;
+  height: clamp(50px, 3.47vw, 62px); margin-top: clamp(32px, 2.9vw, 56px); padding: 0 clamp(24px, 1.667vw, 30px); border-radius: 999px;
   background: var(--lime); color: #211d1d; text-decoration: none;
-  font-family: var(--f-body, "Poppins", sans-serif); font-size: clamp(16px, 1.25vw, 24px); line-height: 1;
+  font-family: var(--f-body, "Poppins", sans-serif); font-size: clamp(16px, 1.111vw, 21px); line-height: 1;
   transition: transform .4s cubic-bezier(.16, 1, .3, 1); }
 .e4__btn::before { content: ""; position: absolute; z-index: -1; left: 50%; top: 100%; width: 150%; aspect-ratio: 1; border-radius: 50%; background: var(--paper);
   transform: translate(-50%, -50%) scale(0); transition: transform .7s cubic-bezier(.16, 1, .3, 1); }

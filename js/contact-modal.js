@@ -42,7 +42,7 @@
         <input class="cm__honey" type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true">
         <p class="cm__error" role="alert" hidden></p>
         <div class="cm__actions">
-          <button type="submit" class="cm__send">Send</button>
+          <button type="submit" class="cm__send"><span>Send message</span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
           <p class="cm__note">By sending this you agree to be contacted about your request.</p>
         </div>
       </form>
@@ -50,7 +50,7 @@
     <div class="cm__thanks" data-cm-thanks hidden>
       <h2 class="cm__title" tabindex="-1">Thanks, <span data-cm-first>there</span>.</h2>
       <p class="cm__lead" data-cm-thanks-text>We have your message. A member of the team will reply within one business day.</p>
-      <button type="button" class="cm__send" data-cm-close>Close</button>
+      <button type="button" class="cm__send" data-cm-close><span>Close</span></button>
     </div>
   </div>
 </div>`;
@@ -127,6 +127,7 @@
       list.appendChild(li); return li;
     });
     sel.before(btn); field.appendChild(list);
+    list.addEventListener('click', (e) => e.preventDefault());   // the field is a <label>: without this, a click in the list re-activates the trigger
     let active = -1;
     const isOpen = () => field.classList.contains('is-open');
     const setActive = (i) => {
@@ -197,7 +198,7 @@
       $('[data-cm-thanks] .cm__title').focus();
     };
     if (f._honey.value || Date.now() - openedAt < 1500) { done(); return; }   // bot: looks like success, nothing is sent
-    sendBtn.classList.add('is-sending'); sendBtn.disabled = true; sendBtn.textContent = 'Sending...';
+    sendBtn.classList.add('is-sending'); sendBtn.disabled = true; sendBtn.querySelector('span').textContent = 'Sending...';
     try {
       const ctl = new AbortController(), timer = setTimeout(() => ctl.abort(), 30000);
       const res = await fetch(ENDPOINT, {
@@ -217,7 +218,7 @@
       console.warn('contact pop-up:', x);
       showError('We could not send your message just now. Please try again in a few minutes, or write to hello@positiv.studio.');
     } finally {
-      sendBtn.classList.remove('is-sending'); sendBtn.textContent = 'Send'; sendBtn.disabled = false;
+      sendBtn.classList.remove('is-sending'); sendBtn.querySelector('span').textContent = 'Send message'; sendBtn.disabled = false;
     }
   }
 

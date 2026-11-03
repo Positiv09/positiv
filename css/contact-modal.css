@@ -11,7 +11,7 @@
 .cm *, .cm *::before, .cm *::after { box-sizing: border-box; }
 html.cm-lock, html.cm-lock body { overflow: hidden !important; }
 
-.cm__card { position: relative; width: 100%; max-width: 760px; margin: auto; padding: clamp(28px, 6vw, 72px) clamp(20px, 9vw, 100px); border-radius: 24px; background: var(--card);
+.cm__card { position: relative; width: 100%; max-width: 760px; margin: auto; padding: clamp(28px, 4vw, 48px) clamp(20px, 7vw, 72px); border-radius: 24px; background: var(--card);
   box-shadow: 0 40px 80px -30px rgb(0 0 0 / .55); transform: translate3d(0, 16px, 0) scale(.985); transition: transform .6s cubic-bezier(.16, 1, .3, 1); }
 .cm.is-open .cm__card { transform: none; }
 .cm__card:focus { outline: none; }
@@ -22,8 +22,8 @@ html.cm-lock, html.cm-lock body { overflow: hidden !important; }
 .cm__close:hover { background: var(--card); color: var(--ink); }
 
 /* heading */
-.cm__head { display: flex; flex-direction: column; align-items: center; text-align: center; margin-bottom: 32px; }
-.cm__title { margin: 0 0 14px; font-family: var(--f-display, "Optima Nova", "Optima", Georgia, serif); font-weight: 400; font-size: clamp(40px, 6vw, 60px); line-height: 1.05; letter-spacing: -.02em; color: var(--ink); }
+.cm__head { display: flex; flex-direction: column; align-items: center; text-align: center; margin-bottom: 28px; }
+.cm__title { margin: 0 0 12px; font-family: var(--f-display, "Optima Nova", "Optima", Georgia, serif); font-weight: 400; font-size: clamp(40px, 5vw, 52px); line-height: 1.05; letter-spacing: -.02em; color: var(--ink); }
 .cm__mail { font-size: 16px; color: var(--ink); text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px; }
 .cm__mail:hover { color: var(--ink); text-decoration-color: var(--faint); }
 
@@ -33,7 +33,9 @@ html.cm-lock, html.cm-lock body { overflow: hidden !important; }
 .cm__banner[hidden] { display: none; }
 
 /* fields: one underlined row each, 66px tall */
-.cm__form { display: grid; }
+/* two columns: name + email, company + size; industry, needs and the message take the full width */
+.cm__form { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); column-gap: 32px; align-items: start; }
+.cm__field--full, .cm__form > :not(.cm__field) { grid-column: 1 / -1; }
 .cm__field { position: relative; display: grid; min-width: 0; }
 .cm__line { display: block; width: 100%; min-height: 66px; margin: 0; padding: 18px 2px; border: 0; border-bottom: 1px solid var(--line); border-radius: 0;
   background: transparent; font: 400 17px/1.5 "Poppins", system-ui, sans-serif; color: var(--ink); transition: border-color .2s ease, box-shadow .2s ease; }
@@ -55,8 +57,10 @@ html.cm-lock, html.cm-lock body { overflow: hidden !important; }
 
 .cm__list { position: absolute; left: 0; right: 0; top: 74px; z-index: 5; max-height: min(480px, 70vh); margin: 0; padding: 8px; list-style: none; overflow-y: auto; overscroll-behavior: contain;
   background: var(--panel); border-radius: 16px; box-shadow: 0 18px 50px rgb(33 29 29 / .18), 0 0 0 1px var(--line);
-  opacity: 0; visibility: hidden; transform: translate3d(0, -4px, 0); transition: opacity .18s ease, transform .18s ease, visibility 0s linear .18s; }
-.cm__field.is-open .cm__list { opacity: 1; visibility: visible; transform: none; transition: opacity .18s ease, transform .18s ease, visibility 0s; }
+  display: none; }
+/* closed lists take no space at all (a hidden but present list would make the window scroll) */
+.cm__field.is-open .cm__list { display: block; animation: cm-list-in .18s ease both; }
+@keyframes cm-list-in { from { opacity: 0; transform: translate3d(0, -4px, 0); } to { opacity: 1; transform: none; } }
 .cm__opt-hint { padding: 6px 12px 8px; font-size: 12px; line-height: 1.4; color: var(--faint); cursor: default; }
 .cm__opt { position: relative; display: block; padding: 12px 44px 12px 12px; border-radius: 12px; cursor: pointer; transition: background-color .15s ease; }
 .cm__opt:hover, .cm__opt.is-active, .cm__opt[aria-selected="true"] { background: var(--hover); }
@@ -75,13 +79,13 @@ html.cm-lock, html.cm-lock body { overflow: hidden !important; }
 .cm__ferr { display: block; margin: 6px 0 0; font-size: 13px; line-height: 1.45; color: var(--error); }
 .cm__ferr[hidden] { display: none; }
 
-.cm__box { display: block; width: 100%; min-height: 140px; margin: 36px 0 0; padding: 16px 18px; border: 1px solid var(--ink); border-radius: 14px; resize: vertical;
+.cm__box { display: block; width: 100%; height: 96px; min-height: 72px; margin: 24px 0 0; padding: 16px 18px; border: 1px solid var(--ink); border-radius: 14px; resize: vertical;
   background: transparent; font: 400 16px/1.5 "Poppins", system-ui, sans-serif; color: var(--ink); transition: box-shadow .2s ease; }
 .cm__box:focus { outline: none; box-shadow: 0 0 0 1px var(--ink); }
 
 .cm__error { margin: 16px 0 0; font-size: 14px; line-height: 1.5; color: var(--error); }
 .cm__error[hidden] { display: none; }
-.cm__actions { display: flex; align-items: center; justify-content: space-between; gap: 16px 24px; flex-wrap: wrap; margin-top: 28px; }
+.cm__actions { display: flex; align-items: center; justify-content: space-between; gap: 16px 24px; flex-wrap: wrap; margin-top: 24px; }
 
 /* Positiv button: ink pill, lime label, a lime circle grows from the bottom on hover */
 .cm__send { position: relative; flex: none; display: inline-flex; align-items: center; justify-content: center; overflow: hidden; isolation: isolate;
@@ -114,6 +118,7 @@ html.cm-lock, html.cm-lock body { overflow: hidden !important; }
 @media (max-width: 767px) {
   .cm { padding: 76px 16px 24px; }
   .cm__card { border-radius: 18px; }
+  .cm__form { grid-template-columns: minmax(0, 1fr); }
   .cm__close { top: 16px; right: 16px; }
   .cm__send { width: 100%; }
 }

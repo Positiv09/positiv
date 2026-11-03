@@ -26,7 +26,12 @@
         <label class="cm__field" data-error="Add your name so we know who to reply to."><span class="cm__sr">Full name</span><input class="cm__line" name="name" type="text" autocomplete="name" placeholder="Full name" required></label>
         <label class="cm__field" data-error="Add your work email so we can reply." data-error-format="That email doesn't look right. Check it and try again."><span class="cm__sr">Work email</span><input class="cm__line" name="email" type="email" autocomplete="email" placeholder="Work email" required></label>
         <label class="cm__field" data-error="Add your company name."><span class="cm__sr">Company name</span><input class="cm__line" name="company" type="text" autocomplete="organization" placeholder="Company name" required></label>
-        <label class="cm__field" data-error="Pick the industry closest to yours."><span class="cm__sr">Industry</span>
+        <label class="cm__field" data-error="Pick your company size."><span class="cm__sr">Company size</span>
+          <select class="cm__line cm__select" name="size" required>
+            <option value="" disabled selected>Company size</option>
+            <option>Under 50</option><option>50–200</option><option>200–500</option><option>500+</option>
+          </select>${chev}</label>
+        <label class="cm__field cm__field--full" data-error="Pick the industry closest to yours."><span class="cm__sr">Industry</span>
           <select class="cm__line cm__select" name="industry" required>
             <option value="" disabled selected>Industry</option>
             <option data-desc="Salesforce, NetSuite, HubSpot, ServiceNow">Channel partner</option>
@@ -34,12 +39,7 @@
             <option data-desc="Consulting, advisory and financial services firms">Finance &amp; Consulting</option>
             <option>Other</option>
           </select>${chev}</label>
-        <label class="cm__field" data-error="Pick your company size."><span class="cm__sr">Company size</span>
-          <select class="cm__line cm__select" name="size" required>
-            <option value="" disabled selected>Company size</option>
-            <option>Under 50</option><option>50–200</option><option>200–500</option><option>500+</option>
-          </select>${chev}</label>
-        <label class="cm__field" data-error="Pick at least one, or &quot;I'm not sure yet&quot;."><span class="cm__sr">What do you need?</span>
+        <label class="cm__field cm__field--full" data-error="Pick at least one, or &quot;I'm not sure yet&quot;."><span class="cm__sr">What do you need?</span>
           <select class="cm__line cm__select" name="need" multiple required data-max="3" data-hint="Pick up to 3.">
             <option value="" disabled>What do you need?</option>
             <option data-desc="It doesn't reflect how good we actually are">Brand</option>
@@ -48,7 +48,7 @@
             <option data-desc="Campaigns and content are inconsistent or slow">Marketing</option>
             <option data-desc="Something's off and we'd like help finding what" data-exclusive data-divider>I'm not sure yet</option>
           </select>${chev}</label>
-        <label class="cm__field"><span class="cm__sr">Your message</span><textarea class="cm__box" name="message" rows="5" placeholder="Anything else we should know? (optional)"></textarea></label>
+        <label class="cm__field cm__field--full"><span class="cm__sr">Your message</span><textarea class="cm__box" name="message" rows="5" placeholder="Anything else we should know? (optional)"></textarea></label>
         <input class="cm__honey" type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true">
         <p class="cm__error" role="alert" hidden></p>
         <div class="cm__actions">

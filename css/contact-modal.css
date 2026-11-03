@@ -20,12 +20,12 @@ html.cm-lock, html.cm-lock body { overflow: hidden !important; }
 
 .cm__head { display: flex; flex-direction: column; align-items: center; text-align: center; }
 .cm__mark { display: block; width: 62px; height: 70px; }
-.cm__title { margin: -2px 0 0; font-family: var(--f-display, "Optima Nova", "Optima", Georgia, serif); font-weight: 400; font-size: 48px; line-height: 60px; letter-spacing: 0; color: #211d1d; }
+.cm__title { margin: 0; font-family: var(--f-display, "Optima Nova", "Optima", Georgia, serif); font-weight: 400; font-size: 48px; line-height: 60px; letter-spacing: 0; color: #211d1d; }
 .cm__lead { margin: 14px 0 0; max-width: 460px; font-size: 16px; line-height: 24px; color: #6f6b66; }
 .cm__mail { margin-top: 14px; font-size: 16px; line-height: 26px; color: #211d1d; text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
 .cm__mail:hover { color: #211d1d; text-decoration-color: rgb(33 29 29 / .45); }
 
-.cm__form { display: flex; flex-direction: column; gap: 18px; margin-top: 14px; }
+.cm__form { display: flex; flex-direction: column; gap: 18px; margin-top: 32px; }
 .cm__field { position: relative; display: block; }
 .cm__line { display: block; width: 100%; height: 48px; margin: 0; padding: 0 2px; border: 0; border-bottom: .5px solid rgb(142 142 142 / .8); border-radius: 0;
   background: transparent; font: 400 16px/26px "Poppins", system-ui, sans-serif; color: #211d1d; transition: border-color .2s ease, box-shadow .2s ease; }
@@ -52,12 +52,18 @@ html.cm-lock, html.cm-lock body { overflow: hidden !important; }
 .cm__opt-check { position: absolute; right: 24px; top: 50%; width: 18px; height: 18px; margin-top: -9px; color: #5915ff; opacity: 0; transition: opacity .15s ease; }
 .cm__opt[aria-selected="true"] .cm__opt-check { opacity: 1; }
 /* small label above a dropdown once it has a value */
-.cm__flabel { position: absolute; left: 2px; top: -10px; font-size: 12px; line-height: 16px; color: #8e8e8e; opacity: 0; transform: translateY(4px); pointer-events: none; transition: opacity .2s ease, transform .2s ease; }
+.cm__flabel { position: absolute; left: 2px; top: 8px; font-size: 12px; line-height: 16px; color: #8e8e8e; opacity: 0; transform: translateY(4px); pointer-events: none; transition: opacity .2s ease, transform .2s ease; }
 .cm__field.has-value .cm__flabel { opacity: 1; transform: none; }
+.cm__field.has-value .cm__trigger { height: 66px; padding-top: 22px; }
+.cm__field.has-value .cm__chev { top: 26px; }
 .cm__box { display: block; width: 100%; height: 140px; min-height: 100px; margin: 22px 0 0; padding: 14px 16px; border: 1px solid #211d1d; border-radius: 12px; resize: vertical;
   background: transparent; font: 400 16px/26px "Poppins", system-ui, sans-serif; color: #211d1d; transition: box-shadow .2s ease; }
 .cm__box:focus { outline: none; box-shadow: 0 0 0 3px rgb(33 29 29 / .1); }
-.cm__field.is-invalid .cm__line { border-bottom-color: #c23b22; box-shadow: 0 .5px 0 #c23b22; }
+/* a field that needs fixing: red placeholder, a 2px red line, and its message underneath */
+.cm__field.is-invalid .cm__line { border-bottom: 2px solid #c23b22; box-shadow: none; }
+.cm__field.is-invalid .cm__line::placeholder, .cm__field.is-invalid .cm__trigger.is-empty { color: #c23b22; }
+.cm__ferr { display: block; margin-top: 8px; font-size: 14px; line-height: 20px; color: #c23b22; }
+.cm__ferr[hidden] { display: none; }
 
 .cm__error { margin: 0; font-size: 14px; line-height: 22px; color: #c23b22; }
 .cm__error[hidden] { display: none; }

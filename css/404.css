@@ -1,7 +1,6 @@
 /* 404 page, after the Duna reference (Mobbin): a full-bleed brand-colour page with a huge faint "404" filling the background,
    and a centred stack on top of it: brand mark, "Page not found." headline, two lines of copy, a pill button home.
    Positiv branding: ink background, lime bolt mark, Optima Nova headline, Poppins copy, lime pill.
-   The faint digits carry the lime light that follows the cursor (js/404.js); a slow loop plays until the mouse moves.
    Sizes are taken from the 1920px reference and scale with the viewport. */
 .is-error { background: #211d1d; }
 .e4 {
@@ -15,34 +14,13 @@
   font-family: var(--f-display, "Optima Nova", Optima, serif); font-weight: 400; font-size: 60vw; line-height: .78; letter-spacing: -.02em;
   white-space: nowrap; user-select: none; pointer-events: none; }
 /* faint digits cut into horizontal bands of two tones, as in the reference */
-.e4__digits, .e4__glow { padding: .16em 0; }   /* room above and below the line box: background-clip text only paints inside the box */
+.e4__digits { padding: .16em 0; }   /* room above and below the line box: background-clip text only paints inside the box */
 .e4__digits { display: block; color: transparent; -webkit-text-fill-color: transparent; -webkit-background-clip: text; background-clip: text;
   background: linear-gradient(to bottom,
     rgb(255 255 255 / .045) 0 13%, rgb(255 255 255 / .065) 13% 41%, rgb(255 255 255 / .045) 41% 58%,
     rgb(255 255 255 / .07) 58% 69%, rgb(255 255 255 / .05) 69% 80%, rgb(255 255 255 / .065) 80% 86%, rgb(255 255 255 / .045) 86% 100%);
   -webkit-background-clip: text; background-clip: text; }
 
-/* the light behind the digits; --gx / --gy move it, opacity fades it between stops (about 10 s per loop) */
-@property --gx { syntax: '<percentage>'; inherits: false; initial-value: 37%; }
-@property --gy { syntax: '<percentage>'; inherits: false; initial-value: 40%; }
-.e4__glow { position: absolute; inset: 0; color: transparent; -webkit-text-fill-color: transparent; --gx: 37%; --gy: 40%;
-  background: radial-gradient(ellipse 16% 40% at var(--gx) var(--gy), rgb(240 248 121 / .42) 0%, rgb(226 232 120 / .2) 32%, rgb(200 206 110 / .06) 62%, transparent 100%) no-repeat;
-  background-size: 100% 100%; -webkit-background-clip: text; background-clip: text;
-  animation: e4-sweep 10s cubic-bezier(.45, 0, .55, 1) infinite; }
-.e4__glow.is-following { animation: none; opacity: 1; transition: opacity .4s ease; }
-@keyframes e4-sweep {
-  0%   { --gx: 22%; --gy: 70%; opacity: 1; }
-  14%  { --gx: 21%; --gy: 82%; opacity: .7; }
-  24%  { --gx: 20%; --gy: 92%; opacity: 0; }
-  30%  { --gx: 38%; --gy: 44%; opacity: 0; }
-  40%  { --gx: 37%; --gy: 40%; opacity: 1; }
-  52%  { --gx: 29%; --gy: 30%; opacity: 1; }
-  66%  { --gx: 60%; --gy: 78%; opacity: 1; }
-  78%  { --gx: 64%; --gy: 55%; opacity: .9; }
-  86%  { --gx: 66%; --gy: 50%; opacity: 0; }
-  92%  { --gx: 22%; --gy: 70%; opacity: 0; }
-  100% { --gx: 22%; --gy: 70%; opacity: 1; }
-}
 
 /* the centred stack */
 .e4__content { display: flex; flex-direction: column; align-items: center; margin-top: .9vw; }
@@ -64,19 +42,10 @@
 .e4__btn:active { transform: scale(.98); }
 .e4__btn:focus-visible { outline: 2px solid var(--lime); outline-offset: 3px; }
 
-/* entrance */
-.e4__content > * { animation: e4-in 1s cubic-bezier(.16, 1, .3, 1) both; }
-.e4__content > :nth-child(2) { animation-delay: .08s; } .e4__content > :nth-child(3) { animation-delay: .16s; } .e4__content > :nth-child(4) { animation-delay: .24s; }
-.e4__bg { animation: e4-bg 1.6s cubic-bezier(.16, 1, .3, 1) both; }
-@keyframes e4-in { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
-@keyframes e4-bg { from { opacity: 0; } to { opacity: 1; } }
 
 @media (max-width: 767px) {
   .e4 { padding: 96px 16px 48px; }
   .e4__bg { font-size: 92vw; }
   .e4__content { margin-top: 0; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .e4__glow, .e4__content > *, .e4__bg { animation: none; }
 }
 .e4 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }

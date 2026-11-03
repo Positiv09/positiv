@@ -47,7 +47,7 @@
         <input class="cm__honey" type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true">
         <p class="cm__error" role="alert" hidden></p>
         <div class="cm__actions">
-          <button type="submit" class="cm__send"><span>Send message</span></button>
+          <button type="submit" class="cm__send"><span>Send</span></button>
         </div>
       </form>
     </div>
@@ -241,7 +241,7 @@
       console.warn('contact pop-up:', x);
       showError('We could not send your message just now. Please try again in a few minutes, or write to hello@positiv.studio.');
     } finally {
-      sendBtn.classList.remove('is-sending'); sendBtn.querySelector('span').textContent = 'Send message'; sendBtn.disabled = false;
+      sendBtn.classList.remove('is-sending'); sendBtn.querySelector('span').textContent = 'Send'; sendBtn.disabled = false;
     }
   }
 

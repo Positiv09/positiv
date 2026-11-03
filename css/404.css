@@ -38,11 +38,27 @@
 /* the digits: a dark base layer plus the same text lit by a soft lime glow clipped to the letters */
 .e4__code { position: relative; margin: 0 0 -2vw; font-family: var(--f-display, "Optima Nova", Optima, serif); font-weight: 400; font-size: 44vw; line-height: .78; letter-spacing: -.04em; white-space: nowrap; user-select: none; }
 .e4__digits { display: block; color: var(--digit); }
-.e4__glow { position: absolute; inset: 0; color: transparent; -webkit-text-fill-color: transparent;
-  background: radial-gradient(ellipse 22% 48% at 37% 33%, rgb(240 248 121 / .78) 0%, rgb(226 232 120 / .42) 32%, rgb(200 206 110 / .12) 62%, transparent 100%) no-repeat;
+/* the light travels behind the digits like the reference: first 4's crossbar, fades, rises inside the 0, crosses to the 0's
+   right edge and the second 4, then returns; about 10 s per loop. --gx / --gy move the light, opacity fades it between stops. */
+@property --gx { syntax: '<percentage>'; inherits: false; initial-value: 37%; }
+@property --gy { syntax: '<percentage>'; inherits: false; initial-value: 40%; }
+.e4__glow { position: absolute; inset: 0; color: transparent; -webkit-text-fill-color: transparent; --gx: 37%; --gy: 40%;
+  background: radial-gradient(ellipse 20% 44% at var(--gx) var(--gy), rgb(240 248 121 / .82) 0%, rgb(226 232 120 / .45) 30%, rgb(200 206 110 / .12) 60%, transparent 100%) no-repeat;
   background-size: 100% 100%; -webkit-background-clip: text; background-clip: text;
-  animation: e4-glow 9s ease-in-out infinite alternate; }
-@keyframes e4-glow { from { background-position: -1.2vw 0; opacity: .92; } to { background-position: 1.2vw .6vw; opacity: 1; } }
+  animation: e4-sweep 10s cubic-bezier(.45, 0, .55, 1) infinite; }
+@keyframes e4-sweep {
+  0%   { --gx: 22%; --gy: 70%; opacity: 1; }
+  14%  { --gx: 21%; --gy: 82%; opacity: .7; }
+  24%  { --gx: 20%; --gy: 92%; opacity: 0; }
+  30%  { --gx: 38%; --gy: 44%; opacity: 0; }
+  40%  { --gx: 37%; --gy: 40%; opacity: 1; }
+  52%  { --gx: 29%; --gy: 30%; opacity: 1; }
+  66%  { --gx: 60%; --gy: 78%; opacity: 1; }
+  78%  { --gx: 64%; --gy: 55%; opacity: .9; }
+  86%  { --gx: 66%; --gy: 50%; opacity: 0; }
+  92%  { --gx: 22%; --gy: 70%; opacity: 0; }
+  100% { --gx: 22%; --gy: 70%; opacity: 1; }
+}
 
 .e4__msg { position: relative; margin: auto 0 0; padding-bottom: 2.6vw; font-family: var(--f-body, "Poppins", sans-serif); font-size: clamp(15px, 1.04vw, 20px); line-height: 1.5; color: var(--text); text-align: center; }
 

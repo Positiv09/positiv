@@ -230,7 +230,7 @@
 .ct-hero--v5::before { content: none; }
 @media (min-width: 992px) { .ct-hero--v5 { height: max(740px, 51.3889vw); } .ct-hero--v5 .ct-hero__inner { padding-top: max(230px, 15.9722vw); } .ct-hero--v5 + .ct-clients { padding-top: 112px; } }
 /* Foundations hero (Figma "Fondation" frame): same treatment, its own photo + overlay baked from the Figma exports */
-.ct-hero--fd { background-image: url("../assets/img/ctaas/hero-fd.jpg"); background-image: image-set(url("../assets/img/ctaas/hero-fd.webp") 1x, url("../assets/img/ctaas/hero-fd@2x.webp") 2x); background-size: cover; background-position: 100% 0; }
+.ct-hero--fd { background-image: url("../assets/img/ctaas/hero-fd.jpg?v=2"); background-image: image-set(url("../assets/img/ctaas/hero-fd.webp?v=2") 1x, url("../assets/img/ctaas/hero-fd@2x.webp?v=2") 2x); background-size: cover; background-position: 100% 0; }
 .ct-hero--fd::before { content: none; }
 .ct-hero--fd .ct-hero__title { max-width: 701px; }
 @media (min-width: 992px) { .ct-hero--fd { height: max(740px, 51.3889vw); } .ct-hero--fd .ct-hero__inner { padding-top: max(230px, 15.9722vw); } .ct-hero--fd + .ct-clients { padding-top: 91px; } }

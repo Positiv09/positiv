@@ -1141,7 +1141,7 @@
     track.addEventListener('click', (e) => e.stopPropagation());
 
     const onKey = (e) => {
-      if (!modal.classList.contains('is-open')) return;
+      if (!modal || !modal.classList.contains('is-open')) return;
       if (e.key === ' ' || e.key === 'k') { e.preventDefault(); toggle(); }
       else if (e.key === 'ArrowRight') { e.preventDefault(); seekBy(5); }
       else if (e.key === 'ArrowLeft') { e.preventDefault(); seekBy(-5); }
@@ -1188,7 +1188,7 @@
     if (phoneMq.matches) phoneFullscreen();                  // still inside the click, so the browser allows it
   }
   function closeModal() {
-    if (!modal.classList.contains('is-open')) return;
+    if (!modal || !modal.classList.contains('is-open')) return;
     autoFs = false;
     if (document.fullscreenElement) document.exitFullscreen?.();
     unlockOrientation();

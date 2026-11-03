@@ -1,0 +1,75 @@
+/* Contact pop-up (Figma: "Contact — pop-up (minimal)").
+   Opened by js/contact-modal.js from any link to contact.html. contact.html stays as the no-JS fallback. */
+.cm { position: fixed; inset: 0; z-index: 100000; display: flex; overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch;
+  padding: 40px 16px; background: rgb(33 29 29 / .6); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
+  opacity: 0; visibility: hidden; transition: opacity .35s cubic-bezier(.16, 1, .3, 1), visibility 0s linear .35s;
+  font-family: "Poppins", system-ui, sans-serif; color: #211d1d; -webkit-font-smoothing: antialiased; }
+.cm.is-open { opacity: 1; visibility: visible; transition: opacity .35s cubic-bezier(.16, 1, .3, 1), visibility 0s; }
+.cm *, .cm *::before, .cm *::after { box-sizing: border-box; }
+html.cm-lock, html.cm-lock body { overflow: hidden !important; }
+
+.cm__card { position: relative; width: 100%; max-width: 680px; margin: auto; padding: 64px; border-radius: 20px; background: #f2f2ed;
+  box-shadow: 0 40px 80px -30px rgb(0 0 0 / .55); transform: translate3d(0, 16px, 0) scale(.985); transition: transform .6s cubic-bezier(.16, 1, .3, 1); }
+.cm.is-open .cm__card { transform: none; }
+.cm__card:focus { outline: none; }
+
+.cm__close { position: fixed; top: 28px; right: 28px; z-index: 1; width: 48px; height: 48px; padding: 0; border-radius: 50%; border: 1px solid #f2f2ed;
+  background: transparent; color: #f2f2ed; display: inline-flex; align-items: center; justify-content: center; cursor: pointer;
+  transition: background-color .25s ease, color .25s ease; }
+.cm__close:hover { background: #f2f2ed; color: #211d1d; }
+
+.cm__head { display: flex; flex-direction: column; align-items: center; text-align: center; }
+.cm__mark { display: block; width: 62px; height: 70px; }
+.cm__title { margin: -2px 0 0; font-family: var(--f-display, "Optima Nova", "Optima", Georgia, serif); font-weight: 400; font-size: 48px; line-height: 60px; letter-spacing: 0; color: #211d1d; }
+.cm__lead { margin: 14px 0 0; max-width: 460px; font-size: 16px; line-height: 24px; color: #6f6b66; }
+.cm__mail { margin-top: 14px; font-size: 16px; line-height: 26px; color: #211d1d; text-decoration: underline; text-underline-offset: 3px; text-decoration-thickness: 1px; }
+.cm__mail:hover { color: #211d1d; text-decoration-color: rgb(33 29 29 / .45); }
+
+.cm__form { display: flex; flex-direction: column; gap: 18px; margin-top: 14px; }
+.cm__field { position: relative; display: block; }
+.cm__line { display: block; width: 100%; height: 48px; margin: 0; padding: 0 2px; border: 0; border-bottom: .5px solid rgb(142 142 142 / .8); border-radius: 0;
+  background: transparent; font: 400 16px/26px "Poppins", system-ui, sans-serif; color: #211d1d; transition: border-color .2s ease, box-shadow .2s ease; }
+.cm__line::placeholder, .cm__box::placeholder { color: #8e8e8e; opacity: 1; }
+.cm__line:hover { border-bottom-color: #6f6b66; }
+.cm__line:focus { outline: none; border-bottom-color: #211d1d; box-shadow: 0 .5px 0 #211d1d; }
+.cm__select { -webkit-appearance: none; appearance: none; padding-right: 26px; cursor: pointer; }
+.cm__select:invalid { color: #8e8e8e; }
+.cm__select option { color: #211d1d; }
+.cm__chev { position: absolute; right: 2px; top: 17px; width: 14px; height: 14px; pointer-events: none; }
+.cm__box { display: block; width: 100%; height: 140px; min-height: 100px; margin: 22px 0 0; padding: 14px 16px; border: 1px solid #211d1d; border-radius: 12px; resize: vertical;
+  background: transparent; font: 400 16px/26px "Poppins", system-ui, sans-serif; color: #211d1d; transition: box-shadow .2s ease; }
+.cm__box:focus { outline: none; box-shadow: 0 0 0 3px rgb(33 29 29 / .1); }
+.cm__field.is-invalid .cm__line { border-bottom-color: #c23b22; box-shadow: 0 .5px 0 #c23b22; }
+
+.cm__error { margin: 0; font-size: 14px; line-height: 22px; color: #c23b22; }
+.cm__error[hidden] { display: none; }
+.cm__actions { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-top: 6px; }
+.cm__send { flex: none; height: 48px; padding: 0 30px; border-radius: 999px; border: 1px solid #211d1d; background: #211d1d; color: #f2f2ed;
+  font: 500 15px/24px "Poppins", system-ui, sans-serif; cursor: pointer; transition: background-color .25s ease, color .25s ease, opacity .2s ease; }
+.cm__send:hover { background: #f0f879; color: #211d1d; }
+.cm__send:disabled { opacity: .45; cursor: not-allowed; background: #211d1d; color: #f2f2ed; }
+.cm__send.is-sending { cursor: progress; }
+.cm__note { margin: 0; font-size: 13px; line-height: 20px; color: #6f6b66; }
+
+.cm__thanks { display: flex; flex-direction: column; align-items: center; text-align: center; }
+.cm__thanks[hidden], .cm__form[hidden] { display: none; }
+.cm__thanks .cm__send { margin-top: 32px; }
+
+.cm__close:focus-visible { outline: 2px solid #f0f879; outline-offset: 3px; }
+.cm__send:focus-visible, .cm__mail:focus-visible { outline: 2px solid #211d1d; outline-offset: 3px; }
+.cm__honey { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
+.cm__sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+@media (max-width: 767px) {
+  .cm { padding: 76px 16px 24px; }
+  .cm__card { padding: 40px 24px 32px; border-radius: 18px; }
+  .cm__mark { width: 50px; height: 56px; }
+  .cm__title { font-size: 40px; line-height: 48px; }
+  .cm__close { top: 16px; right: 16px; }
+  .cm__actions { flex-direction: column; align-items: stretch; }
+  .cm__send { width: 100%; }
+  .cm__note { text-align: center; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cm, .cm__card { transition: none; }
+}

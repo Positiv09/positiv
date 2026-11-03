@@ -41,13 +41,17 @@ html.cm-lock, html.cm-lock body { overflow: hidden !important; }
 .cm__trigger.is-empty { color: #8e8e8e; }
 .cm__field.is-open .cm__trigger { border-bottom-color: #211d1d; box-shadow: 0 .5px 0 #211d1d; }
 .cm__field.is-open .cm__chev { transform: rotate(180deg); }
-.cm__list { position: absolute; left: 0; right: 0; top: calc(100% + 8px); z-index: 5; max-height: 336px; margin: 0; padding: 0; list-style: none; overflow-y: auto; overscroll-behavior: contain;
+.cm__list { position: absolute; left: 0; right: 0; top: calc(100% + 8px); z-index: 5; max-height: min(480px, 70vh); margin: 0; padding: 0; list-style: none; overflow-y: auto; overscroll-behavior: contain;
   background: #fff; border-radius: 12px; box-shadow: 0 0 0 .5px rgb(142 142 142 / .6), 0 24px 48px -20px rgb(33 29 29 / .3);
   opacity: 0; visibility: hidden; transform: translate3d(0, -4px, 0); transition: opacity .18s ease, transform .18s ease, visibility 0s linear .18s; }
 .cm__field.is-open .cm__list { opacity: 1; visibility: visible; transform: none; transition: opacity .18s ease, transform .18s ease, visibility 0s; }
 .cm__opt { position: relative; padding: 11px 56px 11px 24px; font: 400 16px/26px "Poppins", system-ui, sans-serif; color: #211d1d; cursor: pointer; transition: background-color .15s ease; }
 .cm__opt:hover, .cm__opt.is-active { background: #fbfee0; }
 .cm__opt-title, .cm__opt-desc { display: block; }
+.cm__opt-hint { padding: 16px 24px 4px; font-size: 14px; line-height: 22px; color: #8e8e8e; cursor: default; }
+.cm__opt-sep { height: 0; margin: 8px 24px; border-top: 1px solid rgb(33 29 29 / .15); }
+.cm__opt.is-disabled { opacity: .4; cursor: not-allowed; }
+.cm__opt.is-disabled:hover { background: transparent; }
 .cm__opt-desc { margin-top: 2px; font-size: 14px; line-height: 22px; color: #6f6b66; }
 .cm__opt-check { position: absolute; right: 24px; top: 50%; width: 18px; height: 18px; margin-top: -9px; color: #5915ff; opacity: 0; transition: opacity .15s ease; }
 .cm__opt[aria-selected="true"] .cm__opt-check { opacity: 1; }

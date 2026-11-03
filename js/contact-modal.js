@@ -39,9 +39,13 @@
             <option>1–10</option><option>11–50</option><option>51–199</option><option>200–500</option><option>500+</option>
           </select>${chev}</label>
         <label class="cm__field" data-error="Choose what you need."><span class="cm__sr">What do you need?</span>
-          <select class="cm__line cm__select" name="need" required>
-            <option value="" disabled selected>What do you need?</option>
-            <option>Creative Team as a Service</option><option>A Foundation (brand, sales or web)</option><option>Brand</option><option>Sales assets</option><option>Web</option><option>Marketing &amp; campaigns</option><option>Not sure yet</option>
+          <select class="cm__line cm__select" name="need" multiple required data-max="3" data-hint="Pick up to 3.">
+            <option value="" disabled>What do you need?</option>
+            <option data-desc="It doesn't reflect how good we actually are">Brand</option>
+            <option data-desc="Decks and materials that aren't winning deals">Sales assets</option>
+            <option data-desc="It gets visits but doesn't bring in leads">Website</option>
+            <option data-desc="Campaigns and content are inconsistent or slow">Marketing</option>
+            <option data-desc="Something's off and we'd like help finding what" data-exclusive data-divider>I'm not sure yet</option>
           </select>${chev}</label>
         <label class="cm__field"><span class="cm__sr">Your message</span><textarea class="cm__box" name="message" rows="5" placeholder="Anything else we should know? (optional)"></textarea></label>
         <input class="cm__honey" type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true">
@@ -122,14 +126,18 @@
     btn.setAttribute('aria-haspopup', 'listbox'); btn.setAttribute('aria-expanded', 'false'); btn.setAttribute('aria-controls', id);
     const list = document.createElement('ul');
     list.className = 'cm__list'; list.id = id; list.setAttribute('role', 'listbox'); list.setAttribute('aria-label', ph); list.tabIndex = -1;
+    const multi = sel.multiple, max = +sel.dataset.max || Infinity;
+    if (multi) list.setAttribute('aria-multiselectable', 'true');
+    if (sel.dataset.hint) { const h = document.createElement('li'); h.className = 'cm__opt-hint'; h.setAttribute('role', 'presentation'); h.textContent = sel.dataset.hint; list.appendChild(h); }
     const opts = [...sel.options].slice(1).map((o, i) => {
+      if (o.hasAttribute('data-divider')) { const d = document.createElement('li'); d.className = 'cm__opt-sep'; d.setAttribute('role', 'separator'); list.appendChild(d); }
       const li = document.createElement('li');
       li.className = 'cm__opt'; li.id = `${id}-${i}`; li.setAttribute('role', 'option'); li.setAttribute('aria-selected', 'false'); li.dataset.title = o.text;
       const t = document.createElement('span'); t.className = 'cm__opt-title'; t.textContent = o.text; li.appendChild(t);
       if (o.dataset.desc) { const d = document.createElement('span'); d.className = 'cm__opt-desc'; d.textContent = o.dataset.desc; li.appendChild(d); }
       li.insertAdjacentHTML('beforeend', '<svg class="cm__opt-check" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>');
       li.addEventListener('mousedown', (e) => e.preventDefault());
-      li.addEventListener('click', () => { choose(i); hide(); btn.focus(); });
+      li.addEventListener('click', () => { choose(i); if (!multi) hide(); btn.focus(); });
       li.addEventListener('mousemove', () => setActive(i));
       list.appendChild(li); return li;
     });
@@ -146,19 +154,37 @@
       if (li.offsetTop < list.scrollTop) list.scrollTop = li.offsetTop;
       else if (li.offsetTop + li.offsetHeight > list.scrollTop + list.clientHeight) list.scrollTop = li.offsetTop + li.offsetHeight - list.clientHeight;
     };
+    const picked = () => [...sel.options].slice(1).map((o, n) => (o.selected ? n : -1)).filter((n) => n >= 0);
     const sync = () => {
-      const i = sel.selectedIndex - 1;
-      btn.textContent = i >= 0 ? opts[i].dataset.title : ph;
-      btn.classList.toggle('is-empty', i < 0);
-      field.classList.toggle('has-value', i >= 0);
-      btn.setAttribute('aria-label', `${ph} ${i >= 0 ? opts[i].dataset.title : 'not selected'}`);
-      opts.forEach((li, n) => li.setAttribute('aria-selected', String(n === i)));
+      const on = picked(), names = on.map((n) => opts[n].dataset.title).join(', ');
+      btn.textContent = on.length ? names : ph;
+      btn.classList.toggle('is-empty', !on.length);
+      field.classList.toggle('has-value', !!on.length);
+      btn.setAttribute('aria-label', `${ph} ${on.length ? names : 'not selected'}`);
+      opts.forEach((li, n) => li.setAttribute('aria-selected', String(on.includes(n))));
+      if (multi) {
+        const full = on.length >= max;
+        opts.forEach((li, n) => li.classList.toggle('is-disabled', full && !on.includes(n) && !sel.options[n + 1].hasAttribute('data-exclusive')));
+      }
     };
-    const choose = (i) => { sel.selectedIndex = i + 1; sel.dispatchEvent(new Event('change', { bubbles: true })); sync(); };
+    const choose = (i) => {
+      const o = sel.options[i + 1];
+      if (!multi) sel.selectedIndex = i + 1;
+      else if (o.selected) o.selected = false;
+      else {
+        if (o.hasAttribute('data-exclusive')) [...sel.options].forEach((x) => { x.selected = false; });
+        else {
+          [...sel.options].forEach((x) => { if (x.hasAttribute('data-exclusive')) x.selected = false; });
+          if (picked().length >= max) return;   // already 3
+        }
+        o.selected = true;
+      }
+      sel.dispatchEvent(new Event('change', { bubbles: true })); sync();
+    };
     const show = () => {
       $$('.cm__field.is-open', form).forEach((f) => f !== field && f.__cmHide && f.__cmHide());
       field.classList.add('is-open'); btn.setAttribute('aria-expanded', 'true');
-      setActive(sel.selectedIndex > 0 ? sel.selectedIndex - 1 : 0);
+      const on = picked(); setActive(on.length ? on[0] : 0);
     };
     const hide = () => { field.classList.remove('is-open'); btn.setAttribute('aria-expanded', 'false'); btn.removeAttribute('aria-activedescendant'); };
     field.__cmHide = hide;
@@ -167,12 +193,12 @@
       const k = e.key;
       if (k === 'ArrowDown' || k === 'ArrowUp') { e.preventDefault(); if (!isOpen()) show(); else setActive(active + (k === 'ArrowDown' ? 1 : -1)); }
       else if (k === 'Home' || k === 'End') { if (isOpen()) { e.preventDefault(); setActive(k === 'Home' ? 0 : opts.length - 1); } }
-      else if (k === 'Enter' || k === ' ') { e.preventDefault(); if (isOpen()) { choose(active); hide(); } else show(); }
+      else if (k === 'Enter' || k === ' ') { e.preventDefault(); if (isOpen()) { choose(active); if (!multi) hide(); } else show(); }
       else if (k === 'Escape' && isOpen()) { e.preventDefault(); e.stopPropagation(); hide(); }
       else if (k === 'Tab' && isOpen()) hide();
       else if (k.length === 1 && /\S/.test(k)) {
         const n = opts.findIndex((li) => li.dataset.title.toLowerCase().startsWith(k.toLowerCase()));
-        if (n >= 0) { if (isOpen()) setActive(n); else choose(n); }
+        if (n >= 0) { if (isOpen()) setActive(n); else if (!multi) choose(n); }
       }
     });
     btn.addEventListener('blur', () => setTimeout(() => { if (!field.contains(document.activeElement)) hide(); }, 0));
@@ -228,7 +254,7 @@
         signal: ctl.signal, method: 'POST', headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
         body: JSON.stringify({
           Name: f.name.value.trim(), Email: f.email.value.trim(), Company: f.company.value.trim(), 'Company size': f.size.value, Industry: f.industry.value,
-          Needs: f.need.value, Message: f.message.value.trim() || '-', Page: location.href, 'Sent at': new Date().toString(),
+          Needs: [...f.need.selectedOptions].map((o) => o.value).join(', '), Message: f.message.value.trim() || '-', Page: location.href, 'Sent at': new Date().toString(),
           _subject: `New message from ${f.name.value.trim()} - Positiv website`, _replyto: f.email.value.trim(), _template: 'table', _captcha: 'false'
         })
       });

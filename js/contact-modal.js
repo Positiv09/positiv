@@ -96,7 +96,7 @@
     root.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') { e.preventDefault(); close(); return; }
       if (e.key !== 'Tab') return;
-      const f = $$('button, [href], input:not([tabindex="-1"]), select, textarea').filter((el) => !el.disabled && el.offsetParent !== null);
+      const f = $$('button, [href], input:not([tabindex="-1"]), select:not([tabindex="-1"]), textarea').filter((el) => !el.disabled && el.offsetParent !== null);
       if (!f.length) return;
       const first = f[0], last = f[f.length - 1];
       if (e.shiftKey && (document.activeElement === first || document.activeElement === card)) { e.preventDefault(); last.focus(); }
@@ -104,7 +104,72 @@
     });
     $$('input, select', form).forEach((i) => i.addEventListener(i.tagName === 'SELECT' ? 'change' : 'input', () => i.closest('.cm__field').classList.remove('is-invalid')));
     form.addEventListener('submit', onSubmit);
+    $$('select', form).forEach(enhance);
   };
+
+  /* Custom dropdown on top of each native select (the native list cannot be styled).
+     The select stays in the form for the value and validation; the button + listbox are what people use. */
+  let uid = 0;
+  function enhance(sel) {
+    const field = sel.closest('.cm__field'), ph = sel.options[0].text, id = 'cm-list-' + (++uid);
+    sel.classList.add('cm__native'); sel.tabIndex = -1; sel.setAttribute('aria-hidden', 'true');
+    const btn = document.createElement('button');
+    btn.type = 'button'; btn.className = 'cm__line cm__trigger is-empty';
+    btn.setAttribute('aria-haspopup', 'listbox'); btn.setAttribute('aria-expanded', 'false'); btn.setAttribute('aria-controls', id);
+    const list = document.createElement('ul');
+    list.className = 'cm__list'; list.id = id; list.setAttribute('role', 'listbox'); list.setAttribute('aria-label', ph); list.tabIndex = -1;
+    const opts = [...sel.options].slice(1).map((o, i) => {
+      const li = document.createElement('li');
+      li.className = 'cm__opt'; li.id = `${id}-${i}`; li.setAttribute('role', 'option'); li.setAttribute('aria-selected', 'false'); li.textContent = o.text;
+      li.addEventListener('mousedown', (e) => e.preventDefault());
+      li.addEventListener('click', () => { choose(i); hide(); btn.focus(); });
+      li.addEventListener('mousemove', () => setActive(i));
+      list.appendChild(li); return li;
+    });
+    sel.before(btn); field.appendChild(list);
+    let active = -1;
+    const isOpen = () => field.classList.contains('is-open');
+    const setActive = (i) => {
+      active = Math.max(0, Math.min(opts.length - 1, i));
+      opts.forEach((li, n) => li.classList.toggle('is-active', n === active));
+      btn.setAttribute('aria-activedescendant', opts[active].id);
+      const li = opts[active];
+      if (li.offsetTop < list.scrollTop) list.scrollTop = li.offsetTop;
+      else if (li.offsetTop + li.offsetHeight > list.scrollTop + list.clientHeight) list.scrollTop = li.offsetTop + li.offsetHeight - list.clientHeight;
+    };
+    const sync = () => {
+      const i = sel.selectedIndex - 1;
+      btn.textContent = i >= 0 ? opts[i].textContent : ph;
+      btn.classList.toggle('is-empty', i < 0);
+      btn.setAttribute('aria-label', `${ph} ${i >= 0 ? opts[i].textContent : 'not selected'}`);
+      opts.forEach((li, n) => li.setAttribute('aria-selected', String(n === i)));
+    };
+    const choose = (i) => { sel.selectedIndex = i + 1; sel.dispatchEvent(new Event('change', { bubbles: true })); sync(); };
+    const show = () => {
+      $$('.cm__field.is-open', form).forEach((f) => f !== field && f.__cmHide && f.__cmHide());
+      field.classList.add('is-open'); btn.setAttribute('aria-expanded', 'true');
+      setActive(sel.selectedIndex > 0 ? sel.selectedIndex - 1 : 0);
+    };
+    const hide = () => { field.classList.remove('is-open'); btn.setAttribute('aria-expanded', 'false'); btn.removeAttribute('aria-activedescendant'); };
+    field.__cmHide = hide;
+    btn.addEventListener('click', (e) => { e.preventDefault(); isOpen() ? hide() : show(); });
+    btn.addEventListener('keydown', (e) => {
+      const k = e.key;
+      if (k === 'ArrowDown' || k === 'ArrowUp') { e.preventDefault(); if (!isOpen()) show(); else setActive(active + (k === 'ArrowDown' ? 1 : -1)); }
+      else if (k === 'Home' || k === 'End') { if (isOpen()) { e.preventDefault(); setActive(k === 'Home' ? 0 : opts.length - 1); } }
+      else if (k === 'Enter' || k === ' ') { e.preventDefault(); if (isOpen()) { choose(active); hide(); } else show(); }
+      else if (k === 'Escape' && isOpen()) { e.preventDefault(); e.stopPropagation(); hide(); }
+      else if (k === 'Tab' && isOpen()) hide();
+      else if (k.length === 1 && /\S/.test(k)) {
+        const n = opts.findIndex((li) => li.textContent.trim().toLowerCase().startsWith(k.toLowerCase()));
+        if (n >= 0) { if (isOpen()) setActive(n); else choose(n); }
+      }
+    });
+    btn.addEventListener('blur', () => setTimeout(() => { if (!field.contains(document.activeElement)) hide(); }, 0));
+    document.addEventListener('mousedown', (e) => { if (isOpen() && !field.contains(e.target)) hide(); });
+    form.addEventListener('reset', () => setTimeout(sync, 0));
+    sync();
+  }
 
   const validate = () => {
     let first = null, msg = '';
@@ -114,7 +179,7 @@
       if (bad && !first) { first = i; msg = i.type === 'email' && v ? 'Please enter a valid email address.' : 'Please fill in the highlighted fields.'; }
     });
     showError(msg);
-    if (first) first.focus();
+    if (first) (first.tagName === 'SELECT' ? first.closest('.cm__field').querySelector('.cm__trigger') : first).focus();
     return !first;
   };
 

@@ -42,7 +42,7 @@
         <input class="cm__honey" type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true">
         <p class="cm__error" role="alert" hidden></p>
         <div class="cm__actions">
-          <button type="submit" class="cm__send"><span>Send message</span><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+          <button type="submit" class="cm__send"><span>Send message</span></button>
           <p class="cm__note">By sending this you agree to be contacted about your request.</p>
         </div>
       </form>

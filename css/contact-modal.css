@@ -32,26 +32,40 @@ html.cm-lock, html.cm-lock body { overflow: hidden !important; }
 .cm__line::placeholder, .cm__box::placeholder { color: #8e8e8e; opacity: 1; }
 .cm__line:hover { border-bottom-color: #6f6b66; }
 .cm__line:focus { outline: none; border-bottom-color: #211d1d; box-shadow: 0 .5px 0 #211d1d; }
-.cm__select { -webkit-appearance: none; appearance: none; padding-right: 26px; cursor: pointer; }
-.cm__select:invalid { color: #8e8e8e; }
-.cm__select option { color: #211d1d; }
 .cm__chev { position: absolute; right: 2px; top: 17px; width: 14px; height: 14px; pointer-events: none; transition: transform .25s ease; }
-.cm__native { position: absolute; inset: 0; width: 100%; height: 48px; opacity: 0; pointer-events: none; }
-.cm__trigger { display: block; padding-right: 26px; text-align: left; cursor: pointer; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.cm__trigger.is-empty { color: #8e8e8e; }
+.cm__trigger { display: flex; flex-direction: column; justify-content: center; padding-right: 26px; text-align: left; cursor: pointer; }
+.cm__trigger:focus-visible { outline: 2px solid #211d1d; outline-offset: 3px; }
+/* Once answered, the question stays above the answer in small grey type. */
+.cm__lbl { font-size: 12px; line-height: 14px; color: #8e8e8e; }
+.cm__val { display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 22px; }
+.cm__trigger.is-empty .cm__lbl { display: none; }
+.cm__trigger.is-empty .cm__val { color: #8e8e8e; }
 .cm__field.is-open .cm__trigger { border-bottom-color: #211d1d; box-shadow: 0 .5px 0 #211d1d; }
 .cm__field.is-open .cm__chev { transform: rotate(180deg); }
-.cm__list { position: absolute; left: 0; right: 0; top: calc(100% + 8px); z-index: 5; max-height: 336px; margin: 0; padding: 0; list-style: none; overflow-y: auto; overscroll-behavior: contain;
+.cm__list { position: absolute; left: 0; right: 0; top: 56px; z-index: 5; margin: 0; padding: 8px; list-style: none;
   background: #fff; border-radius: 12px; box-shadow: 0 0 0 .5px rgb(142 142 142 / .6), 0 24px 48px -20px rgb(33 29 29 / .3);
   opacity: 0; visibility: hidden; transform: translate3d(0, -4px, 0); transition: opacity .18s ease, transform .18s ease, visibility 0s linear .18s; }
 .cm__field.is-open .cm__list { opacity: 1; visibility: visible; transform: none; transition: opacity .18s ease, transform .18s ease, visibility 0s; }
-.cm__opt { padding: 11px 24px; font: 400 16px/26px "Poppins", system-ui, sans-serif; color: #211d1d; cursor: pointer; transition: background-color .15s ease; }
+.cm__opt { display: flex; align-items: center; gap: 14px; padding: 10px 16px; border-radius: 8px; color: #211d1d; cursor: pointer; transition: background-color .15s ease; }
 .cm__opt:hover, .cm__opt.is-active { background: #fbfee0; }
-.cm__opt[aria-selected="true"] { font-weight: 500; }
+.cm__opt-txt { flex: 1; min-width: 0; display: flex; flex-direction: column; }
+.cm__opt-t { font: 400 16px/24px "Poppins", system-ui, sans-serif; }
+.cm__opt-s { font: 400 13px/19px "Poppins", system-ui, sans-serif; color: #6f6b66; }
+.cm__opt[aria-selected="true"] .cm__opt-t { font-weight: 500; }
+.cm__tick { flex: none; width: 18px; height: 18px; color: #211d1d; opacity: 0; }
+.cm__opt[aria-selected="true"] .cm__tick { opacity: 1; }
+.cm__opt[aria-disabled] { opacity: .38; cursor: not-allowed; }
+.cm__opt[aria-disabled]:hover, .cm__opt[aria-disabled].is-active { background: transparent; }
+.cm__hint { padding: 4px 16px 6px; font: 400 12px/18px "Poppins", system-ui, sans-serif; color: #8e8e8e; }
+.cm__sep { height: .5px; margin: 6px 16px; background: rgb(142 142 142 / .6); }
 .cm__box { display: block; width: 100%; height: 140px; min-height: 100px; margin: 22px 0 0; padding: 14px 16px; border: 1px solid #211d1d; border-radius: 12px; resize: vertical;
   background: transparent; font: 400 16px/26px "Poppins", system-ui, sans-serif; color: #211d1d; transition: box-shadow .2s ease; }
 .cm__box:focus { outline: none; box-shadow: 0 0 0 3px rgb(33 29 29 / .1); }
 .cm__field.is-invalid .cm__line { border-bottom-color: #c23b22; box-shadow: 0 .5px 0 #c23b22; }
+/* Required and missing: the placeholder turns red too, and a short message sits under the field. */
+.cm__field.is-invalid .cm__line::placeholder, .cm__field.is-invalid .cm__trigger.is-empty .cm__val { color: #c23b22; }
+.cm__msg { display: block; margin-top: 6px; font-size: 13px; line-height: 20px; color: #c23b22; }
+.cm__msg[hidden] { display: none; }
 
 .cm__error { margin: 0; font-size: 14px; line-height: 22px; color: #c23b22; }
 .cm__error[hidden] { display: none; }
@@ -69,7 +83,6 @@ html.cm-lock, html.cm-lock body { overflow: hidden !important; }
 .cm__send:disabled { opacity: .45; cursor: not-allowed; color: #f0f879; }
 .cm__send:disabled::before { transform: translate(-50%, -50%) scale(0); }
 .cm__send.is-sending { pointer-events: none; opacity: .7; }
-.cm__note { margin: 0; font-size: 13px; line-height: 20px; color: #6f6b66; }
 
 .cm__thanks { display: flex; flex-direction: column; align-items: center; text-align: center; }
 .cm__thanks[hidden], .cm__form[hidden] { display: none; }
@@ -88,7 +101,6 @@ html.cm-lock, html.cm-lock body { overflow: hidden !important; }
   .cm__close { top: 16px; right: 16px; }
   .cm__actions { flex-direction: column; align-items: stretch; }
   .cm__send { width: 100%; }
-  .cm__note { text-align: center; }
 }
 @media (prefers-reduced-motion: reduce) {
   .cm, .cm__card { transition: none; }

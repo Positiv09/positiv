@@ -157,7 +157,7 @@
         `<span class="fq__ico">${ico}</span><span class="fq__txt"><span class="fq__t">${esc(a.t)}</span>${a.s ? `<span class="fq__s">${esc(a.s)}</span>` : ''}</span></button>`;
     }).join('');
     const right = q.multi
-      ? `<span class="fq__picked">${sel.length ? `${sel.length} of ${q.multi} picked` : `Pick up to ${q.multi}`}</span><button type="button" class="fq__next" data-next${sel.length ? '' : ' disabled'}><span>Continue</span>${svg('arrow-right')}</button>`
+      ? `<span class="fq__picked">${sel.length ? `${sel.length} of ${q.multi} picked` : `Pick up to ${q.multi}`}</span><button type="button" class="fq__next" data-next${sel.length ? '' : ' disabled'}><span>Continue</span></button>`
       : `<span class="fq__hint">Press 1–${q.a.length}</span>`;
     return `<h2 class="fq__q" id="fq-q" tabindex="-1">${esc(q.q)}</h2>` +
       `<p class="fq__sub">${q.multi ? 'Pick up to 3, or choose “I’m not sure yet” on its own.' : 'Pick one.'}</p>` +

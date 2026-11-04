@@ -1,51 +1,50 @@
-/* First-visit intro: dark screen, the Positiv logo rises letter by letter, the yellow "t" hops, a thin bar fills (tied to the real page load,
-   2s minimum), then the screen lifts away like a curtain and the hero starts. Shown once per browser session, skipped for reduced motion.
+/* First-visit opener: the Positiv mark draws its outline, floods with lime from the bottom and settles while a thin bar + percentage counts 0 -> 100%
+   (about 3.6s, then it fades out; held until the page has really loaded, 6s at most). Shown once per browser session, skipped for reduced motion.
    The cover itself is painted by css/intro.css (html.intro-on) so there is no flash before this script runs. */
 (() => {
   const root = document.documentElement;
   if (!root.classList.contains('intro-on')) return;
-  const done = () => { root.classList.remove('intro-on'); try { sessionStorage.setItem('positivIntro', '1'); } catch (e) {} document.dispatchEvent(new Event('positiv:intro-done')); };
-  if (!window.gsap) { done(); return; }
 
   const el = document.createElement('div');
-  el.className = 'intro'; el.setAttribute('role', 'presentation');
-  el.innerHTML = '<div class="intro__inner"><svg class="intro__logo" aria-hidden="true" viewBox="0 0 143 36" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M94.0768 29.6721C90.0647 31.1699 84.7264 29.9141 83.1917 25.5586L86.3529 24.1234C87.308 26.7309 90.023 27.8949 92.4878 26.8352C93.2218 26.5181 93.543 25.788 93.5138 25.0913C93.4888 24.4405 93.0342 23.7646 92.271 23.5226L87.333 21.9707C85.8358 21.4992 84.6472 20.4062 84.2551 19.2839C83.6546 17.5609 83.8923 15.963 84.8265 14.6405C85.9442 13.051 87.7834 12.421 89.6727 12.2333C92.8799 11.9162 95.9869 13.4056 97.2172 16.5096L94.1769 17.8905C93.1301 15.6835 90.7028 14.6155 88.4966 15.7628C87.8543 16.0965 87.5832 16.8308 87.6667 17.4691C87.7376 18.0407 88.238 18.6039 88.9303 18.8208L93.8307 20.377C95.9327 21.0403 97.2464 22.7467 97.3298 24.841C97.4133 26.9604 96.208 28.8753 94.0768 29.6721Z" fill="white"/><path d="M72.1124 26.6275C69.1434 26.6275 66.7366 24.2198 66.7366 21.2498C66.7366 18.2797 69.1434 15.8721 72.1124 15.8721C75.0815 15.8721 77.4883 18.2797 77.4883 21.2498C77.4883 24.2198 75.0815 26.6275 72.1124 26.6275ZM72.1233 12.1582C67.1069 12.1582 63.0406 16.2259 63.0406 21.2439C63.0406 26.262 67.1069 30.3301 72.1233 30.3301C77.1396 30.3301 81.2064 26.262 81.2064 21.2439C81.2064 16.2259 77.1396 12.1582 72.1233 12.1582Z" fill="white"/><path d="M115.203 26.5482C114.026 26.3195 113.266 25.4009 113.266 24.1939L113.267 19.5918H109.365L109.444 24.9924C109.473 26.9044 110.549 28.66 112.293 29.3813C113.904 30.0476 115.625 29.9646 117.3 29.9646C117.311 28.887 117.293 27.6892 117.297 26.5778C116.457 26.5819 115.885 26.6808 115.203 26.5482Z" fill="white"/><path d="M116.281 11.7474C115.201 11.8533 114.185 12.2176 113.283 12.7733C113.145 12.858 112.994 12.7299 113.057 12.5818C113.447 11.676 113.697 9.52831 113.775 8.55373C113.804 8.19619 113.508 7.90332 113.15 7.90332H110.476C110.176 7.90332 109.901 8.11275 109.861 8.40938C109.64 10.0911 108.349 12.8346 106.721 13.1104C106.424 13.1604 106.224 13.4475 106.224 13.7495V16.4062C106.224 16.7659 106.52 17.0625 106.878 17.032C107.99 16.9369 109.032 16.6006 109.955 16.0766C110.096 15.997 110.242 16.1321 110.172 16.2781C109.654 17.3645 109.361 18.5665 109.361 19.7943H113.268C113.268 17.9382 114.652 15.9799 116.441 15.6661C116.74 15.614 116.939 15.3244 116.939 15.0215V12.3732C116.939 12.0115 116.641 11.7119 116.281 11.7474Z" fill="#F0F879"/><path d="M30.3183 11.6507C27.0965 11.9882 24.0675 13.0833 21.3699 14.7434C20.9537 14.9999 20.495 14.6124 20.6881 14.1634C21.8667 11.4208 22.6244 4.91876 22.8609 1.96834C22.9477 0.886128 22.0522 0 20.9667 0H12.8724C11.9478 0 11.1241 0.744698 10.9953 1.66045C10.2775 6.75819 6.3968 14.9244 1.51683 15.7613C0.669375 15.9069 0 16.8423 0 17.7021V25.7424C0 26.8675 0.979663 27.7278 2.09987 27.626C5.42131 27.3244 8.53588 26.3114 11.296 24.7444C11.7013 24.5141 12.1392 24.963 11.9391 25.3844C10.675 28.0415 9.8567 30.9265 9.59187 33.8961C9.49177 35.0187 10.3459 36 11.4728 36H19.5849C20.52 36 21.3095 35.3145 21.4367 34.3875C22.1286 29.3419 25.9584 24.4532 30.795 23.527C31.6979 23.3543 32.439 22.4694 32.439 21.5504V13.5318C32.439 12.3987 31.4452 11.5326 30.3183 11.6507Z" fill="#F0F879"/><path d="M99.8168 11.2178H103.748V15.1503H99.8168V11.2178Z" fill="white"/><path d="M99.8168 17.5781H103.748V29.9476H99.8168V17.5781Z" fill="white"/><path d="M119.779 11.2178H123.711V15.1503H119.779V11.2178Z" fill="white"/><path d="M119.779 17.5781H123.711V29.9476H119.779V17.5781Z" fill="white"/><path d="M136.136 29.9484L143 12.6885H138.8L134.413 24.4618L129.909 12.6885H125.746L132.613 29.9484H136.136Z" fill="white"/><path d="M53.878 17.4421C52.0405 17.6161 50.2613 17.4997 48.2357 17.4897L48.2628 9.54162C51.6209 9.68597 57.1603 8.33342 57.4518 13.2405C57.5907 15.5806 56.0897 17.2331 53.878 17.4421ZM54.5858 6.16732C51.1668 5.92118 47.7811 5.99544 44.4351 6.08305V29.948H48.171L48.1548 20.9749C49.969 20.9236 51.6389 20.8489 53.3763 20.9641C57.7179 21.2524 61.2558 18.2627 61.4568 13.8963C61.6457 9.79695 58.7826 6.46938 54.5858 6.16732Z" fill="white"/></svg><div class="intro__track"><span></span></div><div class="intro__pct" aria-hidden="true">0%</div></div><button class="intro__skip" type="button">Skip</button><div class="intro__curve" aria-hidden="true"></div>';
+  el.className = 'intro'; el.setAttribute('role', 'presentation'); el.setAttribute('aria-hidden', 'true');
+  el.innerHTML = '<div class="intro__stack">'
+    + '<svg class="intro__logo-svg" viewBox="0 0 916 1017" xmlns="http://www.w3.org/2000/svg"><defs>'
+    + '<path id="pv-shape" pathLength="1" d="M360 0H595Q645 0 645 55C635 180 615 320 585 402Q580 420 603 413C680 365 760 335 860 328Q916 328 916 380V610Q916 655 865 663C740 690 630 800 605 968Q598 1017 550 1017H325Q270 1017 270 960C280 870 300 790 337 715Q340 695 320 697C240 740 150 770 55 778Q0 778 0 725V495Q0 452 40 445C170 420 280 220 310 45Q318 0 360 0Z"/>'
+    + '<clipPath id="pv-clip"><use href="#pv-shape"/></clipPath></defs>'
+    + '<g class="intro__mark"><g clip-path="url(#pv-clip)"><rect class="intro__fill" x="-10" y="-10" width="936" height="1037" fill="#eef677"/></g><use class="intro__outline" href="#pv-shape"/></g></svg>'
+    + '<div class="intro__loader"><div class="intro__track"><div class="intro__bar"></div></div><span class="intro__pct">0%</span></div>'
+    + '</div><button class="intro__skip" type="button">Skip</button>';
   document.body.appendChild(el);
 
-  const paths = [...el.querySelectorAll('.intro__logo path')];
-  const lime = paths.filter((p) => /F0F879/i.test(p.getAttribute('fill') || ''));
-  const bar = el.querySelector('.intro__track span'), pct = el.querySelector('.intro__pct'), prog = { v: 0 }, logo = el.querySelector('.intro__logo'), skip = el.querySelector('.intro__skip');
-  gsap.set(paths, { yPercent: 130, opacity: 0, transformBox: 'fill-box', transformOrigin: '50% 100%' });
-  gsap.set(bar, { scaleX: 0, transformOrigin: 'left' });
-  const paint = () => { bar.style.transform = 'scaleX(' + prog.v + ')'; pct.textContent = Math.round(prog.v * 100) + '%'; };   // bar and number share one value
-  gsap.set(skip, { opacity: 0 });
+  const bar = el.querySelector('.intro__bar'), pct = el.querySelector('.intro__pct'), skip = el.querySelector('.intro__skip');
+
+  // percentage 0 -> 100% while the mark draws and fills, finishing just before the fade
+  const delay = 200, duration = 3100, start = performance.now() + delay;
+  const ease = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+  let counting = true;
+  const tick = (now) => {
+    if (!counting) return;
+    const t = Math.min(Math.max((now - start) / duration, 0), 1), p = ease(t);
+    bar.style.transform = 'scaleX(' + p + ')';
+    pct.textContent = Math.round(p * 100) + '%';
+    if (t < 1) requestAnimationFrame(tick);
+  };
+  requestAnimationFrame(tick);
 
   let finished = false;
   const exit = (fast) => {
-    if (finished) return; finished = true;
-    tl.kill();
-    gsap.timeline({ onComplete: () => { el.remove(); done(); } })
-      .to(logo, { y: -24, opacity: 0, duration: fast ? 0.2 : 0.45, ease: 'power2.in' }, 0)
-      .to([el.querySelector('.intro__track'), pct], { opacity: 0, duration: 0.25 }, 0)
-      .to(el, { yPercent: -100, duration: fast ? 0.55 : 1.0, ease: 'power4.inOut' }, fast ? 0.05 : 0.3)
-      .to(el.querySelector('.intro__curve'), { height: 0, duration: fast ? 0.55 : 1.0, ease: 'power4.inOut' }, fast ? 0.05 : 0.3);
+    if (finished) return; finished = true; counting = false;
+    if (fast) { bar.style.transform = 'scaleX(1)'; pct.textContent = '100%'; el.style.transitionDuration = '.25s, 0s'; el.style.transitionDelay = '0s, .25s'; }
+    el.classList.add('is-out');
+    root.classList.remove('intro-on');                                   // the cover goes, the opener fades over the page
+    try { sessionStorage.setItem('positivIntro', '1'); } catch (e) {}
+    setTimeout(() => document.dispatchEvent(new Event('positiv:intro-done')), fast ? 80 : 300);   // the hero starts while the opener fades
+    setTimeout(() => el.remove(), fast ? 400 : 800);
   };
 
   const loaded = new Promise((r) => { if (document.readyState === 'complete') r(); else window.addEventListener('load', r, { once: true }); });
-  const minTime = new Promise((r) => setTimeout(r, 2000));
-  const tl = gsap.timeline();
-  tl.to(paths, { yPercent: 0, opacity: 1, duration: 0.95, ease: 'back.out(1.6)', stagger: 0.07 }, 0.15)
-    .to(prog, { v: 0.82, duration: 1.9, ease: 'sine.inOut', onUpdate: paint }, 0.2)   // slow start, quicker through the middle
-    .to(skip, { opacity: 0.6, duration: 0.5 }, 0.8)
-    .add(() => {                                                       // the yellow "t": one squash-and-hop, like the footer heading
-      lime.forEach((p) => gsap.timeline().to(p, { yPercent: -14, scaleX: 0.94, scaleY: 1.1, duration: 0.22, ease: 'power2.out' })
-        .to(p, { yPercent: 0, scaleX: 1.1, scaleY: 0.86, duration: 0.16, ease: 'power2.in' })
-        .to(p, { scaleX: 1, scaleY: 1, duration: 0.9, ease: 'elastic.out(1, 0.3)' }));
-    }, 1.15);
-  Promise.race([Promise.all([loaded, minTime]), new Promise((r) => setTimeout(r, 5000))]).then(() => {
-    if (finished) return;
-    gsap.to(prog, { v: 1, duration: 0.55, overwrite: true, ease: 'sine.inOut', onUpdate: paint, onComplete: () => exit(false) });   // hits 100% as the curtain starts to lift
-  });
+  const minTime = new Promise((r) => setTimeout(r, 3600));
+  Promise.all([minTime, Promise.race([loaded, new Promise((r) => setTimeout(r, 6000))])]).then(() => exit(false));
   skip.addEventListener('click', () => exit(true));
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') exit(true); });
 })();

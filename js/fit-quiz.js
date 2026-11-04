@@ -28,7 +28,7 @@
       { t: 'Salesforce', chip: 'Salesforce', m: 'SF' }, { t: 'NetSuite', chip: 'NetSuite', m: 'NS' },
       { t: 'HubSpot', chip: 'HubSpot', m: 'HS' }, { t: 'ServiceNow', chip: 'ServiceNow', m: 'SN' },
       { t: 'Microsoft Dynamics', chip: 'Microsoft Dynamics', m: 'MD' }, { t: 'SAP', chip: 'SAP', m: 'SAP' },
-      { t: 'We work with several', chip: 'Multi-vendor', i: 'stack' }, { t: 'Other', chip: 'Other ecosystem', i: 'squares-four' }] },
+      { t: 'Workday', chip: 'Workday', m: 'WD' }, { t: 'Other', chip: 'Other ecosystem', i: 'squares-four' }] },
     { id: 'size', short: 'Team size', q: 'How many people work at your firm?', a: [
       { t: 'Under 50', dq: true, chip: 'Under 50 people', i: 'user' }, { t: '50–200', chip: '50–200 people', i: 'users' },
       { t: '200–500', chip: '200–500 people', i: 'users-three' }, { t: '500+', dq: true, chip: '500+ people', i: 'buildings' }] },
@@ -104,9 +104,8 @@
     const ind = pick('industry'), eco = pick('ecosystem');
     let who = 'B2B firms like you';
     if (ind && ind.v === 'channel') {
-      const vendors = ['Salesforce', 'NetSuite', 'HubSpot', 'ServiceNow', 'Microsoft Dynamics', 'SAP'];
+      const vendors = ['Salesforce', 'NetSuite', 'HubSpot', 'ServiceNow', 'Microsoft Dynamics', 'SAP', 'Workday'];
       if (eco && vendors.indexOf(eco.t) !== -1) who = eco.t + ' partners like you';
-      else if (eco && eco.chip === 'Multi-vendor') who = 'multi-vendor partners like you';
       else who = 'channel partners like you';
     } else if (ind && ind.v === 'tech') who = 'tech companies like you';
     else if (ind && ind.v === 'finance') who = 'consulting and finance firms like you';

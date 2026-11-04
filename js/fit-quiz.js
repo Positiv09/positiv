@@ -183,7 +183,7 @@
     if (!root) return;
     const col = root.querySelector('.fq__col');
     col.style.zoom = '';
-    if (window.innerWidth < 768) return;   // phones scroll as normal
+    if (window.innerWidth < 768 || done) return;   // phones and the result page scroll as normal (the answers list can be opened)
     const z = Math.max(0.72, Math.min(1, (window.innerHeight - 48) / col.offsetHeight));
     if (z < 1) col.style.zoom = String(Math.floor(z * 100) / 100);
   }

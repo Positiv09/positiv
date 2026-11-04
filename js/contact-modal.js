@@ -20,7 +20,7 @@
       <div class="cm__head">
         <h2 class="cm__title" id="cm-title">Get in touch</h2>
         <a class="cm__mail" href="mailto:hello@positiv.studio">hello@positiv.studio</a>
-        <p class="cm__sub" data-cm-trial-line hidden>15 days free. We'll reply within one business day to plan your kickoff.</p>
+        <p class="cm__sub" data-cm-trial-line hidden><mark class="cm__hl cm__hl--sm">15 days free.</mark> We'll reply within one business day to plan your kickoff.</p>
       </div>
       <div class="cm__banner" data-cm-banner hidden><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10.5l4 4 8-9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>We've filled in your answers from the fit quiz. Check them, add your details and send.</span></div>
       <form class="cm__form" novalidate>
@@ -314,7 +314,9 @@
      a trial-specific prompt in the message box and the plan sent with the lead. Everything else stays "Get in touch". */
   function setTrial(plan) {
     trialPlan = plan || null;
-    $('#cm-title').textContent = trialPlan ? `Start your ${trialPlan} trial` : 'Get in touch';
+    const t = $('#cm-title');
+    if (trialPlan) { t.textContent = 'Start your '; const m = document.createElement('mark'); m.className = 'cm__hl'; m.textContent = trialPlan; t.append(m, ' trial'); }
+    else t.textContent = 'Get in touch';
     $('.cm__mail').hidden = !!trialPlan;
     $('[data-cm-trial-line]').hidden = !trialPlan;
     form.elements.message.placeholder = trialPlan ? 'What’s the first thing you’d send us? (optional)' : 'Anything else we should know? (optional)';

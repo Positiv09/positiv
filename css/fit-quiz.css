@@ -1,9 +1,9 @@
-/* Fit quiz pop-up — matched to the Figma frames "Fit quiz — …" (column 768, cards 2-up with 24px gaps,
+/* Fit quiz pop-up (same shell as the "Get in touch" pop-up) — matched to the Figma frames "Fit quiz — …" (column 768, cards 2-up with 24px gaps,
    result card 600). Positiv colours: ink, paper, lime, lime tint for picked answers. */
 .fq { --ink: #211d1d; --paper: #f2f2ed; --lime: #f0f879; --lime-tint: #fbfee0; --body: #6f6b66; --ph: #b2b2b2;
   --line: rgb(33 29 29 / .12); --card-line: rgb(178 178 178 / .4); --error: #b42318;
-  position: fixed; inset: 0; z-index: 100001; overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch;
-  padding: 88px 16px 104px; background: var(--paper); color: var(--ink);
+  position: fixed; inset: 0; z-index: 100001; display: flex; overflow-y: auto; overscroll-behavior: contain; -webkit-overflow-scrolling: touch;
+  padding: 40px 16px; background: rgb(33 29 29 / .6); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px); color: var(--ink);
   font-family: "Poppins", system-ui, sans-serif; font-size: 16px; line-height: 1.5; -webkit-font-smoothing: antialiased;
   opacity: 0; visibility: hidden; transition: opacity .35s cubic-bezier(.16, 1, .3, 1), visibility 0s linear .35s; }
 .fq.is-open { opacity: 1; visibility: visible; transition: opacity .35s cubic-bezier(.16, 1, .3, 1), visibility 0s; }
@@ -12,14 +12,18 @@ html.fq-lock, html.fq-lock body { overflow: hidden !important; }
 .fq svg { display: block; flex: none; }
 .fq button { font: inherit; color: inherit; }
 
+/* same pop-up shell as "Get in touch": blurred page, light card, round close button */
 .fq__close { position: fixed; top: 28px; right: 28px; z-index: 2; display: grid; place-items: center; width: 48px; height: 48px; padding: 0;
-  border: 1px solid var(--line); border-radius: 50%; background: rgb(255 255 255 / .6); color: var(--ink); cursor: pointer; transition: background-color .2s ease, color .2s ease; }
-.fq__close svg { width: 20px; height: 20px; }
-.fq__close:hover { background: var(--ink); color: var(--lime); }
-.fq__close:focus-visible, .fq button:focus-visible, .fq a:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+  border: 1px solid var(--paper); border-radius: 50%; background: transparent; color: var(--paper) !important; cursor: pointer; transition: background-color .25s ease, color .25s ease; }
+.fq__close svg { width: 18px; height: 18px; }
+.fq__close:hover { background: var(--paper); color: var(--ink) !important; }
+.fq__close:focus-visible { outline: 2px solid var(--lime); outline-offset: 3px; }
+.fq button:focus-visible, .fq a:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
 
-.fq__col { max-width: 768px; margin: 0 auto; outline: none; }
-.fq.is-result .fq__col { max-width: 600px; }
+.fq__col { position: relative; width: 100%; max-width: 880px; margin: auto; padding: 48px 56px 40px; border-radius: 24px; background: var(--paper); outline: none;
+  box-shadow: 0 40px 80px -30px rgb(0 0 0 / .55); transform: translate3d(0, 16px, 0) scale(.985); transition: transform .6s cubic-bezier(.16, 1, .3, 1); }
+.fq.is-open .fq__col { transform: none; }
+.fq.is-result .fq__col { max-width: 600px; padding: 0; overflow: hidden; background: #fff; }
 
 /* header: mark, title + count, progress */
 .fq__mark { width: 36px; height: 40px; color: var(--ink); }
@@ -35,11 +39,11 @@ html.fq-lock, html.fq-lock body { overflow: hidden !important; }
 @keyframes fqBack { from { opacity: 0; transform: translateX(-28px); } to { opacity: 1; transform: none; } }
 
 /* question */
-.fq__q { margin: 64px 0 0; font-family: var(--f-display, "Optima Nova", Optima, Georgia, serif); font-weight: 400; font-size: 32px; line-height: 1.15; letter-spacing: -.01em; outline: none; text-wrap: balance; }
+.fq__q { margin: 48px 0 0; font-family: var(--f-display, "Optima Nova", Optima, Georgia, serif); font-weight: 400; font-size: 32px; line-height: 1.15; letter-spacing: -.01em; outline: none; text-wrap: balance; }
 .fq__sub { margin: 10px 0 0; font-size: 18px; line-height: 1.5; color: var(--body); }
 
 /* answer cards */
-.fq__opts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; margin-top: 56px; }
+.fq__opts { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; margin-top: 40px; }
 .fq__opt { display: flex; flex-direction: column; justify-content: space-between; align-items: flex-start; gap: 36px; min-width: 0; min-height: 132px; padding: 24px;
   border: .5px solid var(--card-line); border-radius: 12px; background: rgb(255 255 255 / .5); text-align: left; cursor: pointer;
   transition: border-color .15s ease, background-color .15s ease, box-shadow .15s ease, opacity .15s ease; }
@@ -60,7 +64,7 @@ html.fq-lock, html.fq-lock body { overflow: hidden !important; }
 .fq__or::before, .fq__or::after { content: ""; flex: 1; height: 1px; background: var(--line); }
 
 /* nav */
-.fq__nav { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; min-height: 50px; margin-top: 40px; }
+.fq__nav { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; min-height: 50px; margin-top: 32px; }
 .fq__back { display: inline-flex; align-items: center; gap: 8px; padding: 6px 2px; border: 0; background: none; font-size: 15px; color: var(--body) !important; cursor: pointer; }
 .fq__back:hover { color: var(--ink) !important; }
 .fq__back.is-hidden { visibility: hidden; }
@@ -75,8 +79,7 @@ html.fq-lock, html.fq-lock body { overflow: hidden !important; }
 .fq__next:disabled { background: rgb(33 29 29 / .08); color: rgb(33 29 29 / .42) !important; cursor: not-allowed; }
 
 /* result card */
-.fq__res { position: relative; padding: 56px 56px 40px; border: 1px solid var(--line); border-radius: 28px; background: #fff; text-align: center; overflow: hidden;
-  box-shadow: 0 30px 80px -40px rgb(33 29 29 / .18); }
+.fq__res { position: relative; padding: 56px 56px 40px; background: #fff; text-align: center; overflow: hidden; }
 .fq__res::before { content: ""; position: absolute; left: 50%; top: -150px; width: 560px; height: 300px; transform: translateX(-50%); border-radius: 50%;
   background: rgb(240 248 121 / .3); filter: blur(90px); pointer-events: none; }
 .fq__res > * { position: relative; }
@@ -125,17 +128,18 @@ html.fq-lock, html.fq-lock body { overflow: hidden !important; }
 .fq__sent a { display: inline-block; margin-top: 6px; font-size: 15px; color: var(--ink); text-decoration: underline; text-underline-offset: 4px; }
 
 @media (max-width: 767px) {
-  .fq { padding: 76px 16px 48px; }
+  .fq { padding: 76px 16px 24px; }
+  .fq__col { padding: 32px 20px 24px; border-radius: 18px; }
   .fq__close { top: 16px; right: 16px; width: 44px; height: 44px; }
   .fq__q { margin-top: 44px; font-size: 28px; }
   .fq__sub { font-size: 16px; }
   .fq__opts { grid-template-columns: minmax(0, 1fr); gap: 12px; margin-top: 32px; }
   .fq__opt, .fq__opt.has-s { min-height: 0; gap: 20px; padding: 20px; }
   .fq__hint { display: none; }
-  .fq__res { padding: 44px 20px 28px; border-radius: 20px; }
+  .fq__res { padding: 44px 20px 28px; }
   .fq__vt { font-size: 32px; line-height: 38px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .fq, .fq__slide.is-fwd, .fq__slide.is-back, .fq__sum-list { animation: none; transition: none; }
+  .fq, .fq__col, .fq__slide.is-fwd, .fq__slide.is-back, .fq__sum-list { animation: none; transition: none; }
   .fq__bar i, .fq__opt { transition: none; }
 }

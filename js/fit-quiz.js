@@ -312,7 +312,7 @@
     countEl = root.querySelector('.fq__count'); barFill = root.querySelector('.fq__bar i');
 
     root.addEventListener('click', (e) => {
-      if (e.target.closest('[data-close]')) { close(); return; }
+      if (e.target === root || e.target.closest('[data-close]')) { close(); return; }   // backdrop or close button
       const o = e.target.closest('[data-opt]');
       if (o) { if (o.getAttribute('aria-disabled') !== 'true') choose(+o.dataset.opt); return; }
       if (e.target.closest('[data-next]')) { if (answered(current())) advance(); return; }

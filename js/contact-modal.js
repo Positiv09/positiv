@@ -20,6 +20,7 @@
       <div class="cm__head">
         <h2 class="cm__title" id="cm-title">Get in touch</h2>
         <a class="cm__mail" href="mailto:hello@positiv.studio">hello@positiv.studio</a>
+        <p class="cm__sub" data-cm-trial-line hidden>15 days free. We'll reply within one business day to plan your kickoff.</p>
       </div>
       <div class="cm__banner" data-cm-banner hidden><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10.5l4 4 8-9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg><span>We've filled in your answers from the fit quiz. Check them, add your details and send.</span></div>
       <form class="cm__form" novalidate>
@@ -59,13 +60,13 @@
     <div class="cm__thanks" data-cm-thanks hidden>
       <span class="cm__done-mark" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><path d="M5 12.5l4.5 4.5L19 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
       <h2 class="cm__done-title" tabindex="-1">Thanks, <span data-cm-first>there</span>.</h2>
-      <p class="cm__done-text">We've got your request and we'll reply within one business day.</p>
+      <p class="cm__done-text" data-cm-done-text>We've got your request and we'll reply within one business day.</p>
       <button type="button" class="cm__ghost" data-cm-again>Send another request</button>
     </div>
   </div>
 </div>`;
 
-  let root, card, form, err, sendBtn, opener = null, openedAt = 0, fromQuiz = false;
+  let root, card, form, err, sendBtn, opener = null, openedAt = 0, fromQuiz = false, trialPlan = null;
   const $ = (s, c) => (c || root).querySelector(s);
   const $$ = (s, c) => [...(c || root).querySelectorAll(s)];
 
@@ -279,9 +280,9 @@
         body: JSON.stringify({
           Name: f.name.value.trim(), Email: f.email.value.trim(), Company: f.company.value.trim(), 'Company size': f.size.value, Industry: f.industry.value,
           Needs: [...f.need.selectedOptions].map((o) => o.value).join(', '), Message: f.message.value.trim() || '-',
-          Source: fromQuiz ? 'Fit quiz' : 'Contact form', 'Needs review': f.size.value === 'Under 50' || f.size.value === '500+' ? 'Yes (size outside 50–500)' : 'No',
+          Plan: trialPlan || '-', Source: trialPlan ? `Free trial (${trialPlan})` : fromQuiz ? 'Fit quiz' : 'Contact form', 'Needs review': f.size.value === 'Under 50' || f.size.value === '500+' ? 'Yes (size outside 50–500)' : 'No',
           Page: location.href, 'Sent at': new Date().toString(),
-          _subject: `New message from ${f.name.value.trim()} - Positiv website`, _replyto: f.email.value.trim(), _template: 'table', _captcha: 'false'
+          _subject: trialPlan ? `Free trial request (${trialPlan}) from ${f.name.value.trim()} - Positiv website` : `New message from ${f.name.value.trim()} - Positiv website`, _replyto: f.email.value.trim(), _template: 'table', _captcha: 'false'
         })
       });
       clearTimeout(timer);
@@ -309,6 +310,17 @@
     fromQuiz = true; $('[data-cm-banner]').hidden = false;
   }
 
+  /* "Start free trial" buttons (data-trial="Growth" etc.) open the same form with its own title, a line about the trial,
+     a trial-specific prompt in the message box and the plan sent with the lead. Everything else stays "Get in touch". */
+  function setTrial(plan) {
+    trialPlan = plan || null;
+    $('#cm-title').textContent = trialPlan ? `Start your ${trialPlan} trial` : 'Get in touch';
+    $('.cm__mail').hidden = !!trialPlan;
+    $('[data-cm-trial-line]').hidden = !trialPlan;
+    form.elements.message.placeholder = trialPlan ? 'What’s the first thing you’d send us? (optional)' : 'Anything else we should know? (optional)';
+    $('[data-cm-done-text]').textContent = trialPlan ? 'We’ve got your trial request and we’ll reply within one business day to plan your kickoff.' : 'We’ve got your request and we’ll reply within one business day.';
+  }
+
   function open(from) {
     build();
     const answers = from && !(from instanceof Element) ? from : null;
@@ -317,6 +329,7 @@
     if (!$('[data-cm-thanks]').hidden) { resetForm(); $('[data-cm-thanks]').hidden = true; $('[data-cm-form-view]').hidden = false; }
     else $$('[required]', form).forEach((i) => setFieldError(i, ''));   // start clean (errors from closing with empty fields)
     if (answers) prefill(answers);
+    setTrial(!answers && from instanceof Element && from.dataset.trial ? from.dataset.trial : null);
     showError(''); sendBtn.disabled = false;   // the hourly note shows only when someone presses Send
     document.documentElement.classList.add('cm-lock');
     root.setAttribute('aria-hidden', 'false');

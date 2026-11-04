@@ -26,6 +26,8 @@ html.cm-lock, html.cm-lock body { overflow: hidden !important; }
 .cm__title { margin: 0 0 12px; font-family: var(--f-display, "Optima Nova", "Optima", Georgia, serif); font-weight: 400; font-size: clamp(40px, 5vw, 52px); line-height: 1.05; letter-spacing: -.02em; color: var(--ink); }
 .cm__mail { font-size: 16px; color: var(--ink); text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1px; }
 .cm__mail:hover { color: var(--ink); text-decoration-color: var(--faint); }
+.cm__sub { max-width: 52ch; text-wrap: balance; margin: 0; font-size: 16px; line-height: 1.5; color: var(--muted); }
+.cm__sub[hidden], .cm__mail[hidden] { display: none; }
 
 /* answers carried over from the fit quiz */
 .cm__banner { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 16px; padding: 12px 14px; border-radius: 12px; background: rgb(89 21 255 / .08); font-size: 14px; line-height: 1.5; }

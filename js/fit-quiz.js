@@ -24,7 +24,7 @@
       { t: 'Technology', s: 'Security, AI, FinTech, SaaS & dev tools', v: 'tech', chip: 'Technology', i: 'cpu' },
       { t: 'Finance & Consulting', s: 'Consulting, advisory and financial services firms', v: 'finance', chip: 'Finance & Consulting', i: 'chart-line-up' },
       { t: 'Other', v: 'other', chip: 'Other industry', i: 'squares-four' }] },
-    { id: 'ecosystem', short: 'Ecosystem', q: 'Which ecosystem do you work in?', when: (ans) => ans.industry === 0, a: [
+    { id: 'ecosystem', short: 'Ecosystem', q: 'Which ecosystems do you work in?', multi: 8, all: true, sub: 'Pick all that apply.', when: (ans) => ans.industry === 0, a: [
       { t: 'Salesforce', chip: 'Salesforce', m: 'SF' }, { t: 'NetSuite', chip: 'NetSuite', m: 'NS' },
       { t: 'HubSpot', chip: 'HubSpot', m: 'HS' }, { t: 'ServiceNow', chip: 'ServiceNow', m: 'SN' },
       { t: 'Microsoft Dynamics', chip: 'Microsoft Dynamics', m: 'MD' }, { t: 'SAP', chip: 'SAP', m: 'SAP' },
@@ -101,12 +101,12 @@
     };
     const headline = unsure ? HL.unsure : HL[keys.join('+')];
 
-    const ind = pick('industry'), eco = pick('ecosystem');
+    const ind = pick('industry'), ecos = picks('ecosystem');
     let who = 'B2B firms like you';
     if (ind && ind.v === 'channel') {
       const vendors = ['Salesforce', 'NetSuite', 'HubSpot', 'ServiceNow', 'Microsoft Dynamics', 'SAP', 'Workday'];
-      if (eco && vendors.indexOf(eco.t) !== -1) who = eco.t + ' partners like you';
-      else who = 'channel partners like you';
+      const v = ecos.map((e) => e.t).filter((t) => vendors.indexOf(t) !== -1);   // one or two: name them; three or more: multi-vendor
+      who = v.length === 1 ? `${v[0]} partners like you` : v.length === 2 ? `${v[0]} and ${v[1]} partners like you` : v.length > 2 ? 'multi-vendor partners like you' : 'channel partners like you';
     } else if (ind && ind.v === 'tech') who = 'tech companies like you';
     else if (ind && ind.v === 'finance') who = 'consulting and finance firms like you';
 
@@ -144,10 +144,10 @@
         `<span class="fq__ico">${ico}</span><span class="fq__txt"><span class="fq__t">${esc(a.t)}</span>${a.s ? `<span class="fq__s">${esc(a.s)}</span>` : ''}</span></button>`;
     }).join('');
     const right = q.multi
-      ? `<span class="fq__picked">${sel.length ? `${sel.length} of ${q.multi} picked` : `Pick up to ${q.multi}`}</span><button type="button" class="fq__next" data-next${sel.length ? '' : ' disabled'}><span>Continue</span></button>`
+      ? `<span class="fq__picked">${q.all ? (sel.length ? `${sel.length} picked` : 'Pick all that apply') : (sel.length ? `${sel.length} of ${q.multi} picked` : `Pick up to ${q.multi}`)}</span><button type="button" class="fq__next" data-next${sel.length ? '' : ' disabled'}><span>Continue</span></button>`
       : `<span class="fq__hint">Press 1–${q.a.length}</span>`;
     return `<h2 class="fq__q" id="fq-q" tabindex="-1">${esc(q.q)}</h2>` +
-      `<p class="fq__sub">${q.multi ? 'Pick up to 3, or choose “I’m not sure yet” on its own.' : 'Pick one.'}</p>` +
+      `<p class="fq__sub">${q.sub || (q.multi ? 'Pick up to 3, or choose “I’m not sure yet” on its own.' : 'Pick one.')}</p>` +
       `<div class="fq__opts${q.a.length === 8 ? ' fq__opts--4' : ''}" role="group" aria-labelledby="fq-q">${cards}</div>` +
       `<div class="fq__nav"><button type="button" class="fq__back${cur === 0 ? ' is-hidden' : ''}" data-back>${svg('arrow-left')}Back</button><div class="fq__right">${right}</div></div>`;
   }

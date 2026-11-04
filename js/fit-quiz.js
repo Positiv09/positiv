@@ -117,24 +117,12 @@
       web: `We help ${who} build websites that look, sound and sell like the rest of their brand.`,
       marketing: `We help ${who} keep every campaign on brand, however fast it needs to ship.`
     };
-    const VERB = {
-      brand: 'build a brand buyers trust before the first call',
-      sales: 'give every rep the same winning story',
-      web: 'turn their website into a steady source of leads',
-      marketing: 'keep every campaign on brand and on schedule'
-    };
-    const HOW = {
-      once: 'We’d start with a Foundation package: a one-time build, done properly.',
-      ongoing: 'With our Creative Team, you get a full creative team on call, without hiring one.',
-      both: 'We’d build the foundations first, then our Creative Team keeps everything moving.'
-    };
+    const NOUN = { brand: 'brand', sales: 'sales assets', web: 'website', marketing: 'marketing' };
     let para, free = false;
     if (unsure) { para = 'We’ll diagnose your business and spot the gaps across your brand, sales, website and marketing.'; free = true; }
     else {
-      const v = keys.map((k) => VERB[k]);
-      const s1 = keys.length === 1 ? SINGLE[keys[0]] : `We help ${who} ${v.slice(0, -1).join(', ')} and ${v[v.length - 1]}.`;
-      const help = pick('help');
-      para = s1 + (help ? ' ' + HOW[help.v] : '');
+      const n = keys.map((k) => NOUN[k]);   // one short sentence: who they are + what we fix
+      para = keys.length === 1 ? SINGLE[keys[0]] : `We help ${who} fix their ${n.length > 1 ? n.slice(0, -1).join(', ') + ' and ' + n[n.length - 1] : n[0]}, so one story comes through everywhere.`;
     }
     const t = pick('timing'), tv = t ? t.v : '';
     const when = tv === 'urgent' ? 'We’ll be in touch as soon as possible.' : tv === 'soon' ? 'We’ll be in touch shortly.' : tv === 'exploring' ? 'We’ll be here whenever you’re ready.' : 'We’ll be in touch soon.';

@@ -149,7 +149,7 @@
       : `<span class="fq__hint">Press 1–${q.a.length}</span>`;
     return `<h2 class="fq__q" id="fq-q" tabindex="-1">${esc(q.q)}</h2>` +
       `<p class="fq__sub">${q.multi ? 'Pick up to 3, or choose “I’m not sure yet” on its own.' : 'Pick one.'}</p>` +
-      `<div class="fq__opts" role="group" aria-labelledby="fq-q">${cards}</div>` +
+      `<div class="fq__opts${q.a.length === 8 ? ' fq__opts--4' : ''}" role="group" aria-labelledby="fq-q">${cards}</div>` +
       `<div class="fq__nav"><button type="button" class="fq__back${cur === 0 ? ' is-hidden' : ''}" data-back>${svg('arrow-left')}Back</button><div class="fq__right">${right}</div></div>`;
   }
   function resultHTML() {
@@ -179,9 +179,19 @@
     barFill.style.width = (n / l.length * 100) + '%';
     root.classList.toggle('is-result', done);
   }
+  /* keep the whole step on one screen: shrink the card a little (never below 72%) when the window is short */
+  function fit() {
+    if (!root) return;
+    const col = root.querySelector('.fq__col');
+    col.style.zoom = '';
+    if (window.innerWidth < 768) return;   // phones scroll as normal
+    const z = Math.max(0.72, Math.min(1, (window.innerHeight - 48) / col.offsetHeight));
+    if (z < 1) col.style.zoom = String(Math.floor(z * 100) / 100);
+  }
   function render(animate) {
     renderChrome();
     slide.innerHTML = done ? resultHTML() : questionHTML();
+    fit();
     if (animate) { slide.classList.remove('is-fwd', 'is-back'); void slide.offsetWidth; slide.classList.add(dir > 0 ? 'is-fwd' : 'is-back'); }
   }
   function refreshOptions() {
@@ -189,6 +199,7 @@
     slide.querySelector('.fq__opts').replaceWith(tmp.querySelector('.fq__opts'));
     slide.querySelector('.fq__right').replaceWith(tmp.querySelector('.fq__right'));
     renderChrome();
+    fit();
   }
   function focusFirst() {
     const t = slide.querySelector(done ? '.fq__vt' : '.fq__q');
@@ -310,11 +321,13 @@
         const tmp = document.createElement('div'); tmp.innerHTML = resultHTML();
         slide.querySelector('.fq__sum').replaceWith(tmp.querySelector('.fq__sum'));
         slide.querySelector('[data-sum]').focus({ preventScroll: true });
+        fit();
         return;
       }
       if (e.target.closest('[data-restart]')) { restart(); return; }
       if (e.target.closest('[data-full-form]')) { e.preventDefault(); e.stopPropagation(); openFullForm(); }
     });
+    window.addEventListener('resize', () => { if (root.classList.contains('is-open')) fit(); });
     root.addEventListener('submit', (e) => { if (e.target.matches('[data-lead]')) { e.preventDefault(); submit(e.target); } });
     root.addEventListener('input', (e) => {
       if (e.target.name === 'name') setErr('[data-err-name]', '', e.target);

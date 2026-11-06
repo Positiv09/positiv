@@ -724,9 +724,9 @@
 /* Laptops (MacBook 1440-1728px...): cap the hero paragraph like the 70% on large screens, so it stops well before the image grid */
 @media (min-width: 992px) and (max-width: 1799px) {
   .hero__lead { max-width: min(560px, 44vw); }
-  /* same proportions as the 1920 design, scaled to the window: heading 4.583vw, channel word 5.2vw (69px / 79px on a 1512 MacBook) */
-  .hero__eyebrow { font-size: 4.583vw; line-height: 1.143; }
-  .hero__word { font-size: 5.2vw; line-height: 1.143; }
+  /* same proportions as the 1920 design (word ~1.13x the heading), ~10% smaller: 62px / 70px on a 1512 MacBook */
+  .hero__eyebrow { font-size: 4.1vw; line-height: 1.143; }
+  .hero__word { font-size: 4.65vw; line-height: 1.143; }
 }
 
 /* Typical full-HD desktops (1800-1919px wide: a 1920 screen with the scrollbar, 1904 windows...) get the large hero type of the 1920 design, so the heading is not a size smaller there */

@@ -723,7 +723,7 @@
 
 /* Laptops (MacBook 1440-1728px...): cap the hero paragraph like the 70% on large screens, so it stops well before the image grid */
 @media (min-width: 992px) and (max-width: 1799px) {
-  .hero__lead { max-width: 560px; }
+  .hero__lead { max-width: min(560px, 44vw); }
 }
 
 /* Typical full-HD desktops (1800-1919px wide: a 1920 screen with the scrollbar, 1904 windows...) get the large hero type of the 1920 design, so the heading is not a size smaller there */

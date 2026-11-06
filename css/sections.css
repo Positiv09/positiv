@@ -713,7 +713,7 @@
   .stat__num, .stat__unit { line-height: 75px; }      /* staging: 88px type on a 75px line */
   .hero__content { width: 84%; }
   .hero__eyebrow { font-size: 4.583vw; line-height: 1.143; }                 /* 88px @1920 */
-  .hero__word { font-size: 4.5vw; line-height: 1.143; }   /* ≈86px @1920: measured from the live screenshot (word line = 803px wide) */
+  .hero__word { font-size: 5.2vw; line-height: 1.143; }   /* 100px @1920: bigger than the 88px heading, like on laptops; the widest name (ServiceNow partners) still clears the image grid by ~90px */
   .hero__content { margin-top: 80px; }
   .hero__lead { width: 70%; padding: 20px 0 40px; font-size: 18px; line-height: 26px; font-weight: 300; }
   .hero__actions { padding-top: 20px; }
@@ -730,7 +730,7 @@
 @media (min-width: 1800px) and (max-width: 1919px) {
   .hero__content { width: 84%; margin-top: 80px; }
   .hero__eyebrow { font-size: 4.583vw; line-height: 1.143; }
-  .hero__word { font-size: 4.5vw; line-height: 1.143; }
+  .hero__word { font-size: 5.2vw; line-height: 1.143; }
   .hero__lead { width: 70%; padding: 20px 0 40px; font-size: 18px; line-height: 26px; font-weight: 300; }
   .hero__actions { padding-top: 20px; }
   :root { --hero-h: 910px; }
